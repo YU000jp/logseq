@@ -10,7 +10,8 @@
             [frontend.modules.outliner.transaction :as outliner-tx]
             [frontend.modules.outliner.core :as outliner-core]
             [frontend.db :as db]
-            [clojure.set :as set]))
+            [clojure.set :as set]
+            [frontend.persist-db :as persist-db]))
 
 (def ws-addr config/RTC-WS-URL)
 
@@ -29,7 +30,7 @@
 (defn init-rtc-op-db
   [repo]
   (when (config/db-based-graph? repo)
-    (ipc/ipc :rtc/init repo)))
+    (persist-db/<rtc-init repo)))
 
 
 (def state-schema
