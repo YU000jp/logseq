@@ -436,6 +436,12 @@ should be done through this fn in order to get global config and config defaults
         value (if (some? value) value (:all-pages-public? (get-config)))]
     (true? value)))
 
+(defn collapsed-zoom-buttons?
+  []
+  (let [value (:style/switch-collapsed-zoom-buttons? (get-config))
+        value (if (some? value) value (:collapsed-zoom-buttons? (get-config)))]
+    (true? value)))
+
 (defn get-default-home
   []
   (:default-home (get-config)))
