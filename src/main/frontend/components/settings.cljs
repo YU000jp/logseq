@@ -813,7 +813,8 @@
      (enable-all-pages-public-row enable-all-pages-public?) 
      (when plugins-of-settings (marketplace-row))
      (when plugins-of-settings (plugin-settings-row))
-     (when plugins-of-settings (auto-check-for-updates-control))]))
+     (when plugins-of-settings (auto-check-for-updates-control))
+     (when (and current-repo (util/electron?)) (journal-template-user-submit (state/journal-template-user-submit?)))]))
 
 (rum/defcs settings-style < rum/reactive
   [current-repo]
@@ -829,8 +830,10 @@
      (marketplace-themes-row)
      (when current-repo (edit-custom-css))
      (when current-repo (edit-export-css))
-     (when (and current-repo (util/electron?)) (journal-template-user-submit (state/journal-template-user-submit?)))
-     ]))
+     (when (and (util/electron?) (not util/mac?)) (native-titlebar-row))
+     (show-brackets-row (state/show-brackets?))
+     (wide-mode-row (state/get-wide-mode?))
+     (document-mode-row)]))
 
 (rum/defcs settings-editor < rum/reactive
   [current-repo]
@@ -839,7 +842,6 @@
         preferred-workflow (state/get-preferred-workflow)
         enable-timetracking? (state/enable-timetracking?)
         enable-all-pages-public? (state/all-pages-public?)
-        switch-collapsed-zoom-buttons? (state/collapsed-zoom-buttons?)
         logical-outdenting? (state/logical-outdenting?)
         show-full-blocks? (state/show-full-blocks?)
         preferred-pasting-file? (state/preferred-pasting-file?)
@@ -859,10 +861,9 @@
      (when-not (or (util/mobile?) (mobile-util/native-platform?))
        (tooltip-row enable-tooltip?))
      (when-not (or (util/mobile?) (mobile-util/native-platform?))
-       (tooltip-row enable-tooltip?))
+       (shortcut-tooltip-row enable-shortcut-tooltip?))
      (timetracking-row enable-timetracking?)
-     (enable-all-pages-public-row enable-all-pages-public?)
-     (auto-push-row current-repo enable-git-auto-push?)]))
+     (enable-all-pages-public-row enable-all-pages-public?)]))
 
 (rum/defc settings-git
   []
