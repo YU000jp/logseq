@@ -30,8 +30,8 @@
 
   * [<g-emoji class="g-emoji" alias="thinking" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f914.png">🤔</g-emoji> Why was a derivative version created?](#-why-was-a-derivative-version-created?)
   * [<g-emoji class="g-emoji" alias="eyes" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f440.png">👀</g-emoji> How can I use it?](#-how-can-i-use-it)
-  * [<g-emoji class="g-emoji" alias="books" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f4da.png">📚</g-emoji> Links](#-links)
-  * [<g-emoji class="g-emoji" alias="star2" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f31f.png">🌟</g-emoji> Contributors](#-contributors)
+  * [<g-emoji class="g-emoji" alias="books" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f4da.png">📚</g-emoji> Links](#-links-logseq)
+  * [<g-emoji class="g-emoji" alias="star2" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f31f.png">🌟</g-emoji> Contributors](#-contributors-logseq)
 
 ## 🤔 Why was a derivative version created?
 
@@ -47,7 +47,7 @@ To start using Logseq, follow these simple steps:
 
 That's it! You can now enjoy the benefits of using Logseq to streamline your workflow, manage your projects, and stay on top of your goals. Have fun! 🎉
 
-## 📚 Links
+## 📚 Links (Logseq)
 * Logseq: [Logseq.com](https://logseq.com)
 * Documentation: [docs.logseq.com](https://docs.logseq.com)
 * FAQ page: [Logseq Docs:  FAQ](https://docs.logseq.com/#/page/faq)
@@ -58,7 +58,7 @@ That's it! You can now enjoy the benefits of using Logseq to streamline your wor
 * Discord: [discord.gg/logseq](https://discord.gg/logseq)
     > [中文 Discord](https://discord.gg/xYqcrXWymg)
 
-## 🌟 Contributors
+## 🌟 Contributors (Logseq)
 
 <p align="center">
     <a href="https://github.com/YU000jp/fork-logseq/graphs/contributors">
