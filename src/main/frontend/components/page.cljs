@@ -486,7 +486,7 @@
              (when-not whiteboard?
                [:div.ls-page-title.flex-1.flex-row.w-full
                 (page-title page-name icon title format fmt-journal?)])
-             (when (not config/publishing?)
+             (when (and (not config/publishing?) (not whiteboard?))
                (when config/lsp-enabled?
                  [:div.flex.flex-row
                   (plugins/hook-ui-slot :page-head-actions-slotted nil)
@@ -507,11 +507,11 @@
                      (route-handler/redirect-to-page! @*current-block-page))]
              (page-blocks-cp repo page {:sidebar? sidebar? :whiteboard? whiteboard?}))]])
 
-       (when today?
-         (today-queries repo today? sidebar?))
-
-       (when today?
-         (scheduled/scheduled-and-deadlines page-name))
+       (when-not whiteboard?
+         (when today?
+           (today-queries repo today? sidebar?))
+         (when today?
+           (scheduled/scheduled-and-deadlines page-name)))
 
        (when-not block?
          (tagged-pages repo page-name))
