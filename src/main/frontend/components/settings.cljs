@@ -548,6 +548,12 @@
           show-full-blocks?
           config-handler/toggle-show-full-blocks!))
 
+(defn journal-template-user-submit [enabled?]
+  (toggle "journal_template_user_submit"
+          (t :settings-page/journal-template-user-submit)
+          enabled?
+          config-handler/toggle-journal-template-user-submit!))
+
 (defn preferred-pasting-file [preferred-pasting-file?]
   (toggle "preferred_pasting_file"
           [(t :settings-page/preferred-pasting-file)
@@ -812,11 +818,7 @@
      (switch-theme-row)
      (marketplace-themes-row)
      (when current-repo (edit-custom-css))
-     (when current-repo (edit-export-css))
-     (when (and (util/electron?) (not util/mac?)) (native-titlebar-row))
-     (show-brackets-row (state/show-brackets?))
-     (wide-mode-row (state/get-wide-mode?))
-     (document-mode-row)]))
+     (when current-repo (edit-export-css))]))
 
 (rum/defcs settings-editor < rum/reactive
   [current-repo]
