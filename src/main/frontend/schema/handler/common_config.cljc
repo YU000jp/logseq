@@ -29,6 +29,7 @@
     [:export/bullet-indentation
      [:enum :eight-spaces :four-spaces :two-spaces :tab]]
     [:publishing/all-pages-public? :boolean]
+    [:style/switch-collapsed-zoom-buttons? :boolean]
     [:default-home [:map
                     [:page {:optional true} :string]
                     [:sidebar {:optional true} [:or :string [:vector :string]]]]]

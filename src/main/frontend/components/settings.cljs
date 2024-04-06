@@ -642,6 +642,14 @@
 ;;             (let [value (not enable-block-timestamps?)]
 ;;               (config-handler/set-config! :feature/enable-block-timestamps? value)))))
 
+(defn switch-collapsed-zoom-buttons-row [t switch-collapsed-zoom-buttons?]
+  (toggle "collapsed_zoom_buttons"
+          (t :settings-page/switch-collapsed-zoom-buttons)
+          switch-collapsed-zoom-buttons?
+          (fn []
+            (let [value (not switch-collapsed-zoom-buttons?)]
+              (config-handler/set-config! :style/switch-collapsed-zoom-buttons? value)))))
+
 (defn zotero-settings-row []
   [:div.it.sm:grid.sm:grid-cols-3.sm:gap-4.sm:items-center
    [:label.block.text-sm.font-medium.leading-5.opacity-70
@@ -827,7 +835,9 @@
   (let [preferred-format (state/get-preferred-format)
         preferred-date-format (state/get-date-formatter)
         preferred-workflow (state/get-preferred-workflow)
-        enable-timetracking? (state/enable-timetracking?) 
+        enable-timetracking? (state/enable-timetracking?)
+        enable-all-pages-public? (state/all-pages-public?)
+        switch-collapsed-zoom-buttons? (state/collapsed-zoom-buttons?)
         logical-outdenting? (state/logical-outdenting?)
         show-full-blocks? (state/show-full-blocks?)
         preferred-pasting-file? (state/preferred-pasting-file?)
@@ -847,9 +857,10 @@
      (when-not (or (util/mobile?) (mobile-util/native-platform?))
        (tooltip-row enable-tooltip?))
      (when-not (or (util/mobile?) (mobile-util/native-platform?))
-       (shortcut-tooltip-row enable-shortcut-tooltip?))
-     (timetracking-row enable-timetracking?) 
-     ]))
+       (tooltip-row t enable-tooltip?))
+     (timetracking-row t enable-timetracking?)
+     (enable-all-pages-public-row t enable-all-pages-public?)
+     (auto-push-row t current-repo enable-git-auto-push?)]))
 
 (rum/defc settings-git
   []

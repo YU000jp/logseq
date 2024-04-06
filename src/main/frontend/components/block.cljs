@@ -1757,6 +1757,9 @@
      (when (or (not fold-button-right?) collapsable?)
        [:a.block-control
         {:id       (str "control-" uuid)
+         :title (if collapsed?
+                  (t :editor/expand-block-children)
+                  (t :editor/collapse-block-children))
          :on-click (fn [event]
                      (util/stop event)
                      (state/clear-edit!)
@@ -1776,6 +1779,7 @@
      (let [bullet [:a.bullet-link-wrap {:on-click #(bullet-on-click % block uuid)}
                    [:span.bullet-container.cursor
                     {:id (str "dot-" uuid)
+                     :title (str (t :command.editor/zoom-in) " / " (t :help/context-menu))
                      :draggable true
                      :on-drag-start (fn [event]
                                       (bullet-drag-start event block uuid block-id))

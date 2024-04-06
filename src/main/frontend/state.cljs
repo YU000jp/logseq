@@ -432,6 +432,12 @@ should be done through this fn in order to get global config and config defaults
     (when-not (string/blank? template)
       (string/trim template))))
 
+(defn collapsed-zoom-buttons?
+  []
+  (let [value (:style/switch-collapsed-zoom-buttons? (get-config))
+        value (if (some? value) value (:collapsed-zoom-buttons? (get-config)))]
+    (true? value)))
+
 (defn get-default-home
   []
   (:default-home (get-config)))
