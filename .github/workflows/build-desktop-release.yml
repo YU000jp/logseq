@@ -152,18 +152,18 @@ jobs:
         run: ls -al
         working-directory: ./static
 
-      - name: Upload Sentry Sourcemaps (beta only)
-        if: ${{ github.repository == 'YU000jp/fork-logseq' && github.event_name == 'workflow_dispatch' && github.event.inputs.build-target == 'beta' }}
-        run: |
-          curl -sL https://sentry.io/get-cli/ | bash
-          release_name="logseq@${{ steps.ref.outputs.version }}"
-          sentry-cli releases new "${release_name}"
-          sentry-cli releases files "${release_name}" upload-sourcemaps --ext map --ext js ./static/js --url-prefix '~/static/js'
-          sentry-cli releases finalize "${release_name}"
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: logseq
-          SENTRY_PROJECT: logseq
+      # - name: Upload Sentry Sourcemaps (beta only)
+      #   if: ${{ github.repository == 'YU000jp/fork-logseq' && github.event_name == 'workflow_dispatch' && github.event.inputs.build-target == 'beta' }}
+      #   run: |
+      #     curl -sL https://sentry.io/get-cli/ | bash
+      #     release_name="logseq@${{ steps.ref.outputs.version }}"
+      #     sentry-cli releases new "${release_name}"
+      #     sentry-cli releases files "${release_name}" upload-sourcemaps --ext map --ext js ./static/js --url-prefix '~/static/js'
+      #     sentry-cli releases finalize "${release_name}"
+      #   env:
+      #     SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      #     SENTRY_ORG: logseq
+      #     SENTRY_PROJECT: logseq
 
       - name: Cache Static File
         uses: actions/upload-artifact@v3
@@ -608,15 +608,14 @@ jobs:
       #     name: logseq-android-builds
       #     path: ./
 
-      - name: Generate SHA256 checksums
-        # sha256sum *-darwin-* > SHA256SUMS.txt
-        # sha256sum *.apk >> SHA256SUMS.txt
-        run: |
+      # - name: Generate SHA256 checksums
+      #   # sha256sum *-darwin-* > SHA256SUMS.txt
+      #   # sha256sum *.apk >> SHA256SUMS.txt
+      #   run: |
+      #     sha256sum *-Windows-* >> SHA256SUMS.txt
+      #     sha256sum *-linux-* >> SHA256SUMS.txt
           
-          sha256sum *-win-* >> SHA256SUMS.txt
-          sha256sum *-linux-* >> SHA256SUMS.txt
-          
-          cat SHA256SUMS.txt
+      #     cat SHA256SUMS.txt
 
       - name: List files
         run: ls -rl
@@ -631,18 +630,16 @@ jobs:
           draft: false
           prerelease: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.is-pre-release) || (github.event_name == 'schedule')}}
           body: |
-            This is a nightly release of the Logseq desktop app.
-            It's unstable compared to the official releases, **use it with caution**!
+            This is a nightly release of the Logseq-Classic desktop app.
+            It's unstable compared to the public releases, **use it with caution**!
           
           # ./*.dmg
           # ./*.apk
+          # ./*.zip
+          # ./SHA256SUMS.txt
           files: |
-            ./SHA256SUMS.txt
-            ./*.zip
-            
             ./*.exe
             ./*.AppImage
-            
 
   release:
     # NOTE: For now, we only have beta channel to be released on Github
@@ -698,18 +695,18 @@ jobs:
 
       - name: Fix .nupkg name in RELEASES file
         run: |
-          sed -i "s/Logseq-.*.nupkg/Logseq-win-x64-${{ steps.ref.outputs.version }}-full.nupkg/g" RELEASES
+          sed -i "s/Logseq-.*.nupkg/Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}-full.nupkg/g" RELEASES
 
-      - name: Generate SHA256 checksums
-        # sha256sum *-darwin-* > SHA256SUMS.txt
-        # sha256sum *.apk >> SHA256SUMS.txt
-        run: |
+      # - name: Generate SHA256 checksums
+      #   # sha256sum *-darwin-* > SHA256SUMS.txt
+      #   # sha256sum *.apk >> SHA256SUMS.txt
+      #   run: |
           
-          sha256sum *-win-* >> SHA256SUMS.txt
-          sha256sum *-linux-* >> SHA256SUMS.txt
+      #     sha256sum *-Windows-* >> SHA256SUMS.txt
+      #     sha256sum *-linux-* >> SHA256SUMS.txt
 
-          sha256sum RELEASES >> SHA256SUMS.txt
-          cat SHA256SUMS.txt
+      #     sha256sum RELEASES >> SHA256SUMS.txt
+      #     cat SHA256SUMS.txt
 
       - name: Create Release Draft
         uses: softprops/action-gh-release@v1
@@ -717,20 +714,19 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.ref.outputs.version }}
-          name: Desktop/Android APP ${{ steps.ref.outputs.version }} (Beta Testing)
+          name: Logseq-Classic app ${{ steps.ref.outputs.version }}
           body: "TODO: Fill this changelog. Sorry for the inconvenience!"
           draft: ${{ github.event.inputs.is-draft }}
           prerelease: ${{ github.event.inputs.is-pre-release }}
 
           # ./*.dmg
           # ./*.apk
+          # ./*.zip
+          # ./SHA256SUMS.txt 
+          # ./*.nupkg
           files: |
             ./VERSION
-            ./SHA256SUMS.txt
-            ./*.zip
-            
             ./*.exe
-            ./*.nupkg
             ./RELEASES
             ./*.AppImage
 
