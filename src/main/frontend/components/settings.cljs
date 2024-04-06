@@ -828,7 +828,9 @@
      (switch-theme-row)
      (marketplace-themes-row)
      (when current-repo (edit-custom-css))
-     (when current-repo (edit-export-css))]))
+     (when current-repo (edit-export-css))
+     (when (and current-repo (util/electron?)) (journal-template-user-submit (state/journal-template-user-submit?)))
+     ]))
 
 (rum/defcs settings-editor < rum/reactive
   [current-repo]
