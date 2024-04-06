@@ -857,10 +857,10 @@
      (when-not (or (util/mobile?) (mobile-util/native-platform?))
        (tooltip-row enable-tooltip?))
      (when-not (or (util/mobile?) (mobile-util/native-platform?))
-       (tooltip-row t enable-tooltip?))
-     (timetracking-row t enable-timetracking?)
-     (enable-all-pages-public-row t enable-all-pages-public?)
-     (auto-push-row t current-repo enable-git-auto-push?)]))
+       (tooltip-row enable-tooltip?))
+     (timetracking-row enable-timetracking?)
+     (enable-all-pages-public-row enable-all-pages-public?)
+     (auto-push-row current-repo enable-git-auto-push?)]))
 
 (rum/defc settings-git
   []
