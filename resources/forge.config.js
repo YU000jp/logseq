@@ -19,12 +19,12 @@ module.exports = {
       'entitlements-inherit': 'entitlements.plist',
       'signature-flags': 'library'
     },
-    osxNotarize: {
-      tool: 'notarytool',
-      appleId: process.env['APPLE_ID'],
-      appleIdPassword: process.env['APPLE_ID_PASSWORD'],
-      teamId: process.env['APPLE_TEAM_ID']
-    },
+    // osxNotarize: {
+    //   tool: 'notarytool',
+    //   appleId: process.env['APPLE_ID'],
+    //   appleIdPassword: process.env['APPLE_ID_PASSWORD'],
+    //   teamId: process.env['APPLE_TEAM_ID']
+    // },
   },
   makers: [
     {
@@ -33,8 +33,8 @@ module.exports = {
         'name': 'Logseq',
         'setupIcon': './icons/logseq.ico',
         'loadingGif': './icons/installing.gif',
-        'certificateFile': process.env.CODE_SIGN_CERTIFICATE_FILE,
-        'certificatePassword': process.env.CODE_SIGN_CERTIFICATE_PASSWORD,
+        // 'certificateFile': process.env.CODE_SIGN_CERTIFICATE_FILE,
+        // 'certificatePassword': process.env.CODE_SIGN_CERTIFICATE_PASSWORD,
         "rfc3161TimeStampServer": "http://timestamp.digicert.com"
       }
     },
@@ -65,8 +65,8 @@ module.exports = {
       name: '@electron-forge/publisher-github',
       config: {
         repository: {
-          owner: 'logseq',
-          name: 'logseq'
+          owner: 'YU000jp',
+          name: 'fork-logseq'
         },
         prerelease: true
       }
