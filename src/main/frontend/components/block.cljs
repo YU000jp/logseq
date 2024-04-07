@@ -1769,11 +1769,11 @@
                          (editor-handler/expand-block! uuid)
                          (editor-handler/collapse-block! uuid))))}
         [:span {:class (if (or (and control-show?
-                                    (or collapsed?
-                                        (editor-handler/collapsable? uuid {:semantic? true})))
+                                    (or collapsed? (editor-handler/collapsable? uuid {:semantic? true})))
                                (and collapsed? order-list?))
                          "control-show cursor-pointer"
-                         "control-hide")}
+                         (when-not collapsed? "control-hide"))
+                }
          (ui/rotating-arrow collapsed?)]])
 
      (let [bullet [:a.bullet-link-wrap {:on-click #(bullet-on-click % block uuid)}
@@ -1784,7 +1784,7 @@
                      :on-drag-start (fn [event]
                                       (bullet-drag-start event block uuid block-id))
                      :blockid (str uuid)
-                     :class (str (when collapsed? "bullet-closed")
+                     :class (str ;; (when collapsed? "bullet-closed")
                                  (when (and (:document/mode? config)
                                             (not collapsed?))
                                    " hide-inner-bullet")

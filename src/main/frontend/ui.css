@@ -326,8 +326,14 @@ html.is-mobile {
   }
 }
 
-.rotating-arrow.not-collapsed svg {
-  transform: rotate(90deg);
+span.rotating-arrow {
+  &.not-collapsed {
+    cursor: zoom-out;
+  }
+
+  &.collapsed {
+    cursor: zoom-in;
+  }
 }
 
 .rotating-arrow svg {

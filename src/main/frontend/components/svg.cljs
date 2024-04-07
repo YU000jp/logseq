@@ -158,6 +158,28 @@
     {:d         "M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"
      :fill-rule "evenodd"}]])
 
+(rum/defc plus
+  []
+  [:svg.h-4.w-4
+   {:aria-hidden "true"
+    :version     "1.1"
+    :view-box    "0 0 448 512"
+    :fill        "currentColor"
+    :display     "inline-block"}
+   [:path
+    {:d         "M432 224H272V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v160H16c-8.8 0-16 7.2-16 16s7.2 16 16 16h192v160c0 17.7 14.3 32 32 32s32-14.3 32-32V256h160c8.8 0 16-7.2 16-16s-7.2-16-16-16z"}]])
+
+(rum/defc minus
+  []
+  [:svg.h-4.w-4
+   {:aria-hidden "true"
+    :version     "1.1"
+    :view-box    "0 0 448 512"
+    :fill        "currentColor"
+    :display     "inline-block"}
+   [:path
+    {:d         "M432 240H16c-8.8 0-16 7.2-16 16s7.2 16 16 16h416c8.8 0 16-7.2 16-16s-7.2-16-16-16z"}]])
+
 (defn logo
   ([] (logo 20))
   ([size]

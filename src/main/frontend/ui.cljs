@@ -763,7 +763,9 @@
   [collapsed?]
   [:span
    {:class (if collapsed? "rotating-arrow collapsed" "rotating-arrow not-collapsed")}
-   (svg/caret-right)])
+   (if collapsed?
+     (svg/plus)
+     (svg/minus))])
 
 (rum/defcs foldable-title <
   (rum/local false ::control?)
