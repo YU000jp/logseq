@@ -785,32 +785,32 @@
   []
   (when (state/sub [:document/mode?])
     (ui/tippy {:html [:div.p-2
-                      [:p.mb-2 [:b "Document mode"]]
+                      [:p.mb-2 [:b (t :document-mode-enabled)]]
                       [:ul
                        [:li
                         [:div.inline-block.mr-1 (ui/render-keyboard-shortcut (shortcut-dh/gen-shortcut-seq :editor/new-line))]
-                        [:p.inline-block  "to create new block"]]
-                       [:li
-                        [:p.inline-block.mr-1 "Click `D` or type"]
+                        [:p.inline-block (t :document-mode/tippy-new-block)]]
+                       [:li.text-sm
+                        [:p.inline-block.mr-1 (t :document-mode/tippy-toggle1)]
                         [:div.inline-block.mr-1 (ui/render-keyboard-shortcut (shortcut-dh/gen-shortcut-seq :ui/toggle-document-mode))]
-                        [:p.inline-block "to toggle document mode"]]]]}
+                        [:p.inline-block (t :document-mode/tippy-toggle2)]]]]}
               [:a.block.px-1.text-sm.font-medium.bg-base-2.rounded-md.mx-2
                {:on-click state/toggle-document-mode!}
                "D"])))
 
 (def help-menu-items
-  [{:title "Handbook" :icon "book-2" :on-click #(handbooks/toggle-handbooks)}
-   {:title "Keyboard shortcuts" :icon "command" :on-click #(state/sidebar-add-block! (state/get-current-repo) "shortcut-settings" :shortcut-settings)}
-   {:title "Documentation" :icon "help" :href "https://docs.logseq.com/"}
+  [{:title (t :help/handbook) :icon "book-2" :on-click #(handbooks/toggle-handbooks)}
+   {:title (t :help/shortcuts) :icon "command" :on-click #(state/sidebar-add-block! (state/get-current-repo) "shortcut-settings" :shortcut-settings)}
+   {:title (t :help/docs) :icon "help" :href "https://docs.logseq.com/"}
    :hr
-   {:title "Report bug" :icon "bug" :on-click #(rfe/push-state :bug-report)}
-   {:title "Request feature" :icon "git-pull-request" :href "https://discuss.logseq.com/c/feature-requests/"}
-   {:title "Submit feedback" :icon "messages" :href "https://discuss.logseq.com/c/feedback/13"}
+   {:title (t :help/bug) :icon "bug" :on-click #(rfe/push-state :bug-report)}
+   ;;{:title t(t :help/feature) :icon "git-pull-request" :href "https://discuss.logseq.com/c/feature-requests/"} Removed from discuss forum
+   {:title (t :help/feedback) :icon "messages" :href "https://discuss.logseq.com/c/feedback/13"}
    :hr
-   {:title "Ask the community" :icon "brand-discord" :href "https://discord.com/invite/KpN4eHY"}
-   {:title "Support forum" :icon "message" :href "https://discuss.logseq.com/"}
+   {:title (t :help/title-community) :icon "brand-discord" :href "https://discord.com/invite/KpN4eHY"}
+   {:title (t :help/forum-community) :icon "message" :href "https://discuss.logseq.com/"}
    :hr
-   {:title "Release notes" :icon "asterisk" :href "https://docs.logseq.com/#/page/changelog"}])
+   {:title (t :help/changelog) :icon "asterisk" :href "https://docs.logseq.com/#/page/changelog"}])
 
 (rum/defc help-menu-popup
   []

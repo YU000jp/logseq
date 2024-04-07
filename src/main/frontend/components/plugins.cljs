@@ -89,7 +89,7 @@
         *themes (::themes state)]
     [:div.cp__themes-installed
      {:tab-index -1}
-     [:h1.mb-4.text-2xl.p-1 (t :themes)]
+     [:h1.mb-4.text-2xl.p-1 (t :command.ui/select-theme-color)]
      (map-indexed
        (fn [idx opt]
          (let [current-selected? (:selected opt)
@@ -144,7 +144,7 @@
 (rum/defc category-tabs
   [t total-nums category on-action]
 
-  [:div.secondary-tabs.categories.flex
+  [:div.secondary-tabs.categories.flex.text-md
    (ui/button
      [:span.flex.items-center
       (ui/icon "puzzle")
@@ -152,6 +152,7 @@
      :intent "link"
      :on-click #(on-action :plugins)
      :class (if (= category :plugins) "active" ""))
+   [:span.opacity-50 "/"]
    (ui/button
      [:span.flex.items-center
       (ui/icon "palette")
@@ -191,7 +192,7 @@
   []
   (ui/admonition
     :warning
-    [:p.text-md
+    [:p.text-sm
      (t :plugin/security-warning)]))
 
 (rum/defc card-ctls-of-market < rum/static
@@ -249,9 +250,9 @@
        [:ul.menu-list
         (for [link sponsors]
           [:li {:key link}
-           [:a {:href link :target "_blank"}
-            [:span.flex.items-center link (ui/icon "external-link")]]])
-        ]])]
+           [:a {:href link :target "_blank" :title (t :plugin/sponsor)}
+            [:span.flex.items-center link (ui/icon "external-link")]]])]])]
+        
 
    [:div.r.flex.items-center
     (when (and unpacked? (not disabled?))
@@ -303,7 +304,8 @@
                  :has-new-version new-version}])}
 
      [:div.l.link-block.cursor-pointer
-      {:on-click (get-open-plugin-readme-handler url item repo)}
+      {:on-click (get-open-plugin-readme-handler url item repo)
+       :title "README"}
       (if (and icon (not (string/blank? icon)))
         [:img.icon {:src (if market? (plugin-handler/pkg-asset id icon) icon)}]
         svg/folder)
@@ -315,21 +317,23 @@
       [:h3.head.text-xl.font-bold.pt-1.5
 
        [:span.l.link-block.cursor-pointer
-        {:on-click (get-open-plugin-readme-handler url item repo)}
+        {:on-click (get-open-plugin-readme-handler url item repo)
+         :title "README"}
         name]
        (when (not market?) [:sup.inline-block.px-1.text-xs.opacity-50 version])]
 
       [:div.desc.text-xs.opacity-70
-       [:p description]
+       [:p description]]
        ;;[:small (js/JSON.stringify (bean/->js settings))]
-       ]
+       
 
       ;; Author & Identity
       [:div.flag
        [:p.text-xs.pr-2.flex.justify-between
-        [:small {:on-click #(when-let [^js el (js/document.querySelector ".cp__plugins-page .search-ctls input")]
+        [:small {:title (t :plugin/author)
+                 :on-click #(when-let [^js el (js/document.querySelector ".cp__plugins-page .search-ctls input")]
                               (reset! *search-key (str "@" author))
-                              (.select el))} author]
+                              (.select el))} (str "@" author)]
         [:small {:on-click #(do
                               (notification/show! "Copied!" :success)
                               (util/copy-to-clipboard! id))}
@@ -339,7 +343,8 @@
       [:div.flag.is-top.opacity-50
        (when repo
          [:a.flex {:target "_blank"
-                   :href   (plugin-handler/gh-repo-url repo)}
+                   :href   (plugin-handler/gh-repo-url repo)
+                   :title "GitHub"}
           (svg/github {:width 16 :height 16})])]
 
       (if market?
@@ -570,7 +575,7 @@
              :options {:on-click #(reset! *sort-by :downloads)}
              :icon    (ui/icon (aim-icon :downloads))}
 
-            {:title   (t :plugin/stars)
+            {:title   (str "GitHub " (t :plugin/stars))
              :options {:on-click #(reset! *sort-by :stars)}
              :icon    (ui/icon (aim-icon :stars))}
 
@@ -1032,13 +1037,19 @@
       (fn [{:keys [toggle-fn]}]
         [:div.toolbar-plugins-manager
          {:on-click toggle-fn}
-         [:a.button.relative
-          (ui/icon "puzzle" {:size 20})
+         [:a.button.relative {:title (t :plugins)}
+          (ui/icon "apps" {:size 20})
           (when badge-updates?
             (ui/point "bg-red-600.top-1.right-1.absolute" 4 {:style {:margin-right 2 :margin-top 2}}))]])
 
       ;; items
       (concat
+       (when items
+       [{:item [:span.text-sm.opacity-70
+                {:style {:cursor "default"}}
+                (str (t :plugin/toolbar-badge-toggle)" (" (t :plugins) ")")]
+         :options {:on-click( fn [^js e] (.preventDefault e) false)}}])
+         
         (for [[_ {:keys [key pinned?] :as opts} pid] items
               :let [pkey (str (name pid) ":" key)]]
           {:title   key
@@ -1055,11 +1066,11 @@
                                      (plugin-handler/op-pinned-toolbar-item! pkey (if pinned? :remove :add))))
                                  false)}})
         [{:hr true}
-         {:title   (t :plugins)
+         {:title   (str (t :plugins) "/" (t :plugin/marketplace))
           :options {:on-click #(plugin-handler/goto-plugins-dashboard!)
                     :class    "extra-item mt-2"}
           :icon    (ui/icon "apps")}
-         {:title   (t :settings)
+         {:title   (t :plugin/open-settings)
           :options {:on-click #(plugin-handler/goto-plugins-settings!)
                     :class    "extra-item"}
           :icon    (ui/icon "adjustments")}
@@ -1073,7 +1084,8 @@
 
         [{:hr true :key "dropdown-more"}
          {:title (auto-check-for-updates-control)
-          :options {:no-padding? true}}])
+          :options {:no-padding? true 
+                    :on-click (fn [^js e] (.preventDefault e) false)}}])
       {:trigger-class "toolbar-plugins-manager-trigger"})))
 
 (rum/defc header-ui-items-list-wrap
@@ -1218,25 +1230,30 @@
     [:div.cp__plugins-page
      {:ref       *el-ref
       :tab-index "-1"}
-     [:h1 (t :plugins)]
-     (security-warning)
-
-     [:hr.my-4]
-
      [:div.tabs.flex.items-center.justify-center
       [:div.tabs-inner.flex.items-center
-       (ui/button [:span.it (t :plugin/installed)]
+       (ui/button [:span.it (ui/icon "adjustments") (t :plugin/installed)]
                   :on-click #(set-active! :installed)
                   :intent (if-not market? "" "link"))
 
        (ui/button [:span.mk (svg/apps 16) (t :plugin/marketplace)]
                   :on-click #(set-active! :marketplace)
-                  :intent (if market? "" "link"))]]
+                  :intent (if market? "" "link"))
 
+       (ui/button [:span.text-sm.opacity-70 (ui/icon "puzzle") (t :settings-of-plugins)]
+                  :on-click #(plugin-handler/goto-plugins-settings!)
+                  :intent "link")]]
+     
      [:div.panels
       (if market?
         (marketplace-plugins)
-        (installed-plugins))]]))
+        (installed-plugins))] 
+     [:hr.my-4]
+     (security-warning)
+     (when market?
+       [:div
+      [:p.text-sm
+       (t :plugin/marketplace-notice)]])]))
 
 (def *updates-sub-content-timer (atom nil))
 (def *updates-sub-content (atom nil))
@@ -1356,10 +1373,8 @@
   [pid name url]
   [:div
    [:span.block.whitespace-normal
-    "This plugin "
     [:strong.text-error "#" name]
-    " takes too long to load, affecting the application startup time and
-     potentially causing other plugins to fail to load."]
+    [t :plugin/too-long-to-load]]
 
    [:path.opacity-50
     [:small [:span.pr-1 (ui/icon "folder")] url]]

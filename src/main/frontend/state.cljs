@@ -303,7 +303,9 @@
      :whiteboard/pending-tx-data            {}
      :history/page-only-mode?               false
      ;; db tx-id -> editor cursor
-     :history/tx->editor-cursor             {}})))
+     :history/tx->editor-cursor             {}
+     
+     })))
 
 ;; Block ast state
 ;; ===============
@@ -430,10 +432,10 @@ should be done through this fn in order to get global config and config defaults
     (when-not (string/blank? template)
       (string/trim template))))
 
-(defn all-pages-public?
+(defn collapsed-zoom-buttons?
   []
-  (let [value (:publishing/all-pages-public? (get-config))
-        value (if (some? value) value (:all-pages-public? (get-config)))]
+  (let [value (:style/switch-collapsed-zoom-buttons? (get-config))
+        value (if (some? value) value (:collapsed-zoom-buttons? (get-config)))]
     (true? value)))
 
 (defn collapsed-zoom-buttons?
@@ -594,6 +596,10 @@ Similar to re-frame subscriptions"
                     (get config ::global-config)
                     (get config repo)))))
 
+(defn all-pages-public?
+  []
+  (not (false? (:publishing/all-pages-public? (sub-config)))))
+
 (defn enable-grammarly?
   []
   (true? (:feature/enable-grammarly? (sub-config))))
@@ -638,9 +644,9 @@ Similar to re-frame subscriptions"
   ([repo]
    (not (false? (:feature/enable-whiteboards? (sub-config repo))))))
 
-(defn enable-git-auto-push?
-  [repo]
-  (not (false? (:git-auto-push (sub-config repo)))))
+;; (defn enable-git-auto-push?
+;;   [repo]
+;;   (not (false? (:git-auto-push (sub-config repo)))))
 
 (defn enable-block-timestamps?
   []
@@ -708,6 +714,10 @@ Similar to re-frame subscriptions"
 (defn show-full-blocks?
   []
   (:ui/show-full-blocks? (sub-config)))
+
+(defn journal-template-user-submit?
+  []
+  (:journal-template/user-submit? (sub-config)))
 
 (defn preferred-pasting-file?
   []
@@ -1274,6 +1284,10 @@ Similar to re-frame subscriptions"
 (defn toggle-theme!
   []
   (use-theme-mode! (toggle-theme (:ui/theme @state))))
+
+(defn toggle-help!
+  []
+  (set-state! :ui/help-open? true))
 
 (defn set-custom-theme!
   ([custom-theme]

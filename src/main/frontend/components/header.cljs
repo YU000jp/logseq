@@ -11,7 +11,7 @@
             [frontend.handler :as handler]
             [frontend.handler.file-sync :as file-sync-handler]
             [frontend.components.file-sync :as fs-sync]
-            [frontend.handler.plugin :as plugin-handler]
+            ;;[frontend.handler.plugin :as plugin-handler]
             [frontend.handler.route :as route-handler]
             [frontend.handler.user :as user-handler]
             [frontend.handler.web.nfs :as nfs]
@@ -99,14 +99,13 @@
           :icon (ui/icon "settings")})
 
        (when config/lsp-enabled?
-         {:title (t :plugins)
-          :options {:on-click #(plugin-handler/goto-plugins-dashboard!)}
-          :icon (ui/icon "apps")})
-
-       (when config/lsp-enabled?
-         {:title (t :themes)
+         {:title (t :toggle-theme)
           :options {:on-click #(plugins/open-select-theme!)}
           :icon (ui/icon "palette")})
+
+       {:title (t :right-side-bar/switch-theme)
+        :options {:on-click #(state/toggle-theme!)}
+        :icon (ui/icon "bulb")}
 
        (when current-repo
          {:title (t :export-graph)
@@ -118,24 +117,27 @@
           :options {:href (rfe/href :import)}
           :icon (ui/icon "file-upload")})
 
-       (when-not config/publishing?
-         {:title [:div.flex-row.flex.justify-between.items-center
-                  [:span (t :join-community)]]
-          :options {:href "https://discuss.logseq.com"
-                    :title (t :discourse-title)
-                    :target "_blank"}
-          :icon (ui/icon "brand-discord")})
+       {:title (t :help/shortcuts)
+          :options {:on-click #(state/sidebar-add-block! (state/get-current-repo) "shortcut-settings" :shortcut-settings)} ;; :on-click #(state/pub-event! [:modal/keymap])
+          :icon (ui/icon "keyboard")}
 
-       (when-not config/publishing?
-         {:title [:div.flex-row.flex.justify-between.items-center
-                  [:span (t :help/bug)]]
-          :options {:href (rfe/href :bug-report)}
-          :icon (ui/icon "bug")})
+      ;;  (when-not config/publishing?
+      ;;    {:title [:div.flex-row.flex.justify-between.items-center
+      ;;             [:span (t :join-community)]]
+      ;;     :options {:href "https://discuss.logseq.com"
+      ;;               :title (t :discourse-title)
+      ;;               :target "_blank"}
+      ;;     :icon (ui/icon "brand-discord")})
 
-       (when config/publishing?
-         {:title (t :toggle-theme)
-          :options {:on-click #(state/toggle-theme!)}
-          :icon (ui/icon "bulb")})
+      ;;  (when-not config/publishing?
+      ;;    {:title [:div.flex-row.flex.justify-between.items-center
+      ;;             [:span (t :help/bug)]]
+      ;;     :options {:href (rfe/href :bug-report)}
+      ;;     :icon (ui/icon "bug")})     
+      
+       {:title (t :handbook/title)
+        :options {:on-click #(state/toggle-help!)}
+        :icon (ui/icon "bulb")}
 
        (when login? {:hr true})
        (when login?
@@ -253,6 +255,8 @@
       (when sync-enabled?
         (login))
 
+      (when (util/electron?)
+        (back-and-forward))
       (when config/lsp-enabled?
         [:<>
          (plugins/hook-ui-items :toolbar)
@@ -260,9 +264,6 @@
 
       (when (state/feature-http-server-enabled?)
         (server/server-indicator (state/sub :electron/server)))
-
-      (when (util/electron?)
-        (back-and-forward))
 
       (when-not (mobile-util/native-platform?)
         (new-block-mode))
