@@ -72,6 +72,7 @@
             [logseq.graph-parser.util.page-ref :as page-ref]
             [logseq.graph-parser.whiteboard :as gp-whiteboard]
             [logseq.shui.core :as shui]
+            [logseq.shui.ui :as shui-ui]
             [medley.core :as medley]
             [promesa.core :as p]
             [reitit.frontend.easy :as rfe]
@@ -1681,7 +1682,7 @@
   (reset! *dragging-block block))
 
 (defn- bullet-on-click
-  [e block uuid]
+  [e block uuid collapsed?]
   (cond
     (gp-whiteboard/shape-block? block)
     (route-handler/redirect-to-whiteboard! (get-in block [:block/page :block/name]) {:block-id uuid})
@@ -1698,10 +1699,19 @@
     (do (whiteboard-handler/add-new-block-portal-shape!
          uuid
          (whiteboard-handler/closest-shape (.-target e)))
-        (util/stop e))
+        (util/stop e)) 
+    
+    (gobj/get e "altKey")
+    (do
+         (when uuid (route-handler/redirect-to-page! uuid))
+         (util/stop e))
 
-    :else
-    (when uuid (route-handler/redirect-to-page! uuid))))
+     :else
+    (if collapsed?
+      (editor-handler/expand-block! uuid)
+      (editor-handler/collapse-block! uuid))
+    ;; (when uuid (route-handler/redirect-to-page! uuid))
+    ))
 
 (rum/defc block-children < rum/reactive
   [config block children collapsed?]
@@ -1769,22 +1779,22 @@
                          (editor-handler/expand-block! uuid)
                          (editor-handler/collapse-block! uuid))))}
         [:span {:class (if (or (and control-show?
-                                    (or collapsed?
-                                        (editor-handler/collapsable? uuid {:semantic? true})))
+                                    (or collapsed? (editor-handler/collapsable? uuid {:semantic? true})))
                                (and collapsed? order-list?))
                          "control-show cursor-pointer"
-                         "control-hide")}
+                         (when-not collapsed? "control-hide"))
+                }
          (ui/rotating-arrow collapsed?)]])
 
-     (let [bullet [:a.bullet-link-wrap {:on-click #(bullet-on-click % block uuid)}
+     (let [bullet [:a.bullet-link-wrap {:on-click #(bullet-on-click % block uuid collapsed?)}
                    [:span.bullet-container.cursor
                     {:id (str "dot-" uuid)
-                     :title (str (t :command.editor/zoom-in) " / " (t :help/context-menu))
+                     :title (str "Alt + Click=> " (t :command.editor/zoom-in))
                      :draggable true
                      :on-drag-start (fn [event]
                                       (bullet-drag-start event block uuid block-id))
                      :blockid (str uuid)
-                     :class (str (when collapsed? "bullet-closed")
+                     :class (str ;; (when collapsed? "bullet-closed")
                                  (when (and (:document/mode? config)
                                             (not collapsed?))
                                    " hide-inner-bullet")
