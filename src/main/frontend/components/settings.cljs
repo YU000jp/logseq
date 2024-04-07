@@ -644,7 +644,7 @@
 
 (defn switch-collapsed-zoom-buttons-row [switch-collapsed-zoom-buttons?]
   (toggle "collapsed_zoom_buttons"
-          (t :settings-page/switch-collapsed-zoom-buttons)
+          (str "🚧 " (t :settings-page/switch-collapsed-zoom-buttons))
           switch-collapsed-zoom-buttons?
           (fn []
             (let [value (not switch-collapsed-zoom-buttons?)]
