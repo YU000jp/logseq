@@ -814,6 +814,7 @@
      (when plugins-of-settings (marketplace-row))
      (when plugins-of-settings (plugin-settings-row))
      (when plugins-of-settings (auto-check-for-updates-control))
+     
      (when (and current-repo (util/electron?)) (journal-template-user-submit (state/journal-template-user-submit?)))]))
 
 (rum/defcs settings-style < rum/reactive
@@ -841,7 +842,6 @@
         preferred-date-format (state/get-date-formatter)
         preferred-workflow (state/get-preferred-workflow)
         enable-timetracking? (state/enable-timetracking?)
-        enable-all-pages-public? (state/all-pages-public?)
         switch-collapsed-zoom-buttons? (state/collapsed-zoom-buttons?)
         logical-outdenting? (state/logical-outdenting?)
         show-full-blocks? (state/show-full-blocks?)
@@ -862,10 +862,9 @@
      (when-not (or (util/mobile?) (mobile-util/native-platform?))
        (tooltip-row enable-tooltip?))
      (when-not (or (util/mobile?) (mobile-util/native-platform?))
-       (tooltip-row t enable-tooltip?))
-     (timetracking-row t enable-timetracking?)
-     (enable-all-pages-public-row t enable-all-pages-public?)
-     (auto-push-row t current-repo enable-git-auto-push?)]))
+       (shortcut-tooltip-row enable-shortcut-tooltip?))
+     (timetracking-row enable-timetracking?) 
+     (switch-collapsed-zoom-buttons-row switch-collapsed-zoom-buttons?)]))
 
 (rum/defc settings-git
   []
