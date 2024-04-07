@@ -336,6 +336,14 @@ span.rotating-arrow {
   }
 }
 
+div.block-children-container>div.block-children-left-border {
+  cursor: zoom-in;
+}
+
+div.block-children-container:has(div.block-children>div[data-collapsed="false"])>div.block-children-left-border {
+cursor: zoom-out;
+}
+
 .rotating-arrow svg {
   transition: all 100ms ease-in 0ms;
 }
