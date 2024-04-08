@@ -166,12 +166,14 @@
 
           (when developer-mode?
             {:title   (t :dev/show-page-data)
-             :options {:on-click (fn []
+             :options {:class   "underline"
+                       :on-click (fn []
                                    (dev-common-handler/show-entity-data (:db/id page)))}})
 
           (when developer-mode?
             {:title   (t :dev/show-page-ast)
-             :options {:on-click (fn []
+             :options {:class   "underline"
+                       :on-click (fn []
                                    (let [page (db/pull '[:block/format {:block/file [:file/content]}] (:db/id page))]
                                      (dev-common-handler/show-content-ast
                                       (get-in page [:block/file :file/content])

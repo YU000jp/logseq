@@ -284,6 +284,7 @@
          (when (state/sub [:ui/developer-mode?])
            (ui/menu-link
             {:key      "(Dev) Show block data"
+             :class   "underline"
              :on-click (fn []
                          (dev-common-handler/show-entity-data [:block/uuid block-id]))}
             (t :dev/show-block-data)))
@@ -291,6 +292,7 @@
          (when (state/sub [:ui/developer-mode?])
            (ui/menu-link
             {:key      "(Dev) Show block AST"
+             :class   "underline"
              :on-click (fn []
                          (let [block (db/pull [:block/uuid block-id])]
                            (dev-common-handler/show-content-ast (:block/content block) (:block/format block))))}
