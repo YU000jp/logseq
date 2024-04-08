@@ -17,6 +17,7 @@
     <a href="https://github.com/YU000jp/fork-logseq/graphs/contributors" alt="Contributors"><img src="https://img.shields.io/github/contributors/YU000jp/fork-logseq?color=%2385c8c8&style=for-the-badge"/></a>
     <a href="https://github.com/YU000jp/fork-logseq/blob/master/LICENSE.md" alt="Activity"><img src="https://img.shields.io/github/license/YU000jp/fork-logseq?color=%2385c8c8&style=for-the-badge"/></a>
     <a href="https://github.com/YU000jp/fork-logseq/releases" alt="latest release version"><img src="https://img.shields.io/github/v/release/YU000jp/fork-logseq?color=%2385c8c8&style=for-the-badge"></a>
+    <a href="https://github.com/YU000jp/fork-logseq/releases" alt="Download"><img src="https://img.shields.io/github/downloads/YU000jp/fork-logseq/total.svg?color=%2385c8c8&style=for-the-badge"></a>
 </p>
 
 ## Table of Contents
@@ -29,7 +30,8 @@
 
 ## 🤔 Why was a derivative version created?
 
-The reason for a derivative version is to go beyond plug-ins and add free customization. I am satisfied with the existing system. I want to add ideas to the fundamental aspects of the system, both functionally and design-wise.
+1. The reason for a derivative version is to go beyond plug-ins and add free customization. I am satisfied with the existing system. I want to add ideas to the fundamental aspects of the system, both functionally and design-wise.
+1. Logseq has plans to migrate to a database version that includes extensive changes. When Logseq migrates to the version, many plugins and themes will lose compatibility. Migration isn't always the right thing to do. Some people may want to continue using legacy version.
 
 ## 🙏 Note!
 
@@ -41,8 +43,8 @@ The reason for a derivative version is to go beyond plug-ins and add free custom
 
 ## 👀 How can I use it?
 
-<a href="https://github.com/YU000jp/fork-logseq/releases/latest/"><img src="https://img.shields.io/badge/Download_Logseq_Classic-100000?style=for-the-badge&logo=flatpak&logoColor=white&labelColor=002b36&color=85c8c8" alt="Download Logseq-Classic"/></a> (Windows / Linux)
-1. [Download] the latest version of Logseq-Classic
+- ⭕Windows / Linux: <a href="https://github.com/YU000jp/fork-logseq/releases/latest/"><img src="https://img.shields.io/badge/Download_Logseq_Classic-100000?style=for-the-badge&logo=flatpak&logoColor=white&labelColor=002b36&color=85c8c8" alt="Download Logseq-Classic"/></a>
+- ❌Mac: If we receive enough donations, we may be able to release a Mac version. (https://www.buymeacoffee.com/yu000japan)
 
 ## 🚧 History
 
