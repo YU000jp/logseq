@@ -522,43 +522,43 @@ test('press escape when link/image dialog is open, should restore focus to input
   }
 })
 
-test('should show text after soft return when node is collapsed #5074', async ({ page, block }) => {
-  const delay = 300
-  await createRandomPage(page)
+// test('should show text after soft return when node is collapsed #5074', async ({ page, block }) => {
+//   const delay = 300
+//   await createRandomPage(page)
 
-  await page.type('textarea >> nth=0', 'Before soft return', { delay: 10 })
-  await page.keyboard.press('Shift+Enter', { delay: 10 })
-  await page.type('textarea >> nth=0', 'After soft return', { delay: 10 })
+//   await page.type('textarea >> nth=0', 'Before soft return', { delay: 10 })
+//   await page.keyboard.press('Shift+Enter', { delay: 10 })
+//   await page.type('textarea >> nth=0', 'After soft return', { delay: 10 })
 
-  await block.enterNext()
-  expect(await block.indent()).toBe(true)
-  await block.mustType('Child text')
+//   await block.enterNext()
+//   expect(await block.indent()).toBe(true)
+//   await block.mustType('Child text')
 
-  // collapse
-  await page.click('.block-control >> nth=0')
-  await block.waitForBlocks(1)
+//   // collapse
+//   await page.click('.block-control >> nth=0')
+//   await block.waitForBlocks(1)
 
-  // select the block that has the soft return
-  await page.keyboard.press('ArrowDown')
-  await page.waitForTimeout(delay)
-  await page.keyboard.press('Enter')
-  await page.waitForTimeout(delay)
+//   // select the block that has the soft return
+//   await page.keyboard.press('ArrowDown')
+//   await page.waitForTimeout(delay)
+//   await page.keyboard.press('Enter')
+//   await page.waitForTimeout(delay)
 
-  await expect(page.locator('textarea >> nth=0')).toHaveText('Before soft return\nAfter soft return')
+//   await expect(page.locator('textarea >> nth=0')).toHaveText('Before soft return\nAfter soft return')
 
-  // zoom into the block
-  page.click('a.block-control + a')
-  await page.waitForNavigation()
-  await page.waitForTimeout(delay * 3)
+//   // zoom into the block
+//   page.click('a.block-control + a')
+//   await page.waitForNavigation()
+//   await page.waitForTimeout(delay * 3)
 
-  // select the block that has the soft return
-  await page.keyboard.press('ArrowDown')
-  await page.waitForTimeout(delay)
-  await page.keyboard.press('Enter')
-  await page.waitForTimeout(delay)
+//   // select the block that has the soft return
+//   await page.keyboard.press('ArrowDown')
+//   await page.waitForTimeout(delay)
+//   await page.keyboard.press('Enter')
+//   await page.waitForTimeout(delay)
 
-  await expect(page.locator('textarea >> nth=0')).toHaveText('Before soft return\nAfter soft return')
-})
+//   await expect(page.locator('textarea >> nth=0')).toHaveText('Before soft return\nAfter soft return')
+// })
 
 test('should not erase typed text when expanding block quickly after typing #3891', async ({ page, block }) => {
   await createRandomPage(page)

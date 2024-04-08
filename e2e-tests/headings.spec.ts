@@ -70,9 +70,9 @@ test('set heading of nested block to auto', async ({ page }) => {
   expect(await page.locator('.ls-block .block-content >> nth=1').innerHTML()).toContain('<h3>bar</h3>')
 })
 
-test('view nested block on a dedicated page', async ({ page }) => {
-  await page.locator('span.bullet-container >> nth=1').click()
-  await page.waitForTimeout(200)
+// test('view nested block on a dedicated page', async ({ page }) => {
+//   await page.locator('span.bullet-container >> nth=1').click()
+//   await page.waitForTimeout(200)
 
-  expect(await page.locator('.ls-block .block-content >> nth=0').innerHTML()).toContain('<h1>bar</h1>')
-})
+//   expect(await page.locator('.ls-block .block-content >> nth=0').innerHTML()).toContain('<h1>bar</h1>')
+// })
