@@ -203,16 +203,16 @@
                        (editor-handler/copy-block-ref! block-id #(util/format "{{embed ((%s))}}" %)))}
           (t :content/copy-block-emebed))
 
-         ;; TODO Logseq protocol mobile support
-         (when (util/electron?)
-           (ui/menu-link
-            {:key      "Copy block URL"
-             :on-click (fn [_e]
-                         (let [current-repo (state/get-current-repo)
-                               tap-f (fn [block-id]
-                                       (url-util/get-logseq-graph-uuid-url nil current-repo block-id))]
-                           (editor-handler/copy-block-ref! block-id tap-f)))}
-            (t :content/copy-block-url)))
+        ;;  ;; TODO Logseq protocol mobile support
+        ;;  (when (util/electron?)
+        ;;    (ui/menu-link
+        ;;     {:key      "Copy block URL"
+        ;;      :on-click (fn [_e]
+        ;;                  (let [current-repo (state/get-current-repo)
+        ;;                        tap-f (fn [block-id]
+        ;;                                (url-util/get-logseq-graph-uuid-url nil current-repo block-id))]
+        ;;                    (editor-handler/copy-block-ref! block-id tap-f)))}
+        ;;     (t :content/copy-block-url)))
 
          (ui/menu-link
           {:key      "Copy as"
