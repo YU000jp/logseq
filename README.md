@@ -6,7 +6,7 @@
 <h1 align="center">Logseq-Classic (app)</h1>
 
 <h4 align="center">
-    "Logseq Classic" is a customized derivative version of Logseq.<br/><br/>
+    "Logseq-Classic" is a customized derivative version of Logseq.<br/><br/>
     My belief is to create an environment that is easier to use and has a higher degree of freedom on local.<br/>
     <br/>
     🚧 Active development is underway.<br/>
@@ -40,8 +40,8 @@ The reason for a derivative version is to go beyond plug-ins and add free custom
 
 ## 👀 How can I use it?
 
-<a href="https://github.com/YU000jp/fork-logseq/releases/latest/"><img src="https://img.shields.io/badge/Download_Logseq_Classic-100000?style=for-the-badge&logo=flatpak&logoColor=white&labelColor=002b36&color=85c8c8" alt="Download Logseq Classic"/></a> (Windows / Linux)
-1. [Download] the latest version of Logseq Classic
+<a href="https://github.com/YU000jp/fork-logseq/releases/latest/"><img src="https://img.shields.io/badge/Download_Logseq_Classic-100000?style=for-the-badge&logo=flatpak&logoColor=white&labelColor=002b36&color=85c8c8" alt="Download Logseq-Classic"/></a> (Windows / Linux)
+1. [Download] the latest version of Logseq-Classic
 
 ## 🚧 History
 

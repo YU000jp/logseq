@@ -243,7 +243,7 @@
            :disabled loading?}
           (when loading?
             (ui/tabler-icon "loader2" {:class "animate-spin"}))
-          "Logseq Classic Button"
+          "Logseq-Classic Button"
           (ui/tabler-icon "arrow-right")))
 
       (ui/button {:variant :outline :size :sm} "Outline")

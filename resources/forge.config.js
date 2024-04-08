@@ -30,7 +30,7 @@ module.exports = {
     {
       'name': '@electron-forge/maker-squirrel',
       'config': {
-        'name': 'Logseq',
+        'name': 'Logseq-Classic',
         'setupIcon': './icons/logseq.ico',
         'loadingGif': './icons/installing.gif',
         // 'certificateFile': process.env.CODE_SIGN_CERTIFICATE_FILE,
@@ -48,7 +48,8 @@ module.exports = {
     },
     {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin', 'linux', 'win32'],
+      platforms: [ 'linux', 'win32'],
+      // 'darwin',
     },
 
     {
