@@ -802,15 +802,13 @@
 (rum/defcs settings-general < rum/reactive
   [current-repo]
   (let [preferred-language (state/sub [:preferred-language])
-        enable-all-pages-public? (state/all-pages-public?) 
         plugins-of-settings (and config/lsp-enabled? (seq (plugin-handler/get-enabled-plugins-if-setting-schema)))]
     [:div.panel-wrap.is-general
      (version-row version) 
      (when (and (or util/mac? util/win32?) (util/electron?)) (app-auto-update-row))
      (language-row preferred-language)
      (when current-repo (edit-config-edn))
-     (when (config/global-config-enabled?) (edit-global-config-edn))
-     (enable-all-pages-public-row enable-all-pages-public?) 
+     (when (config/global-config-enabled?) (edit-global-config-edn)) 
      (when plugins-of-settings (marketplace-row))
      (when plugins-of-settings (plugin-settings-row))
      (when plugins-of-settings (auto-check-for-updates-control))
@@ -896,7 +894,8 @@
      ;;(usage-diagnostics-row instrument-disabled?)
      (when-not (mobile-util/native-platform?) (developer-mode-row developer-mode?))
      (when (util/electron?) (https-user-agent-row https-agent-opts))
-     (when (util/electron?) (auto-chmod-row))
+     (when (util/electron?) (auto-chmod-row)) 
+     (enable-all-pages-public-row (state/all-pages-public?)) 
      (when (and (util/electron?) (not (config/demo-graph? current-repo))) (filename-format-row))
      (clear-cache-row)
 
