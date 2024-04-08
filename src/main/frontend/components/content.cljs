@@ -94,17 +94,18 @@
 
    [:hr.menu-separator]
 
-   (ui/menu-link
-    {:key "Expand all"
-     :on-click editor-handler/expand-all-selection!
-     :shortcut (ui/keyboard-shortcut-from-config :editor/expand-block-children)}
-    (t :editor/expand-block-children))
+  ;;  (ui/menu-link
+  ;;   {:key "Expand all"
+  ;;    :on-click editor-handler/expand-all-selection!
+  ;;    :shortcut (ui/keyboard-shortcut-from-config :editor/expand-block-children)}
+  ;;   (t :editor/expand-block-children))
 
-   (ui/menu-link
-    {:key "Collapse all"
-     :on-click editor-handler/collapse-all-selection!
-     :shortcut (ui/keyboard-shortcut-from-config :editor/collapse-block-children)}
-    (t :editor/collapse-block-children))])
+  ;;  (ui/menu-link
+  ;;   {:key "Collapse all"
+  ;;    :on-click editor-handler/collapse-all-selection!
+  ;;    :shortcut (ui/keyboard-shortcut-from-config :editor/collapse-block-children)}
+  ;;   (t :editor/collapse-block-children))
+   ])
 
 (defonce *template-including-parent? (atom nil))
 
@@ -257,19 +258,19 @@
 
          [:hr.menu-separator]
 
-         (ui/menu-link
-          {:key      "Expand all"
-           :on-click (fn [_e]
-                       (editor-handler/expand-all! block-id))
-           :shortcut (ui/keyboard-shortcut-from-config :editor/expand-block-children)}
-          (t :editor/expand-block-children))
+        ;;  (ui/menu-link
+        ;;   {:key      "Expand all"
+        ;;    :on-click (fn [_e]
+        ;;                (editor-handler/expand-all! block-id))
+        ;;    :shortcut (ui/keyboard-shortcut-from-config :editor/expand-block-children)}
+        ;;   (t :editor/expand-block-children))
 
-         (ui/menu-link
-          {:key      "Collapse all"
-           :on-click (fn [_e]
-                       (editor-handler/collapse-all! block-id {}))
-           :shortcut (ui/keyboard-shortcut-from-config :editor/collapse-block-children)}
-          (t :editor/collapse-block-children))
+        ;;  (ui/menu-link
+        ;;   {:key      "Collapse all"
+        ;;    :on-click (fn [_e]
+        ;;                (editor-handler/collapse-all! block-id {}))
+        ;;    :shortcut (ui/keyboard-shortcut-from-config :editor/collapse-block-children)}
+        ;;   (t :editor/collapse-block-children))
 
          (when (state/sub [:plugin/simple-commands])
            (when-let [cmds (state/get-plugins-commands-with-type :block-context-menu-item)]
