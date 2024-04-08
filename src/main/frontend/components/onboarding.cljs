@@ -28,21 +28,22 @@
 
           {:title (t :help/title-community)
            :children [[(t :help/awesome-logseq) "https://github.com/logseq/awesome-logseq"]
-                      [(t :help/blog) "https://blog.logseq.com"]
+                      ;; [(t :help/blog) "https://blog.logseq.com"]
                       [discourse-with-icon "https://discuss.logseq.com"]]}
 
-          {:title (t :help/title-development)
-           :children [[(t :help/roadmap) "https://trello.com/b/8txSM12G/roadmap"]
-                      [(t :help/bug) "https://github.com/YU000jp/fork-logseq/issues/new?labels=from:in-app&template=bug_report.yaml"]
-                      [(t :help/feature) "https://discuss.logseq.com/c/feature-requests/"]
-                      [(t :help/changelog) "https://docs.logseq.com/#/page/changelog"]]}
+          ;; {:title (t :help/title-development)
+          ;;  :children [[(t :help/roadmap) "https://trello.com/b/8txSM12G/roadmap"]
+          ;;             [(t :help/bug) "https://github.com/YU000jp/fork-logseq/issues/new?labels=from:in-app&template=bug_report.yaml"]
+          ;;             [(t :help/feature) "https://discuss.logseq.com/c/feature-requests/"]
+          ;;             [(t :help/changelog) "https://docs.logseq.com/#/page/changelog"]]}
 
-          {:title (t :help/title-about)
-           :children [[(t :help/about) "https://blog.logseq.com/about/"]]}
+          ;; {:title (t :help/title-about)
+          ;;  :children [[(t :help/about) "https://blog.logseq.com/about/"]]}
 
-          {:title (t :help/title-terms)
-           :children [[(t :help/privacy) "https://blog.logseq.com/privacy-policy/"]
-                      [(t :help/terms) "https://blog.logseq.com/terms/"]]}]]
+          ;; {:title (t :help/title-terms)
+          ;;  :children [[(t :help/privacy) "https://blog.logseq.com/privacy-policy/"]
+          ;;             [(t :help/terms) "https://blog.logseq.com/terms/"]]}
+          ]]
 
 
 
