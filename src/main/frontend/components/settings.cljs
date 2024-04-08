@@ -89,11 +89,11 @@
                                            config/revision]]
                                          :info
                                          false))}
-        (str "Logseq " version)]
+        (str "Logseq-Classic " version)]
 
        [:a.text-sm.fade-link.underline.inline
         {:target "_blank"
-         :href "https://docs.logseq.com/#/page/changelog"}
+         :href "https://github.com/YU000jp/fork-logseq/blob/logseq-classic-develop/CHANGELOG.md"}
         (t :settings-page/changelog)]]]
 
      (when-not (or update-pending?
