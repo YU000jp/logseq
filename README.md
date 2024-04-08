@@ -7,6 +7,7 @@
 
 <h4 align="center">
     "Logseq-Classic" is a customized derivative version of Logseq.<br/><br/>
+    This app will include features that Logseq has not approved for implementation.<br/>
     My belief is to create an environment that is easier to use and has a higher degree of freedom on local.<br/>
     <br/>
     🚧 Active development is underway.<br/>
