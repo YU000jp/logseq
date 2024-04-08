@@ -1,5 +1,5 @@
 {
-  "name": "Logseq-Classic",
+  "name": "LogseqClassic",
   "productName": "Logseq",
   "version": "1.10.8",
   "main": "electron.js",
