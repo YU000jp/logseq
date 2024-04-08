@@ -1,12 +1,12 @@
 {
-  "name": "Logseq",
+  "name": "Logseq Classic",
   "productName": "Logseq",
-  "version": "0.10.8",
+  "version": "1.10.8",
   "main": "electron.js",
-  "author": "Logseq",
+  "author": "Logseq / @YU000jp",
   "license": "AGPL-3.0",
-  "description": "A privacy-first, open-source platform for knowledge management and collaboration.",
-  "repository": "https://github.com/logseq/logseq",
+  "description": "'Logseq Classic' is a customized derivative version of Logseq.",
+  "repository": "https://github.com/YU000jp/fork-logseq",
   "scripts": {
     "electron:dev": "electron-forge start",
     "electron:debug": "electron-forge start --inspect-electron",

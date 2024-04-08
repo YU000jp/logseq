@@ -64,7 +64,7 @@
 
 (defn string-join-path
   "Replace all `strings/join` used to construct paths with this function to reduce lint output.
-  https://github.com/logseq/logseq/pull/8679"
+  https://github.com/YU000jp/fork-logseq/pull/8679"
   [parts]
   (string/join "/" parts))
 
