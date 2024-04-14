@@ -178,10 +178,11 @@
   {:will-mount (fn [state]
                  (let [page-e (second (:rum/args state))
                        page-name (:block/name page-e)]
-                   (when (and (db/journal-page? page-name)
-                              (>= (date/journal-title->int page-name)
-                                  (date/journal-title->int (date/today))))
-                     (state/pub-event! [:journal/insert-template page-name false])))
+                   (when-not (state/journal-template-user-submit?)
+                     (when (and (db/journal-page? page-name)
+                                (>= (date/journal-title->int page-name)
+                                    (date/journal-title->int (date/today))))
+                       (state/pub-event! [:journal/insert-template page-name false]))))
                  state)}
   [repo page-e {:keys [sidebar? whiteboard?] :as config}]
   (when page-e
