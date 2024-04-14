@@ -82,7 +82,7 @@
       [:div.journal-item.content {:key name}
        (journal-cp name)])
     {:has-more (page-handler/has-more-journals?)
-     :more-class "text-4xl"
+     :more-class "text-l"
      :on-top-reached page-handler/create-today-journal!
      :on-load (fn []
                 (page-handler/load-more-journals!))})])
