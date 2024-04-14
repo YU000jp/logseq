@@ -191,7 +191,9 @@
           block? (boolean block-id)
           page-blocks (get-blocks repo page-name block-id)]
       (if (empty? page-blocks)
-        (dummy-block page-name)
+        ;; Empty
+        (dummy-block page-name) 
+        ;; Not empty
         (let [document-mode? (state/sub :document/mode?)
               block-entity (db/entity (if block-id
                                        [:block/uuid block-id]
