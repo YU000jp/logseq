@@ -8,7 +8,6 @@
 <h4 align="center">
     "Logseq-Classic" is a customized derivative version of Logseq.<br/><br/>
     This app will include features that Logseq has not approved for implementation.<br/>
-    My belief is to create an environment that is easier to use and has a higher degree of freedom on local.<br/>
     <br/>
     🚧 Active development is underway.<br/>
 </h4>
@@ -30,7 +29,7 @@
 
 ## 🤔 Why was a derivative version created?
 
-1. The reason for a derivative version is to go beyond plug-ins and add free customization. I am satisfied with the existing system. I want to add ideas to the fundamental aspects of the system, both functionally and design-wise.
+1. My belief is to create an environment that is easier to use and has a higher degree of freedom on local. The reason for a derivative version is to go beyond plugins and add free customization. I am satisfied with the existing system. I want to add ideas to the fundamental aspects of the system, both functionally and design-wise.
 1. Logseq has plans to migrate to a database version that includes extensive changes. When Logseq migrates to the version, many plugins and themes will lose compatibility. Migration isn't always the right thing to do. Some people may want to continue using legacy version.
 
 ## 🙏 Note!
