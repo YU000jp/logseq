@@ -39,6 +39,7 @@
     > If it becomes popular and we get enough donations, we will make it compatible with *Mac*. This is because it costs $99 per year to perform "code signing" and "notarization" in order to be established as a *Mac* app.
 1. It is based on **Logseq v0.10.8** and does not include any later updates.
 1. The graphs used in Logseq and derived versions are common. You can switch at any time.
+1. If you have any new suggestions, please open an issue or discussion. 
 
 ## 👀 How can I use it?
 
