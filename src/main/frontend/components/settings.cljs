@@ -642,13 +642,13 @@
 ;;             (let [value (not enable-block-timestamps?)]
 ;;               (config-handler/set-config! :feature/enable-block-timestamps? value)))))
 
-(defn switch-collapsed-zoom-buttons-row [switch-collapsed-zoom-buttons?]
-  (toggle "collapsed_zoom_buttons"
-          (str "🚧 " (t :settings-page/switch-collapsed-zoom-buttons))
-          switch-collapsed-zoom-buttons?
-          (fn []
-            (let [value (not switch-collapsed-zoom-buttons?)]
-              (config-handler/set-config! :style/switch-collapsed-zoom-buttons? value)))))
+;; (defn switch-collapsed-zoom-buttons-row [switch-collapsed-zoom-buttons?]
+;;   (toggle "collapsed_zoom_buttons"
+;;           (str "🚧 " (t :settings-page/switch-collapsed-zoom-buttons))
+;;           switch-collapsed-zoom-buttons?
+;;           (fn []
+;;             (let [value (not switch-collapsed-zoom-buttons?)]
+;;               (config-handler/set-config! :style/switch-collapsed-zoom-buttons? value)))))
 
 (defn zotero-settings-row []
   [:div.it.sm:grid.sm:grid-cols-3.sm:gap-4.sm:items-center
@@ -826,7 +826,7 @@
         preferred-date-format (state/get-date-formatter)
         preferred-workflow (state/get-preferred-workflow)
         enable-timetracking? (state/enable-timetracking?)
-        switch-collapsed-zoom-buttons? (state/collapsed-zoom-buttons?)
+        ;; switch-collapsed-zoom-buttons? (state/collapsed-zoom-buttons?)
         logical-outdenting? (state/logical-outdenting?)
         show-full-blocks? (state/show-full-blocks?)
         preferred-pasting-file? (state/preferred-pasting-file?)
@@ -849,7 +849,8 @@
        (shortcut-tooltip-row enable-shortcut-tooltip?))
      (timetracking-row enable-timetracking?) 
      (when (and current-repo (util/electron?)) (journal-create-user-submit (state/journal-create-user-submit?))) 
-     (switch-collapsed-zoom-buttons-row switch-collapsed-zoom-buttons?)]))
+    ;;  (switch-collapsed-zoom-buttons-row switch-collapsed-zoom-buttons?)
+     ]))
 
 (rum/defc settings-git
   []
@@ -1277,7 +1278,7 @@
                [:features "features" (t :settings-page/tab-features) (ui/icon "app-feature")]
                ;; (when (util/electron?)
                ;;   [:assets "assets" (t :settings-page/tab-assets) (ui/icon "box")])
-               [:advanced "advanced" (t :settings-page/tab-advanced) (ui/icon "bulb")] 
+               [:advanced "advanced" (str (t :settings-page/tab-general) " / " (t :settings-page/tab-advanced)) (ui/icon "adjustments")] ;; ui/icon "bulb"
                (when (and (util/electron?) (state/get-git-auto-commit-enabled?))
                  [:version-control "git" (t :settings-page/tab-version-control) (ui/icon "history")])
                ]]
