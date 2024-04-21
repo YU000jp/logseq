@@ -207,7 +207,8 @@
                                                   (not (:ui/left-sidebar-open? @state/state))))})
         custom-home-page? (and (state/custom-home-page?)
                                (= (state/sub-default-home-page) (state/get-current-page)))
-        sync-enabled? (file-sync-handler/enable-sync?)]
+        ;; sync-enabled? (file-sync-handler/enable-sync?)
+        ]
     [:div.cp__header.drag-region#head
      {:class           (util/classnames [{:electron-mac   electron-mac?
                                           :native-ios     (mobile-util/native-ios?)
@@ -252,8 +253,8 @@
                  (not custom-home-page?))
         (home-button))
 
-      (when sync-enabled?
-        (login))
+      ;; (when sync-enabled?
+      ;;   (login))
 
       (when (util/electron?)
         (back-and-forward))
