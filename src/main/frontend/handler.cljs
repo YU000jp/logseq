@@ -68,7 +68,12 @@
                                          (config/get-repo-dir repo))))
                 (page-handler/create-today-journal!))))]
     (f)
-    (js/setInterval f 60000)))
+    ;; インターバルをやめて、0時0分になったらチェックする
+    (let [now (js/Date.)
+          tomorrow (js/Date. (.getFullYear now) (.getMonth now) (.getDate now) 0 0 0 0)
+          time-to-midnight (- (.getTime tomorrow) (.getTime now))]
+      (js/setTimeout f time-to-midnight)
+      (js/setInterval f (* 24 60 60 1000)))))
 
 (defn- instrument!
   []
