@@ -35,6 +35,7 @@
             [frontend.fs.capacitor-fs :as capacitor-fs]
             [frontend.fs.nfs :as nfs]
             [frontend.fs.sync :as sync]
+            [frontend.date :as date]
             [frontend.fs.watcher-handler :as fs-watcher]
             [frontend.handler.common :as common-handler]
             [frontend.handler.editor :as editor-handler]
@@ -721,15 +722,21 @@
    {:center? true :close-btn? false :close-backdrop? false}))
 
 (defmethod handle :journal/insert-template [[_ page-name user-submit]]
-  (let [page-name (util/page-name-sanity-lc page-name)]
+  (let [page-name (util/page-name-sanity-lc page-name)
+        template (state/get-default-journal-template)
+        title (date/today)]
+    (page-handler/create! title {:redirect? false
+                                 :split-namespace? false
+                                 :create-first-block? (not template)
+                                 :journal? true})
     (when-let [page (db/pull [:block/name page-name])]
       (when (db/page-empty? (state/get-current-repo) page-name)
         (when-let [template (state/get-default-journal-template)]
-            (when (or (not (state/journal-template-user-submit?)) user-submit)
-                (editor-handler/insert-template!
-                 nil
-                 template
-                 {:target page})))))))
+          (when (or (not (state/journal-create-user-submit?)) user-submit)
+            (editor-handler/insert-template!
+             nil
+             template
+             {:target page})))))))
 
 (defmethod handle :editor/set-org-mode-heading [[_ block heading]]
   (when-let [id (:block/uuid block)]

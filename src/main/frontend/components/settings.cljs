@@ -550,11 +550,11 @@
           show-full-blocks?
           config-handler/toggle-show-full-blocks!))
 
-(defn journal-template-user-submit [enabled?]
+(defn journal-create-user-submit [enabled?]
   (toggle "journal_template_user_submit"
-          (t :settings-page/journal-template-user-submit)
+          (t :settings-page/journal-create-user-submit)
           enabled?
-          config-handler/toggle-journal-template-user-submit!))
+          config-handler/toggle-journal-create-user-submit!))
 
 (defn preferred-pasting-file [preferred-pasting-file?]
   (toggle "preferred_pasting_file"
@@ -813,7 +813,7 @@
      (when plugins-of-settings (plugin-settings-row))
      (when plugins-of-settings (auto-check-for-updates-control))
      
-     (when (and current-repo (util/electron?)) (journal-template-user-submit (state/journal-template-user-submit?)))]))
+     (when (and current-repo (util/electron?)) (journal-create-user-submit (state/journal-create-user-submit?)))]))
 
 (rum/defcs settings-style < rum/reactive
   [current-repo]

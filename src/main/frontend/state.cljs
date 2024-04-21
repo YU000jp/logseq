@@ -709,7 +709,7 @@ Similar to re-frame subscriptions"
   []
   (:ui/show-full-blocks? (sub-config)))
 
-(defn journal-template-user-submit?
+(defn journal-create-user-submit?
   []
   (:journal-template/user-submit? (sub-config)))
 

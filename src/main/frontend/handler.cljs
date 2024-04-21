@@ -58,7 +58,7 @@
             ;;  false)
 
 
-(defn- watch-for-date!
+(defn- watch-for-date! ;; 日付が変わった場合に、日記を作成する
   []
   (let [f (fn []
             #_:clj-kondo/ignore
@@ -66,10 +66,13 @@
               (when (and (not (state/nfs-refreshing?))
                          (not (contains? (:file/unlinked-dirs @state/state)
                                          (config/get-repo-dir repo))))
-                ;; Don't create the journal file until user writes something
+                ;;通知を表示する
+                (notification/show! (t :notification/crete-journal-date-change)
+                                    :info
+                                    false)
                 (page-handler/create-today-journal!))))]
     (f)
-    (js/setInterval f 5000)))
+    (js/setInterval f 60000)))
 
 (defn- instrument!
   []

@@ -133,19 +133,17 @@
                             "3px solid #ccc"
                             nil)}}
      (when (db/journal-page? page-name)
-     (when (state/journal-template-user-submit?)
-       (when (state/get-default-journal-template)
-         [:div.flex.flex-row.pt-10
-          [:div.flex.flex-row.items-center.mr-2.ml-1 {:style {:height 24}}
-           [:span.bullet-container.cursor
-            [:span.bullet]]]
-          [:div.flex.flex-1.pb-12
-           [:span.mb-10
-            {:on-click click-handler-fn}
-            ((ui/make-confirm-modal
-              {:title    (t :on-boarding/insert-today-journal)
-               :tag     "insert-today-journal"
-               :on-confirm #((state/pub-event! [:journal/insert-template page-name true]))}))]]])))
+       (when (state/journal-create-user-submit?)
+         (when (state/get-default-journal-template)
+           [:div.flex.flex-row.pt-10
+            [:div.flex.flex-row.items-center.mr-2.ml-1 {:style {:height 24}}
+             [:span.bullet-container.cursor
+              [:span.bullet]]]
+            [:div.flex.flex-1.pb-12
+             [:span.mb-10
+              ((ui/make-confirm-modal
+                {:title    (t :on-boarding/insert-a-journal)
+                 :on-confirm #((state/pub-event! [:journal/insert-template page-name true]))}))]]])))
 
      [:div.flex.flex-row
       [:div.flex.flex-row.items-center.mr-2.ml-1 {:style {:height 24}}
@@ -178,7 +176,7 @@
   {:will-mount (fn [state]
                  (let [page-e (second (:rum/args state))
                        page-name (:block/name page-e)]
-                   (when-not (state/journal-template-user-submit?)
+                   (when-not (state/journal-create-user-submit?)
                      (when (and (db/journal-page? page-name)
                                 (>= (date/journal-title->int page-name)
                                     (date/journal-title->int (date/today))))
