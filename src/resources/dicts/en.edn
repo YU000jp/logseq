@@ -655,7 +655,6 @@
  :file-sync/connectivity-testing-failed "Network connection testing failed. Please check your network settings. Test URLs: "
 
  :notification/clear-all "Clear all"
- :notification/crete-journal-date-change            "The date has changed now."
  :shortcut.category/basics "Basics"
  :shortcut.category/formatting "Formatting"
  :shortcut.category/navigating "Navigation"

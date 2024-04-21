@@ -676,7 +676,6 @@
 
 
 
- :notification/crete-journal-date-change "日付が変わりました。"
  :command.date-picker/complete "日付選択：選択した日で決定"
  :command.date-picker/prev-day "日付選択：前の日を選ぶ"
  :command.date-picker/next-day "日付選択：次の日を選ぶ"

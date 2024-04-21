@@ -66,10 +66,6 @@
               (when (and (not (state/nfs-refreshing?))
                          (not (contains? (:file/unlinked-dirs @state/state)
                                          (config/get-repo-dir repo))))
-                ;;通知を表示する
-                (notification/show! (t :notification/crete-journal-date-change)
-                                    :info
-                                    false)
                 (page-handler/create-today-journal!))))]
     (f)
     (js/setInterval f 60000)))
