@@ -22,7 +22,7 @@
             [frontend.handler.ui :as ui-handler]
             [frontend.handler.user :as user-handler]
             [frontend.mobile.util :as mobile-util]
-            ;;[frontend.modules.instrumentation.core :as instrument]
+            [frontend.modules.instrumentation.core :as instrument]
             [frontend.modules.shortcut.data-helper :as shortcut-helper]
             [frontend.components.shortcut :as shortcut]
             [frontend.spec.storage :as storage-spec]
@@ -666,19 +666,21 @@
          (state/close-settings!)
          (route-handler/redirect! {:to :zotero-setting})))]]])
 
-;; (defn usage-diagnostics-row [instrument-disabled?]
-;;   (toggle "usage-diagnostics"
-;;           (t :settings-page/disable-sentry)
-;;           (not instrument-disabled?)
-;;           (fn [] (instrument/disable-instrument
-;;                    (not instrument-disabled?)))
-;;           [:span.text-sm.opacity-50 (t :settings-page/disable-sentry-desc)]))
+(defn usage-diagnostics-row [instrument-disabled?]
+  (toggle "usage-diagnostics"
+          (t :settings-page/disable-sentry)
+          (not instrument-disabled?)
+          (fn [] (instrument/disable-instrument
+                   (not instrument-disabled?)))
+          [:span.text-sm.opacity-50 (t :settings-page/disable-sentry-desc)]))
 
 (defn clear-cache-row []
   (row-with-button-action {:left-label   (t :settings-page/clear-cache)
                            :button-label (t :settings-page/clear)
                            :on-click     #(state/pub-event! [:graph/clear-cache!])
-                           :-for         "clear_cache"}))
+                           :-for         "clear_cache"
+                           :desc  (t :settings-page/clear-cache-warning)
+                           }))
 
 (defn version-row [version]
   (row-with-button-action {:left-label (t :settings-page/current-version)
@@ -799,22 +801,6 @@
         (js/logseq.api.relaunch))
      [:span.text-sm.opacity-50 (t :settings-page/native-titlebar-desc)])))
 
-(rum/defcs settings-general < rum/reactive
-  [current-repo]
-  (let [preferred-language (state/sub [:preferred-language])
-        ;; plugins-of-settings (and config/lsp-enabled? (seq (plugin-handler/get-enabled-plugins-if-setting-schema)))
-        ]
-    [:div.panel-wrap.is-general
-     (version-row version) 
-     (when (and (or util/mac? util/win32?) (util/electron?)) (app-auto-update-row))
-     (language-row preferred-language)
-     (when current-repo (edit-config-edn))
-     (when (config/global-config-enabled?) (edit-global-config-edn)) 
-    ;;  (when plugins-of-settings (marketplace-row))
-    ;;  (when plugins-of-settings (plugin-settings-row))
-    ;;  (when plugins-of-settings (auto-check-for-updates-control)) 
-     (when (and current-repo (util/electron?)) (journal-create-user-submit (state/journal-create-user-submit?)))]))
-
 (rum/defcs settings-style < rum/reactive
   [current-repo]
   (let [theme (state/sub :ui/theme)
@@ -862,6 +848,7 @@
      (when-not (or (util/mobile?) (mobile-util/native-platform?))
        (shortcut-tooltip-row enable-shortcut-tooltip?))
      (timetracking-row enable-timetracking?) 
+     (when (and current-repo (util/electron?)) (journal-create-user-submit (state/journal-create-user-submit?))) 
      (switch-collapsed-zoom-buttons-row switch-collapsed-zoom-buttons?)]))
 
 (rum/defc settings-git
@@ -885,23 +872,39 @@
    (switch-git-commit-on-close-row)
    (git-auto-commit-seconds)])
 
+
 (rum/defc settings-advanced < rum/reactive
   [current-repo]
-  (let [;;instrument-disabled? (state/sub :instrument/disabled?)
+  (let [instrument-disabled? (state/sub :instrument/disabled?)
         developer-mode? (state/sub [:ui/developer-mode?])
-        https-agent-opts (state/sub [:electron/user-cfgs :settings/agent])]
+        https-agent-opts (state/sub [:electron/user-cfgs :settings/agent])
+        preferred-language (state/sub [:preferred-language])
+        ;; plugins-of-settings (and config/lsp-enabled? (seq (plugin-handler/get-enabled-plugins-if-setting-schema)))
+        ]
     [:div.panel-wrap.is-advanced
-     ;;(usage-diagnostics-row instrument-disabled?)
-     (when-not (mobile-util/native-platform?) (developer-mode-row developer-mode?))
-     (when (util/electron?) (https-user-agent-row https-agent-opts))
-     (when (util/electron?) (auto-chmod-row)) 
-     (enable-all-pages-public-row (state/all-pages-public?)) 
-     (when (and (util/electron?) (not (config/demo-graph? current-repo))) (filename-format-row))
+     (version-row version)
+     (when (or util/mac? util/win32?)
+       (app-auto-update-row))
+     (language-row preferred-language)
+     (when current-repo
+       (edit-config-edn))
+     (when (config/global-config-enabled?)
+       (edit-global-config-edn))
+         ;;  (when plugins-of-settings (marketplace-row))
+         ;;  (when plugins-of-settings (plugin-settings-row))
+         ;;  (when plugins-of-settings (auto-check-for-updates-control)) 
+     (https-user-agent-row https-agent-opts)
+     (auto-chmod-row)
+     (enable-all-pages-public-row (state/all-pages-public?))
+     (filename-format-row)
+     (usage-diagnostics-row instrument-disabled?)
      (clear-cache-row)
+     (when-not (mobile-util/native-platform?) (developer-mode-row developer-mode?))
 
-     (ui/admonition
-       :warning
-       [:p (t :settings-page/clear-cache-warning)])]))
+    ;;  (ui/admonition
+    ;;   :warning
+    ;;   [:p ""])
+     ]))
 
 (rum/defc sync-enabled-switcher
   [enabled?]
@@ -1215,7 +1218,7 @@
      ;;     ]])
 
 
-(def DEFAULT-ACTIVE-TAB-STATE (if config/ENABLE-SETTINGS-ACCOUNT-TAB [:account :account] [:general :general]))
+(def DEFAULT-ACTIVE-TAB-STATE [:style :style])
 
 (rum/defc settings-effect
   < rum/static
@@ -1267,7 +1270,7 @@
         (for [[label id text icon]
               [(when config/ENABLE-SETTINGS-ACCOUNT-TAB
                 [:account "account" (t :settings-page/tab-account) (ui/icon "user-circle")])
-               [:general "general" (t :settings-page/tab-general) (ui/icon "adjustments")] 
+               ;;[:general "general" (t :settings-page/tab-general) (ui/icon "adjustments")] 
                [:style "style" (t :settings-page/tab-style) (ui/icon "palette")]
                [:editor "editor" (t :settings-page/tab-editor) (ui/icon "writing")]
                [:keymap "keymap" (t :settings-page/tab-keymap) (ui/icon "keyboard")]
@@ -1297,8 +1300,8 @@
          :account
          (settings-account)
 
-         :general
-         (settings-general)
+         ;; :general
+         ;; (settings-general)
 
          :style 
          (settings-style)
