@@ -2,6 +2,16 @@
 
 ---
 
+## v1.0.1 (2024-04-21)
+
+## Enhance
+1. Add user confirmation when creating journal https://discuss.logseq.com/t/auto-delete-empty-journal/1825
+   > This is a feature requested by 77 people at this time. It's okay to have days when you don't write in your journal.  Empty files are not created.
+   ![image](https://github.com/YU000jp/fork-logseq/assets/111847207/b9ef22d1-f3f2-4dea-a621-1276264ca3f0)
+1. Pretty Settings
+
+---
+
 ## v1.0.0
 
 ### Enhance
