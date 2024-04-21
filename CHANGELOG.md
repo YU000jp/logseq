@@ -2,7 +2,7 @@
 
 ---
 
-## v1.0.1
+## v1.0.1 (2024-04-21)
 
 ## Enhance
 1. Add user confirmation when creating journal https://discuss.logseq.com/t/auto-delete-empty-journal/1825
