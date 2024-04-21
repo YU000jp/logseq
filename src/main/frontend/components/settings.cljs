@@ -271,27 +271,27 @@
    [:div {:style {:text-align "right"}}
     (ui/render-keyboard-shortcut (shortcut-helper/gen-shortcut-seq :ui/goto-plugins))]])
 
-(defn marketplace-row []
-  [:div.it.sm:grid.sm:grid-cols-3.sm:gap-4.sm:items-center
-   [:label.block.text-sm.font-medium.leading-5.opacity-70
-    {:for "marketplace"}
-    (t :plugins) "/" (t :themes)]
-   [:div
-    [:div.rounded-md.sm:max-w-xs
-     (ui/button (t :plugin/marketplace)
-                :on-click plugin-handler/goto-plugins-dashboard!)]]
-   [:div {:style {:text-align "right"}}
-    (ui/render-keyboard-shortcut (shortcut-helper/gen-shortcut-seq :ui/goto-plugins))]])
+;; (defn marketplace-row []
+;;   [:div.it.sm:grid.sm:grid-cols-3.sm:gap-4.sm:items-center
+;;    [:label.block.text-sm.font-medium.leading-5.opacity-70
+;;     {:for "marketplace"}
+;;     (t :plugins) "/" (t :themes)]
+;;    [:div
+;;     [:div.rounded-md.sm:max-w-xs
+;;      (ui/button (t :plugin/marketplace)
+;;                 :on-click plugin-handler/goto-plugins-dashboard!)]]
+;;    [:div {:style {:text-align "right"}}
+;;     (ui/render-keyboard-shortcut (shortcut-helper/gen-shortcut-seq :ui/goto-plugins))]])
 
-(defn plugin-settings-row []
-  [:div.it.sm:grid.sm:grid-cols-3.sm:gap-4.sm:items-center
-   [:label.block.text-sm.font-medium.leading-5.opacity-70
-    {:for "plugins_settings"}
-    (t :plugins)]
-   [:div
-    [:div.rounded-md.sm:max-w-xs
-     (ui/button (t :plugin/open-settings)
-                :on-click #(plugin-handler/goto-plugins-settings!))]]])
+;; (defn plugin-settings-row []
+;;   [:div.it.sm:grid.sm:grid-cols-3.sm:gap-4.sm:items-center
+;;    [:label.block.text-sm.font-medium.leading-5.opacity-70
+;;     {:for "plugins_settings"}
+;;     (t :plugins)]
+;;    [:div
+;;     [:div.rounded-md.sm:max-w-xs
+;;      (ui/button (t :plugin/open-settings)
+;;                 :on-click #(plugin-handler/goto-plugins-settings!))]]])
 
 (rum/defc auto-check-for-updates-control
   []
@@ -802,17 +802,17 @@
 (rum/defcs settings-general < rum/reactive
   [current-repo]
   (let [preferred-language (state/sub [:preferred-language])
-        plugins-of-settings (and config/lsp-enabled? (seq (plugin-handler/get-enabled-plugins-if-setting-schema)))]
+        ;; plugins-of-settings (and config/lsp-enabled? (seq (plugin-handler/get-enabled-plugins-if-setting-schema)))
+        ]
     [:div.panel-wrap.is-general
      (version-row version) 
      (when (and (or util/mac? util/win32?) (util/electron?)) (app-auto-update-row))
      (language-row preferred-language)
      (when current-repo (edit-config-edn))
      (when (config/global-config-enabled?) (edit-global-config-edn)) 
-     (when plugins-of-settings (marketplace-row))
-     (when plugins-of-settings (plugin-settings-row))
-     (when plugins-of-settings (auto-check-for-updates-control))
-     
+    ;;  (when plugins-of-settings (marketplace-row))
+    ;;  (when plugins-of-settings (plugin-settings-row))
+    ;;  (when plugins-of-settings (auto-check-for-updates-control)) 
      (when (and current-repo (util/electron?)) (journal-create-user-submit (state/journal-create-user-submit?)))]))
 
 (rum/defcs settings-style < rum/reactive
