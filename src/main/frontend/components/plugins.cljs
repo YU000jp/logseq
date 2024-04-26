@@ -13,6 +13,7 @@
             [frontend.mixins :as mixins]
             [electron.ipc :as ipc]
             [promesa.core :as p]
+            [frontend.config :as config]
             [frontend.components.svg :as svg]
             [frontend.components.plugins-settings :as plugins-settings]
             [frontend.handler.notification :as notification]
@@ -1074,6 +1075,15 @@
           :options {:on-click #(plugin-handler/goto-plugins-settings!)
                     :class    "extra-item"}
           :icon    (ui/icon "adjustments")}
+
+         (when config/lsp-enabled?
+           {:title (t :toggle-theme)
+            :options {:on-click #(open-select-theme!)}
+            :icon (ui/icon "palette")})
+
+         {:title (t :right-side-bar/switch-theme)
+          :options {:on-click #(state/toggle-theme!)}
+          :icon (ui/icon "bulb")}
 
          (when badge-updates?
            {:title   [:div.flex.items-center.space-x-5.leading-none
