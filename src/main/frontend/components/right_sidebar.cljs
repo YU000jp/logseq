@@ -158,7 +158,7 @@
     [[:.flex.items-center.page-title
       (ui/icon "search" {:class "text-md mr-2"})
       (let [input (rum/react *db-id)
-            input' (if (string/blank? input) "Blank input" input)]
+            input' (if (string/blank? input) (t :search/blank-input) input)]
         [:span.overflow-hidden.text-ellipsis input'])]
      (rum/with-key
        (cmdk/cmdk-block {:initial-input db-id

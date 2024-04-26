@@ -620,6 +620,7 @@
  :search-item/page "Page"
  :search-item/whiteboard "Whiteboard"
  :search/page-names "Search page names"
+ :search/blank-input "Please enter a keyword"
  :select.graph/add-graph "Yes, add another graph"
  :select.graph/empty-placeholder-description "No matched graphs. Do you want to add another one?"
  :select.graph/prompt "Select a graph"

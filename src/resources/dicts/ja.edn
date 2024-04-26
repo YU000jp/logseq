@@ -597,6 +597,7 @@
  :search-item/page "ノート"
  :search-item/whiteboard "ホワイトボード"
  :search/page-names "ノート名で検索"
+ :search/blank-input "検索ワードを入力してください"
  :select.graph/add-graph "はい、新規グラフを追加します。"
  :select.graph/empty-placeholder-description "マッチするグラフがありません。新しいグラフを追加しますか？"
  :select.graph/prompt "グラフを選んでください"
