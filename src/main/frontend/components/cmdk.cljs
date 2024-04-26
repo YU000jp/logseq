@@ -134,12 +134,12 @@
                  (->>
                   [["Pages"          :pages          (visible-items :pages)]
                    (when-not page-exists?
-                     ["Create"         :create         (create-items input)])
-                   ["Commands"       :commands       (visible-items :commands)]
+                     ["Create"         :create         (create-items input)]) 
                    ["Current page"   :current-page   (visible-items :current-page)]
+                   ["Recents"        :recents        (visible-items :recents)]
                    ["Blocks"         :blocks         (visible-items :blocks)]
                    ["Files"          :files          (visible-items :files)]
-                   ["Recents"        :recents        (visible-items :recents)]]
+                   ["Commands"       :commands       (visible-items :commands)]]
                   (remove nil?)))
         order (remove nil? order*)]
     (for [[group-name group-key group-items] order]
@@ -771,14 +771,17 @@
 
 (defn rand-tip
   []
-  (rand-nth
-   [[:div.flex.flex-row.gap-1.items-center.opacity-50.hover:opacity-100
+  ;; (rand-nth
+  ;;  [
+    [:div.flex.flex-row.gap-1.items-center.opacity-50.hover:opacity-100
      [:div "Type"]
      (shui/shortcut "/")
      [:div "to filter search results"]]
-    [:div.flex.flex-row.gap-1.items-center.opacity-50.hover:opacity-100
-     (shui/shortcut ["mod" "enter"])
-     [:div "to open search in the sidebar"]]]))
+    ;; [:div.flex.flex-row.gap-1.items-center.opacity-50.hover:opacity-100
+    ;;  (shui/shortcut ["mod" "enter"])
+    ;;  [:div "to open search in the sidebar"]]
+    ;; ])
+  )
 
 (rum/defcs tip <
   {:init (fn [state]
