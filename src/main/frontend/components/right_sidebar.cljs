@@ -3,6 +3,7 @@
             [clojure.string :as string]
             [frontend.components.block :as block]
             ;;[frontend.components.onboarding :as onboarding]
+            [frontend.components.scheduled-deadlines :as scheduled]
             [frontend.components.page :as page]
             [frontend.components.shortcut-help :as shortcut-help]
             [frontend.components.cmdk :as cmdk]
@@ -122,6 +123,19 @@
 
     ;; :help
     ;; [[:.flex.items-center (ui/icon "help" {:class "text-md mr-2"}) (t :right-side-bar/help)] (onboarding/help)]
+
+    :scheduled-and-deadline
+        [[:.flex.items-center.page-title
+      (ui/icon "time" {:class "text-sm mr-1"}) 
+       [:span.overflow-hidden.text-ellipsis (t :right-side-bar/scheduled-and-deadline)]]
+      (scheduled/scheduled-and-deadlines (date/today))]
+    
+    :default-queries
+    [[:.flex.items-center.page-title
+      (ui/icon "brand-4chan" {:class "text-sm mr-1"})
+      [:span.overflow-hidden.text-ellipsis (t :right-side-bar/default-queries)]]
+       (ui/lazy-visible
+      (fn [] (page/today-queries repo)))] 
 
     :page-graph
     [[:.flex.items-center (ui/icon "hierarchy" {:class "text-sm mr-2"}) (t :right-side-bar/page-graph)]
@@ -448,12 +462,28 @@
                                                          :title (t :right-side-bar/page-graph)}
           (ui/icon "hierarchy" {:class "icon"})]]
 
+        ;; SCHEDULED AND DEADLINEを表示する
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (state/sidebar-add-block! repo (t :right-side-bar/scheduled-and-deadline) :scheduled-and-deadline))
+                                                         :title (t :right-side-bar/scheduled-and-deadline)}
+          (ui/icon "calendar-time" {:class "icon"})]]
+
+        ;; :dafault-queries
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (state/sidebar-add-block! repo (t :right-side-bar/default-queries "DEFAULT QUERIES") :default-queries))
+                                                         :title (t :right-side-bar/default-queries "DEFAULT QUERIES")}
+          (ui/icon "brand-4chan" {:class "icon"})]]
+        
+        ;; 今日のジャーナルを開く
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
                                                                      (page-handler/open-today-in-sidebar))
                                                          :title (t :command.go/today)}
-          (ui/icon "calendar" {:class "icon"})]]
+          (ui/icon "clock" {:class "icon"})]]
 
+        ;; サイドバーをクリアにする
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
                                                                      (state/clear-sidebar-blocks!))

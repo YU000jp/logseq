@@ -615,6 +615,8 @@
  :right-side-bar/switch-theme "Theme mode"
  :right-side-bar/toggle-right-sidebar "Toggle right sidebar"
  :right-side-bar/whiteboards "Whiteboards"
+ :right-side-bar/scheduled-and-deadline "SCHEUDLED & DEADLINE"
+ :right-side-bar/default-queries "DEFAULT QUERIES"
  :save "Save"
  :search-item/no-result "No matched result"
  :search-item/page "Page"

@@ -8,7 +8,7 @@
             [frontend.components.plugins :as plugins]
             [frontend.components.query :as query]
             [frontend.components.reference :as reference]
-            [frontend.components.scheduled-deadlines :as scheduled]
+            ;;[frontend.components.scheduled-deadlines :as scheduled]
             [frontend.components.svg :as svg]
             [frontend.config :as config]
             [frontend.context.i18n :refer [t]]
@@ -26,6 +26,7 @@
             [frontend.handler.graph :as graph-handler]
             [frontend.handler.notification :as notification]
             [frontend.handler.page :as page-handler]
+            [frontend.handler.ui :as ui-handler]
             [frontend.handler.route :as route-handler]
             [frontend.mixins :as mixins]
             [frontend.mobile.util :as mobile-util]
@@ -143,7 +144,11 @@
              [:span.mb-10
               ((ui/make-confirm-modal
                 {:title    (t :on-boarding/insert-a-journal)
-                 :on-confirm #((state/pub-event! [:journal/insert-template page-name true]))}))]]])))
+                 :on-confirm (fn []
+                               (state/pub-event! [:journal/insert-template page-name true])
+                               (ui-handler/toggle-right-sidebar!)
+                               (js/setTimeout #((ui-handler/toggle-right-sidebar!))
+                                              1300))}))]]])))
 
      [:div.flex.flex-row
       [:div.flex.flex-row.items-center.mr-2.ml-1 {:style {:height 24}}
@@ -220,21 +225,19 @@
     (page-blocks-cp repo page {:sidebar? true})))
 
 (rum/defc today-queries < rum/reactive
-  [repo today? sidebar?]
-  (when (and today? (not sidebar?))
-    (let [queries (get-in (state/sub-config repo) [:default-queries :journals])]
+  [repo]
+    (let [queries (get-in (state/sub-config repo) [:default-queries :journals])] 
       (when (seq queries)
-        [:div#today-queries.mt-10
+        [:div#today-queries.content
          (for [query queries]
            (rum/with-key
              (ui/catch-error
               (ui/component-error "Failed default query:" {:content (pr-str query)})
               (query/custom-query (component-block/wrap-query-components
-                                   {:attr {:class "mt-10"}
-                                    :editor-box editor/box
-                                    :page page})
+                                   {:attr {:class "my-2 references-blocks-item"}
+                                    :editor-box editor/box})
                                   query))
-             (str repo "-custom-query-" (:query query))))]))))
+             (str repo "-custom-query-" (:query query))))])))
 
 (defn tagged-pages
   [repo tag]
@@ -509,11 +512,11 @@
                      (route-handler/redirect-to-page! @*current-block-page))]
              (page-blocks-cp repo page {:sidebar? sidebar? :whiteboard? whiteboard?}))]])
 
-       (when-not whiteboard?
-         (when today?
-           (today-queries repo today? sidebar?))
-         (when today?
-           (scheduled/scheduled-and-deadlines page-name)))
+      ;;  (when-not whiteboard?
+      ;;    (when today?
+      ;;      (today-queries repo today? sidebar?))
+      ;;    (when today?
+      ;;      (scheduled/scheduled-and-deadlines page-name)))
 
        (when-not block?
          (tagged-pages repo page-name))

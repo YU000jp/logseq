@@ -2,7 +2,7 @@
   (:require [clojure.string :as string]
             [frontend.components.page :as page]
             [frontend.components.reference :as reference]
-            [frontend.components.scheduled-deadlines :as scheduled]
+            ;;[frontend.components.scheduled-deadlines :as scheduled]
             [frontend.date :as date]
             [frontend.db :as db]
             [frontend.db-mixins :as db-mixins]
@@ -64,10 +64,10 @@
 
       {})
 
-     (page/today-queries repo today? false)
+    ;;  (page/today-queries repo today? false)
 
-     (when today?
-       (scheduled/scheduled-and-deadlines page))
+    ;;  (when today?
+    ;;    (scheduled/scheduled-and-deadlines page))
 
      (rum/with-key
        (reference/references title)
@@ -83,7 +83,6 @@
        (journal-cp name)])
     {:has-more (page-handler/has-more-journals?)
      :more-class "text-l"
-     :on-top-reached page-handler/create-today-journal!
      :on-load (fn []
                 (page-handler/load-more-journals!))})])
 

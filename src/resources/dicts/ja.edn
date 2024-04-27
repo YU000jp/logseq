@@ -592,6 +592,8 @@
  :right-side-bar/switch-theme "ライト/ダーク モードの切替"
  :right-side-bar/toggle-right-sidebar "サイドバーを開閉する"
  :right-side-bar/whiteboards "ホワイトボード"
+ :right-side-bar/scheduled-and-deadline "スケジュールと期限" 
+ :right-side-bar/default-queries "デフォルト クエリー"
  :save "保存"
  :search-item/no-result "一致する結果がありません"
  :search-item/page "ノート"
