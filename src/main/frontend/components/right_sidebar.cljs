@@ -33,7 +33,10 @@
       [:button.button.icon.toggle-right-sidebar
        {:title (t :right-side-bar/toggle-right-sidebar)
         :on-click ui-handler/toggle-right-sidebar!}
-       (ui/icon "layout-sidebar-right" {:size 20})])))
+       (ui/icon 
+        "layout-sidebar-right"
+        {:size 26
+         :color (if (:ui/sidebar-open? @state/state) "green" "gray")})])))
 
 (rum/defc block-cp < rum/reactive
   [repo idx block]
