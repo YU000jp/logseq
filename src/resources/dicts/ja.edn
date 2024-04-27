@@ -564,7 +564,7 @@
  :remove-background "背景を消去"
  :remove-heading "見出しを消去"
  :remove-orphaned-pages "孤立したノートを削除しますか？"
- :right-side-bar/all-pages "全ノート"
+ :right-side-bar/all-pages "すべてのノート"
  :right-side-bar/block-ref "ブロック引用"
  :right-side-bar/contents "目次/コンテンツ"
  :right-side-bar/flashcards "フラッシュカード"
