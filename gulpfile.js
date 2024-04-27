@@ -75,7 +75,6 @@ const common = {
         'node_modules/pdfjs-dist/cmaps/*.*',
       ]).pipe(gulp.dest(path.join(outputPath, 'js', 'pdfjs', 'cmaps'))),
       () => gulp.src([
-        'node_modules/@tabler/icons/iconfont/tabler-icons.min.css',
         'node_modules/inter-ui/inter.css',
         'node_modules/reveal.js/dist/theme/fonts/source-sans-pro/**',
       ]).pipe(gulp.dest(path.join(outputPath, 'css'))),
