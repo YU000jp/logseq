@@ -117,6 +117,23 @@
   []
   (journal-name (t/minus (t/today) (t/days 1))))
 
+
+;; TODO: 週番号を出力する
+;; (defn get-iso-week-number
+;;   []
+;;   (let [today (t/today)]
+;;     (str "W" (t/week-number-of-year today))
+;;     ))
+
+;; (defn get-us-week-number
+;;   []
+;;   (let [today (t/today)
+;;         start-of-year (t/date-time (t/year today) 1 1)
+;;         days-since-start (t/days (t/interval start-of-year today))
+;;         week-number (Math/ceil (/ days-since-start 7))]
+;;     (str "W" (int week-number))))
+
+
 (defn get-local-date
   []
   (let [date (js/Date.)
