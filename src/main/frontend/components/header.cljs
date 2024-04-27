@@ -222,17 +222,8 @@
            (ui/with-shortcut :go/backward "bottom"
              [:button.it.navigation.nav-left.button.icon.opacity-70
               {:title (t :header/go-back) :on-click #(js/window.history.back)}
-              (ui/icon "chevron-left" {:size 26})]))
-         ;; search button for non-mobile
-         (when current-repo
-           (ui/with-shortcut :go/search "right"
-             [:button.button.icon#search-button
-              {:title (t :header/search)
-               :on-click #(do (when (or (mobile-util/native-android?)
-                                        (mobile-util/native-iphone?))
-                                (state/set-left-sidebar-open! false))
-                              (state/pub-event! [:go/search]))}
-              (ui/icon "search" {:size ui/icon-size})])))]]
+              (ui/icon "chevron-left" {:size 26})])))]]
+         
 
      [:div.r.flex.drag-region
       (when (and current-repo
@@ -246,6 +237,17 @@
 
       ;; (when sync-enabled?
       ;;   (login))
+
+      ;; search button for non-mobile
+      (when current-repo
+        (ui/with-shortcut :go/search "right"
+          [:button.button.icon#search-button
+           {:title (t :header/search)
+            :on-click #(do (when (or (mobile-util/native-android?)
+                                     (mobile-util/native-iphone?))
+                             (state/set-left-sidebar-open! false))
+                           (state/pub-event! [:go/search]))}
+           (ui/icon "search" {:size ui/icon-size})]))
 
       (when (util/electron?)
         (back-and-forward))
