@@ -310,8 +310,7 @@
      [:button#create-button
       {:on-click toggle-fn}
       [:<>
-       (ui/icon "plus" {:font? "true"})
-       [:span.mx-1 (t :left-side-bar/create)]]])
+       (ui/icon "plus" {:font? "true"})]])
    (->>
     [{:title (t :left-side-bar/new-page)
       :class "new-page-link"

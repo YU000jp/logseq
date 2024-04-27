@@ -105,41 +105,41 @@
                            (string/starts-with? input "/"))
         order* (cond
                  (= search-mode :graph)
-                 [["Pages"          :pages          (visible-items :pages)]]
+                 [[(t :search/pages)           :pages          (visible-items :pages)]]
 
                  include-slash?
                  [(if page-exists?
-                    ["Pages"          :pages          (visible-items :pages)]
+                    [(t :search/pages)           :pages          (visible-items :pages)]
                     ["Filters"        :filters        (visible-items :filters)])
                   (if page-exists?
                     ["Filters"        :filters        (visible-items :filters)]
-                    ["Pages"          :pages          (visible-items :pages)])
+                    [(t :search/pages)           :pages          (visible-items :pages)])
                   (when-not page-exists?
-                    ["Create"         :create         (create-items input)])
-                  ["Current page"   :current-page   (visible-items :current-page)]
-                  ["Blocks"         :blocks         (visible-items :blocks)]
-                  ["Files"          :files          (visible-items :files)]]
+                    [(t :search/create)         :create         (create-items input)])
+                  [(t :search/current-page)   :current-page   (visible-items :current-page)]
+                  [(t :search/blocks)         :blocks         (visible-items :blocks)]
+                  [(t :search/files)          :files          (visible-items :files)]]
 
                  filter-group
                  [(when (= filter-group :blocks)
-                    ["Current page"   :current-page   (visible-items :current-page)])
-                  [(if (= filter-group :current-page) "Current page" (name filter-group))
+                    [(t :search/current-page)   :current-page   (visible-items :current-page)])
+                  [(if (= filter-group :current-page) (t :search/current-page) (name filter-group))
                    filter-group
                    (visible-items filter-group)]
                   (when (= filter-group :pages)
                     (when-not page-exists?
-                      ["Create"         :create         (create-items input)]))]
+                      [(t :search/create)         :create         (create-items input)]))]
 
                  :else
                  (->>
-                  [["Pages"          :pages          (visible-items :pages)]
+                  [[(t :search/pages)          :pages          (visible-items :pages)]
                    (when-not page-exists?
-                     ["Create"         :create         (create-items input)]) 
-                   ["Current page"   :current-page   (visible-items :current-page)]
-                   ["Recents"        :recents        (visible-items :recents)]
-                   ["Blocks"         :blocks         (visible-items :blocks)]
-                   ["Files"          :files          (visible-items :files)]
-                   ["Commands"       :commands       (visible-items :commands)]]
+                     [(t :search/create)         :create         (create-items input)]) 
+                   [(t :search/current-page)   :current-page   (visible-items :current-page)]
+                   [(t :search/recents)        :recents        (visible-items :recents)]
+                   [(t :search/blocks)         :blocks         (visible-items :blocks)]
+                   [(t :search/files)          :files          (visible-items :files)]
+                   [(t :search/commands)       :commands       (visible-items :commands)]]
                   (remove nil?)))
         order (remove nil? order*)]
     (for [[group-name group-key group-items] order]
@@ -716,14 +716,14 @@
     (reset! (::meta? state) meta?)))
 
 (defn- input-placeholder
-  [sidebar?]
+  []
   (let [search-mode (:search/mode @state/state)]
     (cond
-      (and (= search-mode :graph) (not sidebar?))
+      (and (= search-mode :graph))
       "Add graph filter"
 
       :else
-      "What are you looking for?")))
+      (t :search/what-are-you-looking-for))))
 
 (rum/defc input-row
   [state all-items opts]
@@ -743,7 +743,7 @@
       {:class "text-xl bg-transparent border-none w-full outline-none px-3 py-3"
        :auto-focus true
        :autoComplete "off"
-       :placeholder (input-placeholder false)
+       :placeholder (input-placeholder)
        :ref #(when-not @input-ref (reset! input-ref %))
        :on-change (fn [e]
                     (let [new-value (.-value (.-target e))]
@@ -851,7 +851,7 @@
 
           :create
           [:<>
-           (button-fn "Create" ["return"])]
+           (button-fn (t :search/create) ["return"])]
 
           :filter
           [:<>
