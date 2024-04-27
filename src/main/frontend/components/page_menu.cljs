@@ -105,10 +105,10 @@
                            nil))
                        :class "cp__btn_history_version"}})
 
-          (when (or (util/electron?)
-                    (mobile-util/native-platform?))
-            {:title   (t :page/copy-page-url)
-             :options {:on-click #(page-handler/copy-page-url page-original-name)}})
+          ;; (when (or (util/electron?)
+          ;;           (mobile-util/native-platform?))
+          ;;   {:title   (t :page/copy-page-url)
+          ;;    :options {:on-click #(page-handler/copy-page-url page-original-name)}})
 
           (when-not (or contents?
                         config/publishing?)
@@ -165,7 +165,7 @@
              :options {:on-click
                        (fn []
                          (ipc/ipc "openFileBackupDir" (config/get-local-dir repo) file-rpath))}})
-
+          {:hr true}
           (when config/lsp-enabled?
             (for [[_ {:keys [label] :as cmd} action pid] (state/get-plugins-commands-with-type :page-menu-item)]
               {:title label
