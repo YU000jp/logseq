@@ -14,6 +14,7 @@
             [frontend.extensions.slide :as slide]
             [frontend.handler.editor :as editor-handler]
             [frontend.handler.ui :as ui-handler]
+            [frontend.handler.page :as page-handler]
             [frontend.state :as state]
             [frontend.ui :as ui]
             [logseq.shui.ui :as shui]
@@ -447,6 +448,9 @@
 
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (page-handler/open-today-in-sidebar))}
+          (t :command.go/today)]]
+        
         ;; [:div.text-sm
         ;;  [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
         ;;                                                              (state/sidebar-add-block! repo "help" :help))}
