@@ -126,9 +126,9 @@
       ;;     :options {:href (rfe/href :bug-report)}
       ;;     :icon (ui/icon "bug")})     
       
-       {:title (t :handbook/title)
-        :options {:on-click #(state/toggle-help!)}
-        :icon (ui/icon "bulb")}
+      ;;  {:title (t :handbook/title)
+      ;;   :options {:on-click #(state/toggle-help!)}
+      ;;   :icon (ui/icon "bulb")}
 
        (when login? {:hr true})
        (when login?
