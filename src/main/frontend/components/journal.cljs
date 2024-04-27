@@ -29,7 +29,7 @@
         page (string/lower-case title)
         repo (state/sub :git/current-repo)
         today? (= (string/lower-case title)
-                  (string/lower-case (date/journal-name)))
+                  (string/lower-case (date/journal-name))) ;; ジャーナルかどうか
         page-entity (db/pull [:block/name (util/page-name-sanity-lc title)])
         data-page-tags (when (seq (:block/tags page-entity))
                          (let [page-names (model/get-page-names-by-ids (map :db/id (:block/tags page)))]
