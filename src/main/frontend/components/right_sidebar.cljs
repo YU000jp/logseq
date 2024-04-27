@@ -14,6 +14,7 @@
             [frontend.db.model :as db-model]
             [frontend.extensions.slide :as slide]
             [frontend.handler.editor :as editor-handler]
+            [frontend.handler.user :as user-handler]
             [frontend.handler.ui :as ui-handler]
             [frontend.handler.page :as page-handler]
             [frontend.state :as state]
@@ -121,7 +122,7 @@
   [repo idx db-id block-type *db-id init-key]
   (case (keyword block-type)
     :contents
-    [[:.flex.items-center (ui/icon "list-details" {:class "text-sm mr-2"}) (t :right-side-bar/contents)]
+    [[:.flex.items-center (ui/icon "note" {:class "text-sm mr-2"}) (t :right-side-bar/contents)]
      (contents)]
 
     ;; :help
@@ -451,10 +452,45 @@
        [:div.cp__right-sidebar-settings.hide-scrollbar.gap-1 {:key "right-sidebar-settings"}
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (state/pub-event! [:go/search]))
+                                                         :title (t :header/search)}
+          (ui/icon "search" {:class "icon" :size 23})]]
+
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
                                                                      (state/sidebar-add-block! repo "contents" :contents))
                                                          :title (t :right-side-bar/contents)}
-          (ui/icon "list-details" {:class "icon"})]]
+          (ui/icon "note" {:class "icon" :size 23})]]
 
+        ;; SCHEDULED AND DEADLINEを表示する
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (state/sidebar-add-block! repo (t :right-side-bar/scheduled-and-deadline) :scheduled-and-deadline))
+                                                         :title (t :right-side-bar/scheduled-and-deadline)}
+          (ui/icon "calendar-time" {:class "icon" :size 23})]]
+
+        ;; :dafault-queries
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (state/sidebar-add-block! repo (t :right-side-bar/default-queries "DEFAULT QUERIES") :default-queries))
+                                                         :title (t :right-side-bar/default-queries "DEFAULT QUERIES")}
+          (ui/icon "brand-4chan" {:class "icon" :size 23})]]
+        
+        ;; 今日のジャーナルを開く
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (page-handler/open-today-in-sidebar))
+                                                         :title (t :command.go/today)}
+          (ui/icon "clock" {:class "icon" :size 23})]]
+
+        ;; サイドバーをクリアにする
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (state/clear-sidebar-blocks!))
+                                                         :title (t :command.sidebar/clear)}
+          (ui/icon "trash-x" {:class "icon" :color "red"})]]
+
+        ;; TODO: ページタイトルの横に移植する予定
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn []
                                                                      (when-let [page (get-current-page)]
@@ -464,34 +500,7 @@
                                                                         :page-graph)))
                                                          :title (t :right-side-bar/page-graph)}
           (ui/icon "hierarchy" {:class "icon"})]]
-
-        ;; SCHEDULED AND DEADLINEを表示する
-        [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
-                                                                     (state/sidebar-add-block! repo (t :right-side-bar/scheduled-and-deadline) :scheduled-and-deadline))
-                                                         :title (t :right-side-bar/scheduled-and-deadline)}
-          (ui/icon "calendar-time" {:class "icon"})]]
-
-        ;; :dafault-queries
-        [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
-                                                                     (state/sidebar-add-block! repo (t :right-side-bar/default-queries "DEFAULT QUERIES") :default-queries))
-                                                         :title (t :right-side-bar/default-queries "DEFAULT QUERIES")}
-          (ui/icon "brand-4chan" {:class "icon"})]]
         
-        ;; 今日のジャーナルを開く
-        [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
-                                                                     (page-handler/open-today-in-sidebar))
-                                                         :title (t :command.go/today)}
-
-        ;; サイドバーをクリアにする
-        [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
-                                                                     (state/clear-sidebar-blocks!))
-                                                         :title (t :command.sidebar/clear)}
-          (ui/icon "trash-x" {:class "icon" :color "red"})]]
-
         ;; [:div.text-sm
         ;;  [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
         ;;                                                              (state/sidebar-add-block! repo "help" :help))}
