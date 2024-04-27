@@ -54,7 +54,8 @@
        (util/safari?)
        (js/window.scrollTo 0 0)))
 
-(defonce icon-size (if (mobile-util/native-platform?) 26 20))
+;; (defonce icon-size (if (mobile-util/native-platform?) 26 20))
+(defonce icon-size 26)
 
 (def built-in-colors
   ["yellow"
