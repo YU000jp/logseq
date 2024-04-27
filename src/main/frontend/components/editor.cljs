@@ -242,7 +242,7 @@
          matched-templates
          {:on-chosen   (editor-handler/template-on-chosen-handler id)
           :on-enter    non-exist-handler
-          :empty-placeholder [:div.text-gray-500.px-4.py-2.text-sm "Search for a template"]
+          :empty-placeholder [:div.text-gray-500.px-4.py-2.text-sm (t :search/template)]
           :item-render (fn [[template _block-db-id]]
                          template)
           :class       "black"})))))
@@ -261,8 +261,8 @@
          matched-properties
          {:on-chosen (editor-handler/property-on-chosen-handler id q-property)
           :on-enter non-exist-handler
-          :empty-placeholder [:div.px-4.py-2.text-sm (str "Create a new property: " q-property)]
-          :header [:div.px-4.py-2.text-sm.font-medium "Matched properties: "]
+          :empty-placeholder [:div.px-4.py-2.text-sm (str (t :search/property)": " q-property)]
+          :header [:div.px-4.py-2.text-sm.font-medium (t :search/properties-matched)": "]
           :item-render (fn [property] property)
           :class       "black"})))))
 
@@ -288,8 +288,8 @@
          matched-values
          {:on-chosen (editor-handler/property-value-on-chosen-handler id q)
           :on-enter non-exist-handler
-          :empty-placeholder [:div.px-4.py-2.text-sm (str "Create a new property value: " q)]
-          :header [:div.px-4.py-2.text-sm.font-medium "Matched property values: "]
+          :empty-placeholder [:div.px-4.py-2.text-sm (str (t :search/property-value)": " q)]
+          :header [:div.px-4.py-2.text-sm.font-medium (str (t :search/property-values-matched)": ")]
           :item-render (fn [property-value] property-value)
           :class       "black"})))))
 

@@ -73,12 +73,12 @@
 
 (defn create-items [q]
   (when-not (string/blank? q)
-    [{:text "Create page"       :icon "new-page"
+    [{:text (t :left-side-bar/new-page)       :icon "new-page"
       :icon-theme :gray
-      :info (str "Create page called '" q "'") :source-create :page}
-     {:text "Create whiteboard" :icon "new-whiteboard"
+      :info (str "'" q "'") :source-create :page}
+     {:text (t :left-side-bar/new-whiteboard) :icon "new-whiteboard"
       :icon-theme :gray
-      :info (str "Create whiteboard called '" q "'") :source-create :whiteboard}]))
+      :info (str "'" q "'") :source-create :whiteboard}]))
 
 ;; Take the results, decide how many items to show, and order the results appropriately
 (defn state->results-ordered [state search-mode]
@@ -110,9 +110,9 @@
                  include-slash?
                  [(if page-exists?
                     [(t :search/pages)           :pages          (visible-items :pages)]
-                    ["Filters"        :filters        (visible-items :filters)])
+                    [(t :search/filters)        :filters        (visible-items :filters)])
                   (if page-exists?
-                    ["Filters"        :filters        (visible-items :filters)]
+                    [(t :search/filters)        :filters        (visible-items :filters)]
                     [(t :search/pages)           :pages          (visible-items :pages)])
                   (when-not page-exists?
                     [(t :search/create)         :create         (create-items input)])
@@ -134,7 +134,7 @@
                  (->>
                   [[(t :search/pages)          :pages          (visible-items :pages)]
                    (when-not page-exists?
-                     [(t :search/create)         :create         (create-items input)]) 
+                     [(t :search/create)         :create         (create-items input)])
                    [(t :search/current-page)   :current-page   (visible-items :current-page)]
                    [(t :search/recents)        :recents        (visible-items :recents)]
                    [(t :search/blocks)         :blocks         (visible-items :blocks)]
@@ -486,8 +486,9 @@
                                                (reset! (::input state) ""))
         (and shift-or-sidebar? block?) (handle-action :open-block-right state event)
         (and shift-or-sidebar? page?) (handle-action :open-page-right state event)
-        block? (handle-action :open-block state event)
-        page? (handle-action :open-page state event)))))
+        ;; block? (handle-action :open-block state event)
+        ;; page? (handle-action :open-page state event)
+        ))))
 
 (defmethod handle-action :search [_ state _event]
   (when-let [item (some-> state state->highlighted-item)]
@@ -596,10 +597,10 @@
           {:on-click (if (= show :more) show-less show-more)}
           (if (= show :more)
             [:div.flex.flex-row.gap-1.items-center
-             "Show less"
+             (t :search/show-less)
              (shui/shortcut "mod up" nil)]
             [:div.flex.flex-row.gap-1.items-center
-             "Show more"
+             (t :search/show-more)
              (shui/shortcut "mod down" nil)])])]
 
       [:div.search-results
