@@ -119,8 +119,8 @@
     [[:.flex.items-center (ui/icon "list-details" {:class "text-md mr-2"}) (t :right-side-bar/contents)]
      (contents)]
 
-    :help
-    [[:.flex.items-center (ui/icon "help" {:class "text-md mr-2"}) (t :right-side-bar/help)] (onboarding/help)]
+    ;; :help
+    ;; [[:.flex.items-center (ui/icon "help" {:class "text-md mr-2"}) (t :right-side-bar/help)] (onboarding/help)]
 
     :page-graph
     [[:.flex.items-center (ui/icon "hierarchy" {:class "text-md mr-2"}) (t :right-side-bar/page-graph)]
@@ -447,8 +447,10 @@
 
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
-                                                                     (state/sidebar-add-block! repo "help" :help))}
-          (t :right-side-bar/help)]]
+        ;; [:div.text-sm
+        ;;  [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+        ;;                                                              (state/sidebar-add-block! repo "help" :help))}
+        ;;   (t :right-side-bar/help)]]
 
         (when (and config/dev? (state/sub [:ui/developer-mode?]))
           [:div.text-sm
