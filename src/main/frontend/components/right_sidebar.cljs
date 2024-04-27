@@ -315,7 +315,7 @@
                   :variant  :text
                   :class "px-3"
                   :on-click #(state/sidebar-remove-block! idx)}
-                 (ui/icon "x"))]]
+                 (ui/icon "x" {:color "red"}))]]
 
              [:div {:role            "region"
                     :id              (str "sidebar-panel-content-" idx)
@@ -484,14 +484,13 @@
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
                                                                      (page-handler/open-today-in-sidebar))
                                                          :title (t :command.go/today)}
-          (ui/icon "clock" {:class "icon"})]]
 
         ;; サイドバーをクリアにする
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
                                                                      (state/clear-sidebar-blocks!))
                                                          :title (t :command.sidebar/clear)}
-          (ui/icon "trash-x" {:class "icon"})]]
+          (ui/icon "trash-x" {:class "icon" :color "red"})]]
 
         ;; [:div.text-sm
         ;;  [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
