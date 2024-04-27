@@ -116,14 +116,14 @@
   [repo idx db-id block-type *db-id init-key]
   (case (keyword block-type)
     :contents
-    [[:.flex.items-center (ui/icon "list-details" {:class "text-md mr-2"}) (t :right-side-bar/contents)]
+    [[:.flex.items-center (ui/icon "list-details" {:class "text-sm mr-2"}) (t :right-side-bar/contents)]
      (contents)]
 
     ;; :help
     ;; [[:.flex.items-center (ui/icon "help" {:class "text-md mr-2"}) (t :right-side-bar/help)] (onboarding/help)]
 
     :page-graph
-    [[:.flex.items-center (ui/icon "hierarchy" {:class "text-md mr-2"}) (t :right-side-bar/page-graph)]
+    [[:.flex.items-center (ui/icon "hierarchy" {:class "text-sm mr-2"}) (t :right-side-bar/page-graph)]
      (page/page-graph)]
 
     :history
@@ -149,14 +149,14 @@
           page-name (:block/name page)]
       [[:.flex.items-center.page-title
         (if-let [icon (get-in page [:block/properties :icon])]
-          [:.text-md.mr-2 icon]
-          (ui/icon (if (= "whiteboard" (:block/type page)) "whiteboard" "page") {:class "text-md mr-2"}))
+          [:.text-md.mr-1 icon]
+          (ui/icon (if (= "whiteboard" (:block/type page)) "whiteboard" "page") {:class "text-sm mr-1"}))
         [:span.overflow-hidden.text-ellipsis (db-model/get-page-original-name page-name)]]
        (page-cp repo page-name)])
 
     :search
     [[:.flex.items-center.page-title
-      (ui/icon "search" {:class "text-md mr-2"})
+      (ui/icon "search" {:class "text-sm mr-1"})
       (let [input (rum/react *db-id)
             input' (if (string/blank? input) (t :search/blank-input) input)]
         [:span.overflow-hidden.text-ellipsis input'])]
