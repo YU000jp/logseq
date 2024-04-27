@@ -453,7 +453,7 @@
            [:div.flashcards-nav
             (flashcards srs-open?)])
 
-         (sidebar-item
+         (sidebar-item ;; TODO: グラフビュー機能のトグル
           {:class "graph-view-nav"
            :title (t :right-side-bar/graph-view)
            :href (rfe/href :graph)

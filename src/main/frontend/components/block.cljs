@@ -932,7 +932,7 @@
                                         {:style {:width      735
                                                  :text-align "left"
                                                  :max-height 600}}
-                                        [(breadcrumb config repo block-id {:indent? true})
+                                        [(breadcrumb config repo block-id {:indent? true}) ;;TODO: 階層タイトル
                                          (blocks-container
                                           (db/get-block-and-children repo block-id)
                                           (assoc config :id (str id) :preview? true))]])
