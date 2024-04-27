@@ -406,7 +406,7 @@
  :on-boarding/importing-opml-desc " OPMLファイルを読み込む"
  :on-boarding/importing-roam-desc "Roam Researchのグラフを書き出したJSON を読み込む"
  :on-boarding/importing-title "既に存在するノートを読み込みますか？"
- :on-boarding/insert-a-journal "日記を作成しますか？"
+ :on-boarding/insert-a-journal "その日のジャーナルを作成しますか？"
  :on-boarding/main-desc "はじめに、ノートを保存しておくためのフォルダを選択する必要があります。"
  :on-boarding/main-title (fn [] [[:strong "Logseq-Classic"] "へようこそ！"])
  :on-boarding/new-graph-desc-1 "Logseqは、マークダウンとOrgモードの両方をサポートしています。あなたのローカル端末の既存フォルダ（ディレクトリ）を選ぶか、新しいフォルダを作成してください。あなたのローカル端末にデータが保存されます。"
@@ -669,7 +669,7 @@
  :settings-page/git-switcher-label "Git 自動コミットを有効にする"
  :settings-page/git-tip "Logseq Syncが有効な場合、ノートの編集履歴を直接見ることができます。この節は技術に精通している人のためのものになります。"
  :settings-page/home-default-page "起動時のノートを設定 (ホームページ)"
- :settings-page/journal-create-user-submit "日記を作成する前のユーザー確認を有効にする"
+ :settings-page/journal-create-user-submit "その日のジャーナルを作成する前のユーザー確認を有効にする"
  :settings-page/login-prompt "新しい機能を早く使いたい場合は、LogseqのOpen Collective Sponsorか後援者になった上で、ログインしてください。"
 
  :settings-page/native-titlebar "ネイティブのタイトルバー"
