@@ -434,8 +434,9 @@
        [:div.cp__right-sidebar-settings.hide-scrollbar.gap-1 {:key "right-sidebar-settings"}
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
-                                                                     (state/sidebar-add-block! repo "contents" :contents))}
-          (t :right-side-bar/contents)]]
+                                                                     (state/sidebar-add-block! repo "contents" :contents))
+                                                         :title (t :right-side-bar/contents)}
+          (ui/icon "list-details" {:class "icon"})]]
 
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn []
@@ -443,14 +444,22 @@
                                                                        (state/sidebar-add-block!
                                                                         repo
                                                                         page
-                                                                        :page-graph)))}
-          (t :right-side-bar/page-graph)]]
+                                                                        :page-graph)))
+                                                         :title (t :right-side-bar/page-graph)}
+          (ui/icon "hierarchy" {:class "icon"})]]
 
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
-                                                                     (page-handler/open-today-in-sidebar))}
-          (t :command.go/today)]]
-        
+                                                                     (page-handler/open-today-in-sidebar))
+                                                         :title (t :command.go/today)}
+          (ui/icon "calendar" {:class "icon"})]]
+
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (state/clear-sidebar-blocks!))
+                                                         :title (t :command.sidebar/clear)}
+          (ui/icon "trash-x" {:class "icon"})]]
+
         ;; [:div.text-sm
         ;;  [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
         ;;                                                              (state/sidebar-add-block! repo "help" :help))}
@@ -459,8 +468,9 @@
         (when (and config/dev? (state/sub [:ui/developer-mode?]))
           [:div.text-sm
            [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
-                                                                       (state/sidebar-add-block! repo "history" :history))}
-            (t :right-side-bar/history)]])]]
+                                                                       (state/sidebar-add-block! repo "history" :history))
+                                                           :title (t :right-side-bar/history)}
+            (ui/icon "history" {:class "icon"})]])]]
 
       [:.sidebar-item-list.flex-1.scrollbar-spacing.px-2
        (if @*anim-finished?
