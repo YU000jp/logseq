@@ -102,7 +102,7 @@
         "@radix-ui/colors": "^0.1.8",
         "@sentry/react": "^6.18.2",
         "@sentry/tracing": "^6.18.2",
-        "@tabler/icons": "^1.96.0",
+        "@tabler/icons": "^3.2.0",
         "@tippyjs/react": "4.2.5",
         "bignumber.js": "^9.0.2",
         "capacitor-voice-recorder": "^5.0.0",
