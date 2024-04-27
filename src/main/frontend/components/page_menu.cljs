@@ -115,6 +115,14 @@
             {:title   (t :page/delete)
              :options {:on-click #(state/set-modal! (delete-page-dialog page-name))}})
 
+          (when (util/electron?)
+            {:title   (t :right-side-bar/page-graph)
+             :options {:on-click #((when-let [page (state/get-current-page)]
+                                     (state/sidebar-add-block!
+                                      repo
+                                      page
+                                      :page-graph)))}})
+
           (when (and (not (mobile-util/native-platform?))
                      (state/get-current-page))
             {:title (t :page/slide-view)
