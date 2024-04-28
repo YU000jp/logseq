@@ -42,17 +42,17 @@
 (def GROUP-LIMIT 5)
 
 (def search-actions
-  [{:text "Search only pages"        :info "Add filter to search" :icon-theme :gray :icon "page" :filter {:mode "search"
+  [{:text (t :search/only-pages)        :info (t :search/info-filter-to-search) :icon-theme :gray :icon "page" :filter {:mode "search"
                                                                                                           :group :pages}}
-   {:text "Search only current page" :info "Add filter to search" :icon-theme :gray :icon "page" :filter {:mode "search"
+   {:text (t :search/only-current-page) :info (t :search/info-filter-to-search) :icon-theme :gray :icon "page" :filter {:mode "search"
                                                                                                           :group :current-page}}
-   {:text "Search only blocks"       :info "Add filter to search" :icon-theme :gray :icon "block" :filter {:mode "search"
+   {:text (t :search/only-blocks)       :info (t :search/info-filter-to-search) :icon-theme :gray :icon "block" :filter {:mode "search"
                                                                                                            :group :blocks}}
-   {:text "Search only commands"     :info "Add filter to search" :icon-theme :gray :icon "command" :filter {:mode "search"
+   {:text (t :search/only-commands)     :info (t :search/info-filter-to-search) :icon-theme :gray :icon "command" :filter {:mode "search"
                                                                                                              :group :commands}}
-   {:text "Search only whiteboards"  :info "Add filter to search" :icon-theme :gray :icon "whiteboard" :filter {:mode "search"
+   {:text (t :search/only-whiteboards)  :info (t :search/info-filter-to-search) :icon-theme :gray :icon "whiteboard" :filter {:mode "search"
                                                                                                                 :group :whiteboards}}
-   {:text "Search only files"        :info "Add filter to search" :icon-theme :gray :icon "file" :filter {:mode "search"
+   {:text (t :search/only-files)        :info (t :search/info-filter-to-search) :icon-theme :gray :icon "file" :filter {:mode "search"
                                                                                                           :group :files}}])
 
 (def filters search-actions)
@@ -775,9 +775,9 @@
   ;; (rand-nth
   ;;  [
     [:div.flex.flex-row.gap-1.items-center.opacity-50.hover:opacity-100
-     [:div "Type"]
+     [:span (t :search/tip-slash-type)]
      (shui/shortcut "/")
-     [:div "to filter search results"]]
+     [:span (t :search/tip-slash)]]
     ;; [:div.flex.flex-row.gap-1.items-center.opacity-50.hover:opacity-100
     ;;  (shui/shortcut ["mod" "enter"])
     ;;  [:div "to open search in the sidebar"]]
@@ -792,9 +792,9 @@
     (cond
       filter
       [:div.flex.flex-row.gap-1.items-center.opacity-50.hover:opacity-100
-       [:div "Type"]
+       [:span (t :search/tip-slash-type)]
        (shui/shortcut "esc" {:tiled false})
-       [:div "to clear search filter"]]
+       [:span (t :search/tip-slash-clear)]]
 
       :else
       (::rand-tip inner-state))))
@@ -838,17 +838,17 @@
         (case action
           :open
           [:<>
-           (button-fn "Open" ["return"])
-           (button-fn "Open in sidebar" ["shift" "return"] {:open-sidebar? true})
+           (button-fn (t :open) ["return"])
+           (button-fn (t :content/open-in-sidebar) ["shift" "return"] {:open-sidebar? true})
            (when (:source-block @(::highlighted-item state)) (button-fn "Copy ref" ["⌘" "c"]))]
 
           :search
           [:<>
-           (button-fn "Search" ["return"])]
+           (button-fn (t :command.go/search) ["return"])]
 
           :trigger
           [:<>
-           (button-fn "Trigger" ["return"])]
+           (button-fn :search/action-trigger ["return"])]
 
           :create
           [:<>
@@ -856,7 +856,7 @@
 
           :filter
           [:<>
-           (button-fn "Filter" ["return"])]
+           (button-fn (t :search/action-filter) ["return"])]
 
           nil)]])))
 
@@ -957,7 +957,8 @@
           [:div.flex.flex-col.p-4.opacity-50
            (when-not (string/blank? (rum/react *input))
              "No matched results")]))]
-     (when-not sidebar? (hints state))]))
+     (hints state)
+     ]))
 
 (rum/defc cmdk-modal [props]
   [:div {:class "cp__cmdk__modal rounded-lg w-[90dvw] max-w-4xl relative"}
