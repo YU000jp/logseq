@@ -130,7 +130,7 @@
 
     :scheduled-and-deadline
     [[:.flex.items-center.page-title
-      (ui/icon "time" {:class "text-sm mr-1"})
+      (ui/icon "calendar-time" {:class "text-sm mr-1"})
       [:span.overflow-hidden.text-ellipsis (t :right-side-bar/scheduled-and-deadline)]]
      (scheduled/scheduled-and-deadlines (date/today))]
 
