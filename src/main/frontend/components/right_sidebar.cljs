@@ -493,6 +493,13 @@
                                                          :title (t :command.sidebar/clear)}
           (ui/icon "trash-x" {:class "icon" :color "red"})]]
 
+        ;; キーボードショートカットへ移動
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (state/sidebar-add-block! (state/get-current-repo) "shortcut-settings" :shortcut-settings))
+                                                         :title (t :command.go/keyboard-shortcuts)}
+          (ui/icon "keyboard" {:class "icon" :color "gray"})]]
+
         ;; TODO: ページタイトルの横に移植する予定
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn []
