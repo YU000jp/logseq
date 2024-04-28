@@ -625,7 +625,7 @@
  :search/blank-input "Please enter a keyword"
  :search/what-are-you-looking-for "What are you looking for?" 
  :search/commands "Commands"
- :search/Files "Files"
+ :search/files "Files"
  :search/blocks "Blocks"
  :search/recents "Recents"
  :search/current-page "Current page"
