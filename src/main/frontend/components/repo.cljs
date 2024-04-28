@@ -201,24 +201,18 @@
                                    short-repo-name (if repo-name
                                                      (db/get-short-repo-name repo-name)
                                                      "Select a Graph")]
-                               [:a.item.group.flex.items-center.p-2.text-sm.font-medium.rounded-md
-
+                               [:a.item.group.flex.items-center.rounded-md
                                 {:on-click (fn []
                                              (check-multiple-windows? state)
                                              (toggle-fn))
                                  :title    repo-name}       ;; show full path on hover
-                                [:div.flex.flex-row.items-center
-                                 [:div.flex.relative.graph-icon.rounded
-                                  (let [icon "database"
-                                        opts {:size 14}]
-                                    (ui/icon icon opts))]
-
+                                [:div.flex.flex-row.items-center 
                                  [:div.graphs
                                   [:span#repo-switch.block.pr-2.whitespace-nowrap
                                    [:span [:span#repo-name.font-medium
                                            [:span.overflow-hidden.text-ellipsis (if (= config/local-repo short-repo-name) "Demo" short-repo-name)]
                                            (when remote? [:span.pl-1 (ui/icon "cloud")])]]
-                                   [:span.dropdown-caret.ml-2 {:style {:border-top-color "#6b7280"}}]]]]]))
+                                   [:span.dropdown-caret.ml-4 {:style {:border-top-color "#6b7280"}}]]]]]))
             links-header (cond->
                           {:z-index 1000
                            :modal-class (util/hiccup->class

@@ -12,6 +12,7 @@
             [frontend.handler :as handler]
             [frontend.handler.file-sync :as file-sync-handler]
             [frontend.components.file-sync :as fs-sync]
+            [frontend.components.repo :as repo]
             ;;[frontend.handler.plugin :as plugin-handler]
             [frontend.handler.route :as route-handler]
             [frontend.handler.user :as user-handler]
@@ -218,6 +219,8 @@
                              (util/scroll-to-top true))))}
      [:div.l.flex.drag-region
       [left-menu
+       [:div.text-md.ml-2 
+       (repo/repos-dropdown)]
        (when (mobile-util/native-platform?)
          ;; back button for mobile
          (when-not (or (state/home?) custom-home-page? (state/whiteboard-dashboard?))
