@@ -630,6 +630,7 @@
  :search/tip-slash-clear "で絞り込み解除";"to clear search filter"
  :search/action-filter "フィルタ"
  :search/action-trigger "トリガー"
+ :search/copy-ref "引用をコピー"
 
  :select.graph/add-graph "はい、新規グラフを追加します。"
  :select.graph/empty-placeholder-description "マッチするグラフがありません。新しいグラフを追加しますか？"

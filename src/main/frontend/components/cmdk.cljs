@@ -82,7 +82,7 @@
 
 ;; Take the results, decide how many items to show, and order the results appropriately
 (defn state->results-ordered [state search-mode]
-  (let [sidebar? (:sidebar? (last (:rum/args state)))
+  (let [;; sidebar? (:sidebar? (last (:rum/args state)))
         results @(::results state)
         input @(::input state)
         filter @(::filter state)
@@ -91,14 +91,14 @@
         visible-items (fn [group]
                         (let [{:keys [items show]} (get results group)]
                           (cond
-                            (or sidebar? (= group filter-group))
-                            items
+                            ;; (or sidebar? (= group filter-group))
+                            ;; items
 
                             (= :more show)
                             items
 
                             :else
-                            (take 5 items))))
+                            (take 10 items))))
         page-exists? (when-not (string/blank? input)
                        (db/entity [:block/name (string/trim input)]))
         include-slash? (or (string/includes? input "/")
@@ -123,7 +123,9 @@
                  filter-group
                  [(when (= filter-group :blocks)
                     [(t :search/current-page)   :current-page   (visible-items :current-page)])
-                  [(if (= filter-group :current-page) (t :search/current-page) (name filter-group))
+                  [(if (= filter-group :current-page)
+                     (t :search/current-page)
+                     (name filter-group))
                    filter-group
                    (visible-items filter-group)]
                   (when (= filter-group :pages)
@@ -173,24 +175,29 @@
 ;; Initially we want to load the recents into the results
 (defmethod load-results :initial [_ state]
   (let [!results (::results state)
-        recent-searches (seq (mapv (fn [q] {:type :search :data q}) (db/get-key-value :recent/search)))
-        recent-pages (seq (mapv (fn [page] {:type :page :data page}) (db/get-key-value :recent/pages)))
-        recent-items (->> (concat recent-searches recent-pages)
-                          (map #(hash-map :icon (if (= :page (:type %)) "page" "history")
-                                          :icon-theme :gray
-                                          :text (:data %)
-                                          :source-recent %
-                                          :source-page (when (= :page (:type %)) (:data %))
-                                          :source-search (when (= :search (:type %)) (:data %)))))
-        command-items (->> (cp-handler/top-commands 1000)
-                           (remove (fn [c] (= :window/close (:id c))))
-                           (map #(hash-map :icon "command"
-                                           :icon-theme :gray
-                                           :text (translate t %)
-                                           :shortcut (:shortcut %)
-                                           :source-command %)))]
-    (reset! !results (-> default-results (assoc-in [:recents :items] recent-items)
-                         (assoc-in [:commands :items] command-items)))))
+        recent-search (db/get-key-value :recent/search)
+        recent-pages (db/get-key-value :recent/pages)]
+        ;;バグ対策 recents データベース消失時にエラーが出るのを防ぐ
+    (when (or recent-search recent-pages)
+      (let [recent-searches (seq (mapv (fn [q] {:type :search :data q}) recent-search))
+            recent-pages (seq (mapv (fn [page] {:type :page :data page}) recent-pages))
+            recent-items (->> (concat recent-searches recent-pages)
+                              (map #(hash-map :icon (if (= :page (:type %)) "page" "history")
+                                              :icon-theme :gray
+                                              :text (:data %)
+                                              :source-recent %
+                                              :source-page (when (= :page (:type %)) (:data %))
+                                              :source-search (when (= :search (:type %)) (:data %)))))
+            command-items (->> (cp-handler/top-commands 1000)
+                               (remove (fn [c] (= :window/close (:id c))))
+                               (map #(hash-map :icon "command"
+                                               :icon-theme :gray
+                                               :text (translate t %)
+                                               :shortcut (:shortcut %)
+                                               :source-command %)))]
+        (reset! !results (-> default-results
+                             (assoc-in [:recents :items] recent-items)
+                             (assoc-in [:commands :items] command-items)))))))
 
 ;; The commands search uses the command-palette handler
 (defmethod load-results :commands [group state]
@@ -336,7 +343,7 @@
 (defmethod load-results :recents [group state]
   (let [!input (::input state)
         !results (::results state)
-        recent-searches (mapv (fn [q] {:type :search :data q}) (db/get-key-value :recent/search))
+        recent-searches (seq (mapv (fn [q] {:type :search :data q}) (db/get-key-value :recent/search)))
         recent-pages (->> (filter string? (db/get-key-value :recent/pages))
                           (keep (fn [page]
                                   (when-let [page-entity (db/entity [:block/name (util/page-name-sanity-lc page)])]
@@ -486,8 +493,8 @@
                                                (reset! (::input state) ""))
         (and shift-or-sidebar? block?) (handle-action :open-block-right state event)
         (and shift-or-sidebar? page?) (handle-action :open-page-right state event)
-        ;; block? (handle-action :open-block state event)
-        ;; page? (handle-action :open-page state event)
+        block? (handle-action :open-block state event)
+        page? (handle-action :open-page state event)
         ))))
 
 (defmethod handle-action :search [_ state _event]
@@ -591,8 +598,7 @@
 
        (when (and (= group highlighted-group)
                   (or can-show-more? can-show-less?)
-                  (empty? filter)
-                  (not sidebar?))
+                  (empty? filter))
          [:a.text-link.select-node.opacity-50.hover:opacity-90
           {:on-click (if (= show :more) show-less show-more)}
           (if (= show :more)
@@ -656,7 +662,7 @@
 
        ;; ensure that there is a throttled version of the load-results function
      (when-not @!load-results-throttled
-       (reset! !load-results-throttled (gfun/throttle load-results 50)))
+       (reset! !load-results-throttled (gfun/throttle load-results 25)))
 
        ;; retrieve the load-results function and update all the results
      (when (or (not composing?) (= e-type "compositionend"))
@@ -838,7 +844,7 @@
           [:<>
            (button-fn (t :open) ["return"])
            (button-fn (t :content/open-in-sidebar) ["shift" "return"] {:open-sidebar? true})
-           (when (:source-block @(::highlighted-item state)) (button-fn "Copy ref" ["⌘" "c"]))]
+           (when (:source-block @(::highlighted-item state)) (button-fn (t :search/copy-ref) ["⌘" "c"]))]
 
           :search
           [:<>
@@ -846,7 +852,7 @@
 
           :trigger
           [:<>
-           (button-fn :search/action-trigger ["return"])]
+           (button-fn (t :search/action-trigger) ["return"])]
 
           :create
           [:<>

@@ -653,6 +653,7 @@
  :search/tip-slash-clear "to clear search filter"
  :search/action-filter "Filter"
  :search/action-trigger "Trigger"
+ :search/copy-ref "Copy ref"
  :select.graph/add-graph "Yes, add another graph"
  :select.graph/empty-placeholder-description "No matched graphs. Do you want to add another one?"
  :select.graph/prompt "Select a graph"
