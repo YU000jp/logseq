@@ -408,11 +408,15 @@
     (state/set-modal! shell/shell)))
 
 (defmethod handle :go/search [_]
-  (state/set-modal! cmdk/cmdk-modal
-                    {:fullscreen? true
-                     :close-btn?  false
-                     :panel?      false
-                     :label "ls-modal-search"}))
+  ;; (state/set-modal! cmdk/cmdk-modal
+  ;;                   {:fullscreen? true
+  ;;                    :close-btn?  false
+  ;;                    :panel?      false
+  ;;                    :label "ls-modal-search"}) 
+  (let [repo (state/get-current-repo)]
+    (state/close-modal!)
+    (state/sidebar-add-block! repo "" :search)) ;; サイドバーで検索を開く
+  )
 
 (defmethod handle :go/plugins [_]
   (plugin/open-plugins-modal!))
