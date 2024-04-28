@@ -7,7 +7,7 @@
             [frontend.components.journal :as journal]
             [frontend.components.onboarding :as onboarding]
             [frontend.components.plugins :as plugins]
-            [frontend.components.repo :as repo]
+            ;; [frontend.components.repo :as repo]
             [frontend.components.right-sidebar :as right-sidebar]
             [frontend.components.select :as select]
             [frontend.components.theme :as theme]
@@ -132,7 +132,7 @@
     (shui/context-menu
       (shui/context-menu-trigger
         [:a.flex.items-center.justify-between.relative.group
-         {:on-click
+         {:on-click ;; TODO: ブックマークや履歴のリンクにツールチップをつける
           (fn [e]
             (let [name (if (empty? source-page) name (:block/name source-page))]
               (if (gobj/get e "shiftKey")
@@ -411,8 +411,7 @@
        ;    (ui/icon "menu-2" {:size ui/icon-size})]])
 
        [:nav.px-4.flex.flex-col.gap-1.cp__menubar-repos
-        {:aria-label "Navigation menu"}
-        (repo/repos-dropdown)
+        {:aria-label "Navigation menu"} 
 
         [:div.nav-header.flex.flex-col.mt-2
          (let [page (:page default-home)]
@@ -435,7 +434,7 @@
                                    (if (gobj/get e "shiftKey")
                                      (route-handler/sidebar-journals!)
                                      (route-handler/go-to-journals!)))
-               :icon "calendar"
+               :icon "calendar-time"
                :shortcut :go/journals})))
 
          (when enable-whiteboards?
