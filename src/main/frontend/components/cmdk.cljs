@@ -173,8 +173,8 @@
 ;; Initially we want to load the recents into the results
 (defmethod load-results :initial [_ state]
   (let [!results (::results state)
-        recent-searches (mapv (fn [q] {:type :search :data q}) (db/get-key-value :recent/search))
-        recent-pages (mapv (fn [page] {:type :page :data page}) (db/get-key-value :recent/pages))
+        recent-searches (seq (mapv (fn [q] {:type :search :data q}) (db/get-key-value :recent/search)))
+        recent-pages (seq (mapv (fn [page] {:type :page :data page}) (db/get-key-value :recent/pages)))
         recent-items (->> (concat recent-searches recent-pages)
                           (map #(hash-map :icon (if (= :page (:type %)) "page" "history")
                                           :icon-theme :gray
