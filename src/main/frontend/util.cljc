@@ -1322,6 +1322,14 @@
        (gobj/get e "ctrlKey"))))
 
 #?(:cljs
+   (defn shift-key? [e]
+       (gobj/get e "shiftKey")))
+
+#?(:cljs
+   (defn alt-key? [e]
+     (gobj/get e "altKey")))
+
+#?(:cljs
    (defn right-click?
      [e]
      (let [which (gobj/get e "which")

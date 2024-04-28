@@ -336,6 +336,10 @@
                                           :sub-checkbox? local?
                                           :on-confirm    (fn [_e {:keys [close-fn sub-selected]}]
                                                            (close-fn)
+                                                           
+                                                           ;;TODO:削除する前に、forwardページに移動する
+                                                           (js/window.history.back)
+
                                                            (editor-handler/delete-asset-of-block!
                                                              {:block-id      block-id
                                                               :local?        local?
