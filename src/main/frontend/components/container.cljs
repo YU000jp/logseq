@@ -310,7 +310,7 @@
      [:button#create-button
       {:on-click toggle-fn}
       [:<>
-       (ui/icon "plus" {:font? "true"})]])
+       (ui/icon "plus")]])
    (->>
     [{:title (t :left-side-bar/new-page)
       :class "new-page-link"
