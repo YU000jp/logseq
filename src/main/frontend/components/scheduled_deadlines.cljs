@@ -22,7 +22,7 @@
   (let [scheduled-or-deadlines (when (scheduled-or-deadlines? page-name)
                                  (db/get-date-scheduled-or-deadlines (string/capitalize page-name)))]
     (if (seq scheduled-or-deadlines)
-      [:div.scheduled-deadlines.references-blocks.mb-6
+      [:div.scheduled-deadlines.references-blocks.mb-2.text-sm
        (let [ref-hiccup (block/->hiccup scheduled-or-deadlines
                                         {:id (str page-name "-agenda")
                                          :ref? true
