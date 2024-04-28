@@ -139,7 +139,7 @@
       (ui/icon "brand-4chan" {:class "text-sm mr-1"})
       [:span.overflow-hidden.text-ellipsis (t :right-side-bar/default-queries)]]
      (ui/lazy-visible
-      (fn [] (page/today-queries repo idx)))]
+      (fn [] (page/today-queries repo)))]
 
     :page-graph
     [[:.flex.items-center (ui/icon "hierarchy" {:class "text-sm mr-2"}) (t :right-side-bar/page-graph)]
@@ -457,34 +457,34 @@
                                                                        (state/close-modal!)
                                                                        (state/sidebar-add-block! repo "" :search)))
                                                          :title (t :header/search)}
-          (ui/icon "search" {:class "icon" :size 23})]]
+          (ui/icon "search" {:class "icon" :size 23 :color "gray"})]]
 
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
                                                                      (state/sidebar-add-block! repo "contents" :contents))
                                                          :title (t :right-side-bar/contents)}
-          (ui/icon "note" {:class "icon" :size 23})]]
+          (ui/icon "note" {:class "icon" :size 23 :color "gray"})]]
 
         ;; SCHEDULED AND DEADLINEを表示する
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
                                                                      (state/sidebar-add-block! repo (t :right-side-bar/scheduled-and-deadline) :scheduled-and-deadline))
                                                          :title (t :right-side-bar/scheduled-and-deadline)}
-          (ui/icon "calendar-time" {:class "icon" :size 23})]]
+          (ui/icon "calendar-time" {:class "icon" :size 23 :color "gray"})]]
 
         ;; :dafault-queries
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
                                                                      (state/sidebar-add-block! repo (t :right-side-bar/default-queries "DEFAULT QUERIES") :default-queries))
                                                          :title (t :right-side-bar/default-queries "DEFAULT QUERIES")}
-          (ui/icon "brand-4chan" {:class "icon" :size 23})]]
+          (ui/icon "brand-4chan" {:class "icon" :size 23 :color "gray"})]]
         
         ;; 今日のジャーナルを開く
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
                                                                      (page-handler/open-today-in-sidebar))
                                                          :title (t :command.go/today)}
-          (ui/icon "clock" {:class "icon" :size 23})]]
+          (ui/icon "clock" {:class "icon" :size 23 :color "gray"})]]
 
         ;; サイドバーをクリアにする
         [:div.text-sm
@@ -502,7 +502,7 @@
                                                                         page
                                                                         :page-graph)))
                                                          :title (t :right-side-bar/page-graph)}
-          (ui/icon "hierarchy" {:class "icon"})]]
+          (ui/icon "hierarchy" {:class "icon" :color "gray"})]]
         
         ;; [:div.text-sm
         ;;  [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
@@ -514,7 +514,7 @@
            [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
                                                                        (state/sidebar-add-block! repo "history" :history))
                                                            :title (t :right-side-bar/history)}
-            (ui/icon "history" {:class "icon"})]])]]
+            (ui/icon "history" {:class "icon" :size 18 :color "gray"})]])]]
 
       [:.sidebar-item-list.flex-1.scrollbar-spacing.px-2
        (if @*anim-finished?
