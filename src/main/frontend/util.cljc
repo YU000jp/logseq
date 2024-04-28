@@ -62,11 +62,12 @@
 #?(:cljs (defonce convert-to-letters utils/convertToLetters))
 #?(:cljs (defonce hsl2hex utils/hsl2hex))
 
+#_{:clj-kondo/ignore [:path-invalid-construct/string-join]}
 (defn string-join-path
   "Replace all `strings/join` used to construct paths with this function to reduce lint output.
   https://github.com/YU000jp/fork-logseq/pull/8679"
   [parts]
-  (string/join "/" parts))
+  (clojure.string/join "/" parts))
 
 #?(:cljs
    (defn safe-re-find
