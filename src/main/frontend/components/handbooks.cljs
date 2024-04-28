@@ -1,6 +1,6 @@
 (ns frontend.components.handbooks
   (:require [rum.core :as rum]
-            [frontend.state :as state]
+            ;; [frontend.state :as state]
             [frontend.modules.layout.core :as layout]
             ;[shadow.lazy :as lazy]
             [frontend.extensions.handbooks.core :as handbooks]))
@@ -35,6 +35,6 @@
      [:div.cp__handbooks-content-wrap
       (handbooks/content)]]))
 
-(defn toggle-handbooks
-  []
-  (state/toggle! :ui/handbooks-open?))
+;; (defn toggle-handbooks
+;;   []
+;;   (state/toggle! :ui/handbooks-open?))
