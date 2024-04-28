@@ -67,7 +67,7 @@
   "Replace all `strings/join` used to construct paths with this function to reduce lint output.
   https://github.com/YU000jp/fork-logseq/pull/8679"
   [parts]
-  (clojure.string/join "/" parts))
+  (string/join "/" parts))
 
 #?(:cljs
    (defn safe-re-find

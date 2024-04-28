@@ -945,10 +945,11 @@
     "@types/streamx" "*"
 
 "@types/gulp@^4.0.7":
-  version "4.0.14"
-  resolved "https://registry.yarnpkg.com/@types/gulp/-/gulp-4.0.14.tgz#e077ec7a76c730c340f98dc17f0678df585a8814"
-  integrity sha512-zjhBRyGTIPnJ/gByJpjtFyRPKej7zkNFct+QgDhAwpOEoJ2MQjajhU69vrcHIffKcnt3Dik2JHzgMj0C1q9WOg==
+  version "4.0.17"
+  resolved "https://registry.yarnpkg.com/@types/gulp/-/gulp-4.0.17.tgz#b314c3762d08d8d69b7c0b86f78d069bafd65009"
+  integrity sha512-+pKQynu2C/HS16kgmDlAicjtFYP8kaa86eE9P0Ae7GB5W29we/E2TIdbOWtEZD5XkpY+jr8fyqfwO6SWZecLpQ==
   dependencies:
+    "@types/node" "*"
     "@types/undertaker" ">=1.2.6"
     "@types/vinyl-fs" "*"
     chokidar "^3.3.1"
