@@ -59,8 +59,8 @@
                         (state/get-current-page)
                         (state/get-current-whiteboard))]
     (let [page-name (util/page-name-sanity-lc page-name)
-          repo (state/sub :git/current-repo)
-          page (db/entity repo [:block/name page-name])
+          current-repo (state/get-current-repo)
+          page (db/entity current-repo [:block/name page-name])
           page-original-name (:block/original-name page)
           whiteboard? (= "whiteboard" (:block/type page))
           block? (and page (util/uuid-string? page-name) (not whiteboard?))
@@ -114,21 +114,23 @@
           (when-not (or contents?
                         config/publishing?)
             {:title   (t :page/delete)
-             :options {:on-click #(state/set-modal! (delete-page-dialog page-name))}})
+             :options {:on-click (fn []
+                                   (state/set-modal! (delete-page-dialog page-name)))}})
 
           (when electron?
             {:title   (t :right-side-bar/page-graph)
-             :options {:on-click #((state/sidebar-add-block!
-                                      repo
-                                      page-name
-                                      :page-graph))}})
+             :options {:on-click (fn []
+                                   (state/sidebar-add-block!
+                                    current-repo
+                                    page-name
+                                    :page-graph))}})
 
           (when (and (not (mobile-util/native-platform?))
                      page-name)
             {:title (t :page/slide-view)
              :options {:on-click (fn []
                                    (state/sidebar-add-block!
-                                    repo
+                                    current-repo
                                     (:db/id page)
                                     :page-slide-view))}})
 
@@ -137,7 +139,7 @@
           ;; this one. However this component doesn't yet exist. PRs are welcome!
           ;; Details: https://github.com/logseq/logseq/pull/3003#issuecomment-952820676
           (when file-rpath
-            (let [repo-dir (config/get-repo-dir repo)
+            (let [repo-dir (config/get-repo-dir current-repo)
                   file-fpath (path/path-join repo-dir file-rpath)]
               [{:title   (t :page/open-in-finder)
                 :options {:on-click #(ipc/ipc "openFileInFolder" file-fpath)}}
@@ -160,11 +162,11 @@
                          (state/close-modal!))}})
 
           (when (and electron? file-rpath
-                     (not (file-sync-handler/synced-file-graph? repo)))
+                     (not (file-sync-handler/synced-file-graph? current-repo)))
             {:title   (t :page/open-backup-directory)
              :options {:on-click
                        (fn []
-                         (ipc/ipc "openFileBackupDir" (config/get-local-dir repo) file-rpath))}})
+                         (ipc/ipc "openFileBackupDir" (config/get-local-dir current-repo) file-rpath))}})
           {:hr true}
           (when config/lsp-enabled?
             (for [[_ {:keys [label] :as cmd} action pid] (state/get-plugins-commands-with-type :page-menu-item)]
