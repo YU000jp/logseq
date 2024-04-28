@@ -71,8 +71,9 @@
           favorited? (contains? (set (map util/page-name-sanity-lc favorites))
                                 page-name)
           developer-mode? (state/sub [:ui/developer-mode?])
-          file-rpath (when (util/electron?) (page-util/get-page-file-rpath page-name))
-          _ (state/sub :auth/id-token)
+          electron? (util/electron?)
+          file-rpath (when electron? (page-util/get-page-file-rpath page-name))
+          _ (state/sub :auth/id-token) 
           file-sync-graph-uuid (and (user-handler/logged-in?)
                                     (file-sync-handler/enable-sync?)
                                     ;; FIXME: Sync state is not cleared when switching to a new graph
@@ -90,7 +91,7 @@
                            (page-handler/unfavorite-page! page-original-name)
                            (page-handler/favorite-page! page-original-name)))}})
 
-          (when (and (or (util/electron?) file-sync-graph-uuid) (state/get-git-auto-commit-enabled?))
+          (when (and (or electron? file-sync-graph-uuid) (state/get-git-auto-commit-enabled?))
             {:title   (t :page/version-history)
              :options {:on-click
                        (fn []
@@ -98,14 +99,14 @@
                            file-sync-graph-uuid
                            (state/pub-event! [:graph/pick-page-histories file-sync-graph-uuid page-name])
 
-                           (util/electron?)
+                           electron?
                            (shell/get-file-latest-git-log page 100)
 
                            :else
                            nil))
                        :class "cp__btn_history_version"}})
 
-          ;; (when (or (util/electron?)
+          ;; (when (or electron?
           ;;           (mobile-util/native-platform?))
           ;;   {:title   (t :page/copy-page-url)
           ;;    :options {:on-click #(page-handler/copy-page-url page-original-name)}})
@@ -115,16 +116,15 @@
             {:title   (t :page/delete)
              :options {:on-click #(state/set-modal! (delete-page-dialog page-name))}})
 
-          (when (util/electron?)
+          (when electron?
             {:title   (t :right-side-bar/page-graph)
-             :options {:on-click #((when-let [page (state/get-current-page)]
-                                     (state/sidebar-add-block!
+             :options {:on-click #((state/sidebar-add-block!
                                       repo
-                                      page
-                                      :page-graph)))}})
+                                      page-name
+                                      :page-graph))}})
 
           (when (and (not (mobile-util/native-platform?))
-                     (state/get-current-page))
+                     page-name)
             {:title (t :page/slide-view)
              :options {:on-click (fn []
                                    (state/sidebar-add-block!
@@ -144,13 +144,13 @@
                {:title   (t :page/open-with-default-app)
                 :options {:on-click #(js/window.apis.openPath file-fpath)}}]))
 
-          (when (or (state/get-current-page) whiteboard?)
+          (when (or page-name whiteboard?)
             {:title   (t :export-page)
              :options {:on-click #(state/set-modal!
                                    (fn []
                                      (export/export-blocks (:block/name page) {:whiteboard? whiteboard?})))}})
 
-          (when (util/electron?)
+          (when electron?
             {:title   (t (if public? :page/make-private :page/make-public))
              :options {:on-click
                        (fn []
@@ -159,7 +159,7 @@
                           (if public? false true))
                          (state/close-modal!))}})
 
-          (when (and (util/electron?) file-rpath
+          (when (and electron? file-rpath
                      (not (file-sync-handler/synced-file-graph? repo)))
             {:title   (t :page/open-backup-directory)
              :options {:on-click
