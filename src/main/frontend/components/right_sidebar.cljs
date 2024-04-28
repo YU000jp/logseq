@@ -129,17 +129,17 @@
     ;; [[:.flex.items-center (ui/icon "help" {:class "text-md mr-2"}) (t :right-side-bar/help)] (onboarding/help)]
 
     :scheduled-and-deadline
-        [[:.flex.items-center.page-title
-      (ui/icon "time" {:class "text-sm mr-1"}) 
-       [:span.overflow-hidden.text-ellipsis (t :right-side-bar/scheduled-and-deadline)]]
-      (scheduled/scheduled-and-deadlines (date/today))]
-    
+    [[:.flex.items-center.page-title
+      (ui/icon "time" {:class "text-sm mr-1"})
+      [:span.overflow-hidden.text-ellipsis (t :right-side-bar/scheduled-and-deadline)]]
+     (scheduled/scheduled-and-deadlines (date/today))]
+
     :default-queries
     [[:.flex.items-center.page-title
       (ui/icon "brand-4chan" {:class "text-sm mr-1"})
       [:span.overflow-hidden.text-ellipsis (t :right-side-bar/default-queries)]]
-       (ui/lazy-visible
-      (fn [] (page/today-queries repo)))] 
+     (ui/lazy-visible
+      (fn [] (page/today-queries repo idx)))]
 
     :page-graph
     [[:.flex.items-center (ui/icon "hierarchy" {:class "text-sm mr-2"}) (t :right-side-bar/page-graph)]
@@ -185,8 +185,8 @@
                          :on-input-change (fn [new-value]
                                             (reset! *db-id new-value))
                          :on-input-blur (fn [new-value]
-                                            (state/sidebar-replace-block! [repo db-id block-type]
-                                                                          [repo new-value block-type]))})
+                                          (state/sidebar-replace-block! [repo db-id block-type]
+                                                                        [repo new-value block-type]))})
        (str init-key))]
 
     :page-slide-view

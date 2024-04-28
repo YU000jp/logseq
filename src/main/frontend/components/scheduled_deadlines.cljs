@@ -2,6 +2,7 @@
   (:require [frontend.date :as date]
             [frontend.state :as state]
             [frontend.ui :as ui]
+            [frontend.context.i18n :refer [t]]
             [frontend.components.content :as content]
             [frontend.components.block :as block]
             [clojure.string :as string]
@@ -20,7 +21,7 @@
   [page-name]
   (let [scheduled-or-deadlines (when (scheduled-or-deadlines? page-name)
                                  (db/get-date-scheduled-or-deadlines (string/capitalize page-name)))]
-    (when (seq scheduled-or-deadlines)
+    (if (seq scheduled-or-deadlines)
       [:div.scheduled-deadlines.references-blocks.mb-6
        (let [ref-hiccup (block/->hiccup scheduled-or-deadlines
                                         {:id (str page-name "-agenda")
@@ -28,7 +29,8 @@
                                          :group-by-page? true
                                          :editor-box editor/box}
                                         {})]
-         (content/content page-name {:hiccup ref-hiccup}))])))
+         (content/content page-name {:hiccup ref-hiccup}))]
+      [:span (t :right-side-bar/scheduled-and-deadline-no-result)])))
 
 (rum/defc scheduled-and-deadlines
   [page-name]

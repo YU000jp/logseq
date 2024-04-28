@@ -226,18 +226,23 @@
 
 (rum/defc today-queries < rum/reactive
   [repo]
-    (let [queries (get-in (state/sub-config repo) [:default-queries :journals])] 
-      (when (seq queries)
-        [:div#today-queries.content
+  (let [queries (get-in (state/sub-config repo) [:default-queries :journals])]
+    (when (seq queries)
+      [:div#today-queries.content
+       (let [no-result! true]
          (for [query queries]
            (rum/with-key
              (ui/catch-error
               (ui/component-error "Failed default query:" {:content (pr-str query)})
-              (query/custom-query (component-block/wrap-query-components
-                                   {:attr {:class "my-2 references-blocks-item"}
-                                    :editor-box editor/box})
-                                  query))
-             (str repo "-custom-query-" (:query query))))])))
+              ((query/custom-query (component-block/wrap-query-components
+                                    {:attr {:class "my-2 references-blocks-item"}
+                                     :editor-box editor/box})
+                                   query)
+               ;; no-resultをfalseにする
+               (reset! (atom no-result!) false)))
+             (str repo "-custom-query-" (:query query))))
+         (when (atom no-result!)
+           [:span (t :right-side-bar/default-queries-no-result)]))])))
 
 (defn tagged-pages
   [repo tag]
