@@ -720,9 +720,7 @@
   []
   (let [search-mode (:search/mode @state/state)]
     (cond
-      (and (= search-mode :graph))
-      "Add graph filter"
-
+      (= search-mode :graph) "Add graph filter"
       :else
       (t :search/what-are-you-looking-for))))
 
