@@ -63,7 +63,7 @@
     [:button.#left-menu.cp__header-left-menu.button.icon
      {:title (t :header/toggle-left-sidebar)
       :on-click on-click}
-     (ui/icon "menu-2" {:size ui/icon-size})]))
+     (ui/icon "align-left" {:size 20})]))
 
 (defn bug-report-url []
   (let [ua (.-userAgent js/navigator)
