@@ -215,8 +215,7 @@
                              (js/window.apis.toggleMaxOrMinActiveWindow)
 
                              (mobile-util/native-platform?)
-                             (util/scroll-to-top true))))
-      :style           {:fontSize 50}}
+                             (util/scroll-to-top true))))}
      [:div.l.flex.drag-region
       [left-menu
        (when (mobile-util/native-platform?)
