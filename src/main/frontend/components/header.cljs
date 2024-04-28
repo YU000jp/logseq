@@ -230,7 +230,7 @@
 
      [:div.r.flex.drag-region
       (when (and current-repo
-                 (not (config/demo-graph? current-repo))
+                 (not (config/demo-graph? current-repo)) ;; デモグラフの場合を除く
                  (user-handler/alpha-or-beta-user?))
         (fs-sync/indicator))
 
