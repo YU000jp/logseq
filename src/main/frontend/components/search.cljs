@@ -8,12 +8,12 @@
   (let [content (search-handler/sanity-search-content format content)]
     [:div
      (when (not= search-mode :page)
-       [:div {:class "mb-1" :key "parents"}
+       [:div {:class "text-sm.mb-1" :key "parents"}
         (block/breadcrumb {:id "block-search-block-parent"
                            :block? true
                            :search? true}
                           repo
                           (clojure.core/uuid uuid)
                           {:indent? false})])
-     [:div {:class "font-medium" :key "content"}
+     [:div {:class "text-sm" :key "content"}
       (search-handler/highlight-exact-query content q)]]))
