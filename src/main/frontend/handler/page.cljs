@@ -824,7 +824,7 @@
 (defn create-today-journal!
   []
   ;; 空のページを作成しない 
-  (when (not (state/journal-create-user-submit?)))
+  (when (not (state/journal-create-user-submit?))
     (when-let [repo (state/get-current-repo)]
       (when (and (state/enable-journals? repo)
                  (not (state/loading-files? repo))
@@ -848,10 +848,9 @@
                 (when (or (not file-exists?)
                           (and file-exists? (string/blank? file-content)))
                   ;; ページを作成するかどうか尋ねる   
-                  (state/pub-event! [:journal/insert-template today-page])
-                  )
+                  (state/pub-event! [:journal/insert-template today-page]))
                 ;;(ui-handler/re-render-root!)
-                (plugin-handler/hook-plugin-app :today-journal-created {:title today-page}))))))))
+                (plugin-handler/hook-plugin-app :today-journal-created {:title today-page})))))))))
 
 (defn open-today-in-sidebar
   []
