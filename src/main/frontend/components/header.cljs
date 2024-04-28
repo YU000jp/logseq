@@ -7,6 +7,7 @@
             [frontend.components.right-sidebar :as sidebar]
             [frontend.components.svg :as svg]
             [frontend.config :as config]
+            [frontend.date :as date]
             [frontend.context.i18n :refer [t]]
             [frontend.handler :as handler]
             [frontend.handler.file-sync :as file-sync-handler]
@@ -30,10 +31,12 @@
   (ui/with-shortcut :go/home "left"
     [:button.button.icon.inline.mx-1
      {:title (t :home)
-      :on-click #(do
+      :on-click (fn [e]
                    (when (mobile-util/native-iphone?)
                      (state/set-left-sidebar-open! false))
-                   (route-handler/redirect-to-home!))}
+                   (if (util/shift-key? e)
+                     (route-handler/redirect-to-page! (date/today))
+                     (route-handler/redirect-to-home!)))}
      (ui/icon "home" {:size ui/icon-size})]))
 
 (rum/defc login < rum/reactive
@@ -243,10 +246,16 @@
         (ui/with-shortcut :go/search "right"
           [:button.button.icon#search-button
            {:title (t :header/search)
-            :on-click #(do (when (or (mobile-util/native-android?)
-                                     (mobile-util/native-iphone?))
-                             (state/set-left-sidebar-open! false))
-                           (state/pub-event! [:go/search]))}
+            :on-click (fn [e]
+                        (when (or (mobile-util/native-android?)
+                                  (mobile-util/native-iphone?))
+                          (state/set-left-sidebar-open! false))
+                        (if (util/shift-key? e)
+                          (let [repo (state/get-current-repo)]
+                            (state/close-modal!)
+                            ;; サイドバーで検索を開く
+                            (state/sidebar-add-block! repo "" :search))
+                          (state/pub-event! [:go/search])))}
            (ui/icon "search" {:size ui/icon-size})]))
 
       (when (util/electron?)
