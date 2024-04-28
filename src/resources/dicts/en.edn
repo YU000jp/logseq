@@ -396,6 +396,8 @@
  :left-side-bar/new-page "New page"
  :left-side-bar/new-whiteboard "New whiteboard"
  :left-side-bar/switch "Switch to:"
+ :left-side-bar/demo-graph "Demo graph"
+ :left-side-bar/graph-unlink "Unlink graph"
  :linked-references/filter-directions "Click to include and shift-click to exclude. Click again to remove."
  :linked-references/filter-excludes "Excludes: "
  :linked-references/filter-heading "Filter"

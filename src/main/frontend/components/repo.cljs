@@ -77,7 +77,7 @@
                                  (let [current-repo (state/get-current-repo)]
                                    (repo-handler/remove-repo! repo)
                                    (state/pub-event! [:graph/unlinked repo current-repo]))))}
-                  (if only-cloud? "Remove" "Unlink")])]]]))
+                  (if only-cloud? "Remove" (t :left-side-bar/graph-unlink))])]]]))
 
 (rum/defc repos < rum/reactive
   []
@@ -210,7 +210,7 @@
                                  [:div.graphs
                                   [:span#repo-switch.block.pr-2.whitespace-nowrap
                                    [:span [:span#repo-name.font-medium
-                                           [:span.overflow-hidden.text-ellipsis (if (= config/local-repo short-repo-name) "Demo" short-repo-name)]
+                                           [:span.overflow-hidden.text-ellipsis (if (= config/local-repo short-repo-name) (t :left-side-bar/demo-graph) short-repo-name)]
                                            (when remote? [:span.pl-1 (ui/icon "cloud")])]]
                                    [:span.dropdown-caret.ml-4 {:style {:border-top-color "#6b7280"}}]]]]]))
             links-header (cond->
