@@ -452,7 +452,10 @@
        [:div.cp__right-sidebar-settings.hide-scrollbar.gap-1 {:key "right-sidebar-settings"}
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
-                                                                     (state/pub-event! [:go/search]))
+                                                                      ;; サイドバーで検索を開く
+                                                                     (let [repo (state/get-current-repo)]
+                                                                       (state/close-modal!)
+                                                                       (state/sidebar-add-block! repo "" :search)))
                                                          :title (t :header/search)}
           (ui/icon "search" {:class "icon" :size 23})]]
 
