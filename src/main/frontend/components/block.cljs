@@ -72,7 +72,7 @@
             [logseq.graph-parser.util.page-ref :as page-ref]
             [logseq.graph-parser.whiteboard :as gp-whiteboard]
             [logseq.shui.core :as shui]
-            [logseq.shui.ui :as shui-ui]
+            ;; [logseq.shui.ui :as shui-ui]
             [medley.core :as medley]
             [promesa.core :as p]
             [reitit.frontend.easy :as rfe]

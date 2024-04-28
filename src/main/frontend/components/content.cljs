@@ -22,7 +22,7 @@
             [frontend.modules.shortcut.core :as shortcut]
             [logseq.graph-parser.util :as gp-util]
             [logseq.graph-parser.util.block-ref :as block-ref]
-            [frontend.util.url :as url-util]
+            ;; [frontend.util.url :as url-util]
             [goog.dom :as gdom]
             [goog.object :as gobj]
             [rum.core :as rum]))

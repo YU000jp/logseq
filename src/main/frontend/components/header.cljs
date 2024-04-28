@@ -219,7 +219,7 @@
       :style           {:fontSize 50}}
      [:div.l.flex.drag-region
       [left-menu
-       (if (mobile-util/native-platform?)
+       (when (mobile-util/native-platform?)
          ;; back button for mobile
          (when-not (or (state/home?) custom-home-page? (state/whiteboard-dashboard?))
            (ui/with-shortcut :go/backward "bottom"

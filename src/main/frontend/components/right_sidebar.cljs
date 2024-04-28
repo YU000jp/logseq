@@ -14,7 +14,7 @@
             [frontend.db.model :as db-model]
             [frontend.extensions.slide :as slide]
             [frontend.handler.editor :as editor-handler]
-            [frontend.handler.user :as user-handler]
+            ;; [frontend.handler.user :as user-handler]
             [frontend.handler.ui :as ui-handler]
             [frontend.handler.page :as page-handler]
             [frontend.state :as state]

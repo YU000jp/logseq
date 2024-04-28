@@ -459,9 +459,9 @@
           page-original-name (:block/original-name page)
           title (or page-original-name page-name)
           icon (or icon "")
-          today? (and
-                  journal?
-                  (= page-name (util/page-name-sanity-lc (date/journal-name))))
+          ;; today? (and
+          ;;         journal?
+          ;;         (= page-name (util/page-name-sanity-lc (date/journal-name)))) ;; today page
           *control-show? (::control-show? state)
           *all-collapsed? (::all-collapsed? state)
           *current-block-page (::current-page state)
