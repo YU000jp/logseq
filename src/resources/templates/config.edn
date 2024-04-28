@@ -54,7 +54,7 @@
 
  ;; Enable Block timestamps.
  ;; Default value: false
- :feature/enable-block-timestamps? false
+ :feature/enable-block-timestamps? true
 
  ;; Disable accent marks when searching.
  ;; After changing this setting, rebuild the search index by pressing (^C ^S).
@@ -214,6 +214,7 @@
  :default-queries
  {:journals
   [
+   
    {:title "🔨 NOW"
     :query [:find (pull ?h [*]) ; get full block results
             :in $ ?start ?today ; variables made from the values in :inputs to use in the query.
@@ -239,6 +240,8 @@
     :group-by-page? false ; don't group the blocks by page (change to true to group)
     :breadcrumb-show? true ; do show the parent block hierarchy of the block (change to false to hide it)
     :collapsed? false} ; don't collapse the query to title only. Change to true to collapse the query.
+   
+   
    {:title "📅 NEXT"
     :query [:find (pull ?h [*]) ; get full block results
             :in $ ?start ?next ; variables made from the values in :inputs to use in the query.
@@ -261,6 +264,7 @@
     :group-by-page? false ; don't group the blocks by page (change to true to group)
     :breadcrumb-show? true ; do show the parent block hierarchy of the block (change to false to hide it)
     :collapsed? false} ; don't collapse the query to title only. Change to true to collapse the query.
+  
   ]
  }
 
