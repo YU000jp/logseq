@@ -598,7 +598,8 @@
 
        (when (and (= group highlighted-group)
                   (or can-show-more? can-show-less?)
-                  (empty? filter))
+                  (empty? filter)
+                  (not sidebar?))
          [:a.text-link.select-node.opacity-50.hover:opacity-90
           {:on-click (if (= show :more) show-less show-more)}
           (if (= show :more)
