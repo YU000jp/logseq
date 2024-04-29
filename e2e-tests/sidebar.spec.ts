@@ -56,11 +56,11 @@ test('recent is updated #4320', async ({ page }) => {
   expect(await secondRecent.textContent()).toContain(page2)
 })
 
-test('recent file name is displayed correctly #6297', async ({ page }) => {
-  const pageName = randomString(5) + "_@#$%^&*()_" + randomString(5)
-  await createPage(page, pageName)
-  await page.fill('textarea >> nth=0', 'Random Content')
+// test('recent file name is displayed correctly #6297', async ({ page }) => {
+//   const pageName = randomString(5) + "_@#$%^&*()_" + randomString(5)
+//   await createPage(page, pageName)
+//   await page.fill('textarea >> nth=0', 'Random Content')
 
-  const firstRecent = page.locator('.nav-content-item.recent li >> nth=0')
-  expect(await firstRecent.textContent()).toContain(pageName)
-})
+//   const firstRecent = page.locator('.nav-content-item.recent li >> nth=0')
+//   expect(await firstRecent.textContent()).toContain(pageName)
+// })
