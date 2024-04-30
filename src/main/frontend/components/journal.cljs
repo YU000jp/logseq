@@ -38,12 +38,14 @@
                                 data-page-tags
                                 (assoc :data-page-tags data-page-tags))
 
+     ;;TODO: 日付ナビゲーション設置
+
      (ui/foldable
       [:a.initial-color.title.journal-title
        {:href     (rfe/href :page {:name page})
         :on-mouse-down (fn [e]
                          (when (util/right-click? e)
-                           (state/set-state! :page-title/context {:page page})))
+                           (state/set-state! :page-title/context {:page page}))) ;; TODO: ページの各種メニューはボタン配置にする
         :on-click (fn [e]
                     (when (gobj/get e "shiftKey")
                       (when-let [page page-entity]
@@ -70,7 +72,7 @@
     ;;    (scheduled/scheduled-and-deadlines page))
 
      (rum/with-key
-       (reference/references title)
+       (reference/references title) ;; TODO: サイドバーを開いているときと、そうでないときにLinked Refrencesの配置を変える
        (str title "-refs"))]))
 
 (rum/defc journals < rum/reactive

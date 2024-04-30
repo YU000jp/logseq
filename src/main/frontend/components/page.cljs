@@ -523,7 +523,7 @@
 
        ;; referenced blocks
        (when-not block-or-whiteboard?
-         [:div {:key "page-references"}
+         [:div {:key "page-references"} ;; TODO: サイドバーではLinked Refrencesを折りたたむ
           (rum/with-key
             (reference/references route-page-name)
             (str route-page-name "-refs"))])
