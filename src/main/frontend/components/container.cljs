@@ -83,16 +83,17 @@
         whiteboard-page? (db-model/whiteboard-page? name)
         untitled? (db-model/untitled-page? name)
         name (util/safe-page-name-sanity-lc name)
+        repo (state/get-current-repo)
         file-rpath (when (util/electron?) (page-util/get-page-file-rpath name))
-        source-page (db-model/get-alias-source-page (state/get-current-repo) name)
+        source-page (db-model/get-alias-source-page repo name)
         ctx-icon #(shui/tabler-icon %1 {:class "scale-90 pr-1 opacity-80"})
         open-in-sidebar #(when-let [page-entity (and (not whiteboard-page?)
                                                   (if (empty? source-page)
                                                     (db/entity [:block/name name]) source-page))]
                            (state/sidebar-add-block!
-                             (state/get-current-repo)
-                             (:db/id page-entity)
-                             :page))
+                            repo
+                            (:db/id page-entity)
+                            :page))
         x-menu-content (fn [type opts]
                          (let [dropdown? (= type :dropdown)
                                x-menu-content (if dropdown? shui/dropdown-menu-content shui/context-menu-content)
@@ -110,7 +111,7 @@
                                                             (first)
                                                             (shortcut-utils/decorate-binding))))))
                              (when-let [page-fpath (and (util/electron?) file-rpath
-                                                     (config/get-repo-fpath (state/get-current-repo) file-rpath))]
+                                                     (config/get-repo-fpath repo file-rpath))]
                                [:<>
                                 (x-menu-item
                                   {:on-click #(ipc/ipc :openFileInFolder page-fpath)}
@@ -355,7 +356,9 @@
                                 (max touching-x-offset (- 0 (:width el-rect))))))
         offset-ratio (and (number? touching-x-offset)
                           (some->> (:width el-rect)
-                                   (/ touching-x-offset)))]
+                                   (/ touching-x-offset)))
+        repo               (state/get-current-repo)
+        ]
 
     (rum/use-effect!
      #(js/setTimeout
@@ -415,7 +418,7 @@
 
         [:div.nav-header.flex.flex-col.mt-2
          (let [page (:page default-home)]
-           (if (and page (not (state/enable-journals? (state/get-current-repo))))
+           (if (and page (not (state/enable-journals? repo)))
              (sidebar-item
               {:class "home-nav"
                :title page
@@ -448,7 +451,7 @@
              :icon-extension? true
              :shortcut :go/whiteboards}))
 
-         (when (state/enable-flashcards? (state/get-current-repo))
+         (when (state/enable-flashcards? repo)
            [:div.flashcards-nav
             (flashcards srs-open?)])
 
@@ -473,6 +476,12 @@
 
         (when (not config/publishing?)
           (recent-pages t))]
+       
+        (when (page (state/get-current-page))
+       [:div.nav-contents-container.flex.flex-col.gap-1.pt-1
+        {:on-scroll on-contents-scroll}
+        (tagged-pages repo page)])
+
 
        [:footer.px-2 {:class "create"}
         (when-not config/publishing?
@@ -612,7 +621,7 @@
                    state)}
   [{:keys [route-match margin-less-pages? route-name indexeddb-support? db-restoring? main-content show-action-bar? show-recording-bar?]}]
   (let [left-sidebar-open?   (state/sub :ui/left-sidebar-open?)
-        onboarding-and-home? (and (or (nil? (state/get-current-repo)) (config/demo-graph?))
+        onboarding-and-home? (and (or (nil? repo) (config/demo-graph?))
                                   (not config/publishing?)
                                   (= :home route-name))
         margin-less-pages?   (or (and (mobile-util/native-platform?) onboarding-and-home?) margin-less-pages?)]
@@ -710,7 +719,7 @@
         current-repo (state/sub :git/current-repo)
         loading-files? (when current-repo (state/sub [:repo/loading-files? current-repo]))
         journals-length (state/sub :journals-length)
-        latest-journals (db/get-latest-journals (state/get-current-repo) journals-length)
+        latest-journals (db/get-latest-journals repo journals-length)
         graph-parsing-state (state/sub [:graph/parsing-state current-repo])]
     (cond
       (or
@@ -798,7 +807,7 @@
 
 (def help-menu-items
   [;;{:title (t :help/handbook) :icon "book-2" :on-click #(handbooks/toggle-handbooks)}
-   {:title (t :help/shortcuts) :icon "command" :on-click #(state/sidebar-add-block! (state/get-current-repo) "shortcut-settings" :shortcut-settings)}
+   {:title (t :help/shortcuts) :icon "command" :on-click #(state/sidebar-add-block! repo "shortcut-settings" :shortcut-settings)}
    {:title (t :help/docs) :icon "help" :href "https://docs.logseq.com/"}
    :hr
   ;;  {:title (t :help/bug) :icon "bug" :on-click #(rfe/push-state :bug-report)}
