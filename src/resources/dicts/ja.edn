@@ -391,7 +391,32 @@
  :left-side-bar/graph-unlink "このグラフのリンクを解除"
  :left-side-bar/hierarchy "階層ノート"
  :left-side-bar/tagged-pages "タグ付けされたノート"
+
+ :linked-references/filter-directions "クリックしてフィルターに含める、シフトクリックで除外。再クリックして削除。" ;"Click to include and shift-click to exclude. Click again to remove."
+ :linked-references/filter-excludes  "除外：" ;"Excludes: "
+ :linked-references/filter-heading "フィルター：" ;"Filter: " 
+ :linked-references/filter-includes "含む：" ;"Includes: "
  :linked-references/filter-search "引用リンクを検索"
+ :linked-references/reference-count (fn [filtered-count total]
+                                       ;; 1 Linked Reference
+                                       ;; 1 of 1 Linked Reference
+                                       ;; 2 of 5 Linked References
+                                      (str
+                                       "関連ログ ["
+                                       (when filtered-count
+                                         (str filtered-count " of "))
+                                       total
+                                      ;; (if (= total 1) " Linked Reference" " Linked References")
+                                       "]"))
+ :linked-references/unexpected-error " グラフを再インデックスしてください。" ;"Linked References: Unexpected error. Please re-index your graph first." 
+ :unlinked-references/reference-count (fn [total]
+                                         ;; 1 Unlinked Reference
+                                         ;; 5 Unlinked References
+                                        (str 
+                                          "リンクされていないログ ["
+                                         total
+                                          ;;    (if (= total 1) " Unlinked Reference" " Unlinked References")
+                                          "]"))
  :loading "読み込み中..."
  :loading-files "ファイルロード中"
  :login "ログイン"
