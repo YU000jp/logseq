@@ -1447,24 +1447,31 @@
 
 (rum/defc namespace-hierarchy-aux
   [config namespace children]
-  [:ul
+  [:ul.text-sm.pt-1
    (for [child children]
      [:li {:key (str "namespace-" namespace "-" (:db/id child))}
       (let [shorten-name (some-> (or (:block/original-name child) (:block/name child))
                                  (string/split "/")
                                  last)]
         (page-cp {:label shorten-name} child))
-      (when (seq (:namespace/children child))
-        (namespace-hierarchy-aux config (:block/name child)
-                                 (:namespace/children child)))])])
+      (let [children (:namespace/children child)]
+        (when (seq children) 
+          (namespace-hierarchy-aux config (:block/name child) children)))])])
 
 (rum/defc namespace-hierarchy
-  [config namespace children]
-  [:div.namespace
-   [:div.font-medium.flex.flex-row.items-center.pb-2
-    [:span.text-sm.mr-1 "Namespace "]
-    (page-cp config {:block/name namespace})]
-   (namespace-hierarchy-aux config namespace children)])
+  [config namespace children as-query?]
+  (when (seq children)
+    [:div.namespace
+     (if as-query?
+       [:div.font-medium.flex.flex-row.items-center
+        [:span.mr-1 "Namespace "]
+        (page-cp config {:block/name namespace})]
+       [:span.mr-1.font-bold.opacity-50.pb-1.ml-1
+        (ui/icon "hierarchy" {:size 16})
+        [:span.flex-1.ml-2
+         (t :left-side-bar/hierarchy)]])
+
+     (namespace-hierarchy-aux config namespace children)]))
 
 (defn- macro-cp
   [config options]
@@ -1488,7 +1495,7 @@
         (when-not (string/blank? namespace)
           (let [namespace (string/lower-case (page-ref/get-page-name! namespace))
                 children (model/get-namespace-hierarchy (state/get-current-repo) namespace)]
-            (namespace-hierarchy config namespace children))))
+            (namespace-hierarchy config namespace children true))))
 
       (= name "youtube")
       (when-let [url (first arguments)]

@@ -4,7 +4,7 @@
             [frontend.components.block :as component-block]
             [frontend.components.content :as content]
             [frontend.components.editor :as editor]
-            [frontend.components.hierarchy :as hierarchy]
+            ;; [frontend.components.hierarchy :as hierarchy]
             [frontend.components.plugins :as plugins]
             [frontend.components.query :as query]
             [frontend.components.reference :as reference]
@@ -246,10 +246,14 @@
       [:div.references.page-tags.mt-6.flex-1.flex-row
        [:div.content
         (ui/foldable
-         [:h2.font-bold.opacity-50 (util/format "Pages tagged with \"%s\"" tag)]
-         [:ul.mt-2
+         [:span.mr-1.font-bold.opacity-50.pb-1.ml-1
+          {:title tag}
+          (ui/icon "tag" {:size 16})
+          [:span.flex-1.ml-2
+           (t :left-side-bar/tagged-pages)]]
+         [:ul.mt-2.text-sm
           (for [[original-name name] (sort-by last pages)]
-            [:li {:key (str "tagged-page-" name)}
+            [:li.mt-2 {:key (str "tagged-page-" name)}
              (component-block/page-cp {} {:block/name name :block/original-name original-name})])]
          {:default-collapsed? false})]])))
 

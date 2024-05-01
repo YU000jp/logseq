@@ -398,6 +398,8 @@
  :left-side-bar/switch "Switch to:"
  :left-side-bar/demo-graph "Demo graph"
  :left-side-bar/graph-unlink "Unlink graph"
+ :left-side-bar/hierarchy "Hierarchy"
+ :left-side-bar/tagged-pages "Tagged pages"
  :linked-references/filter-directions "Click to include and shift-click to exclude. Click again to remove."
  :linked-references/filter-excludes "Excludes: "
  :linked-references/filter-heading "Filter"

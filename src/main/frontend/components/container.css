@@ -194,7 +194,7 @@
     }
 
     .header {
-      @apply pl-6 pr-4 py-1 flex justify-between items-center select-none sticky top-[-4px];
+      @apply pl-2 pr-4 py-1 flex justify-between items-center select-none sticky top-[-4px];
       @apply cursor-pointer z-[2] active:opacity-80;
 
 
@@ -250,7 +250,10 @@
 
         a {
           width: 100%;
-          padding: 4px 24px;
+          padding-left: 3px;
+          padding-right: 2px;
+          padding-top: 2px;
+          padding-bottom: 2px;
           opacity: .8;
           transition: background-color .3s, opacity .3s;
 

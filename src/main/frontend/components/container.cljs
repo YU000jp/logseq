@@ -8,9 +8,12 @@
             [frontend.components.onboarding :as onboarding]
             [frontend.components.plugins :as plugins]
             ;; [frontend.components.repo :as repo]
+            [frontend.components.hierarchy :as hierarchy]
             [frontend.components.right-sidebar :as right-sidebar]
             [frontend.components.select :as select]
             [frontend.components.theme :as theme]
+            [frontend.components.page :as com-page]
+            [frontend.components.block :as com-block]
             [frontend.components.widgets :as widgets]
             [frontend.components.handbooks :as handbooks]
             [frontend.config :as config]
@@ -41,6 +44,8 @@
             [logseq.shui.ui :as shui]
             [logseq.shui.toaster.core :as shui-toaster]
             [logseq.shui.dialog.core :as shui-dialog]
+            [logseq.graph-parser.util.page-ref :as page-ref]
+            
             [frontend.util :as util]
             [frontend.util.cursor :as cursor]
             [frontend.components.window-controls :as window-controls]
@@ -213,7 +218,8 @@
     (nav-content-item
      [:a.flex.items-center.text-sm.font-medium.rounded-md.wrap-th
       (ui/icon "star" {:size 16})
-      [:strong.flex-1.ml-2 (string/upper-case (t :left-side-bar/nav-favorites))]]
+      [:strong.flex-1.ml-2
+       (t :left-side-bar/nav-favorites)]]
 
      {:class "favorites"
       :count (count favorite-entities)
@@ -237,10 +243,10 @@
                    (util/distinct-by :lowercase)
                    (map :page))]
     (nav-content-item
-     [:a.flex.items-center.text-sm.font-medium.rounded-md.wrap-th
+     [:a.flex.items-center.rounded-md.wrap-th
       (ui/icon "history" {:size 16})
       [:strong.flex-1.ml-2
-       (string/upper-case (t :left-side-bar/nav-recent-pages))]]
+       (t :left-side-bar/nav-recent-pages)]]
 
      {:class "recent"
       :count (count pages)}
@@ -290,7 +296,7 @@
   [{:keys [on-click-handler class title icon icon-extension? active href shortcut]}]
   [:div
    {:class class}
-   [:a.item.group.flex.items-center.text-sm.font-medium.rounded-md
+   [:a.item.group.flex.items-center.rounded-md
     {:on-click on-click-handler
      :class (when active "active")
      :href href}
@@ -358,7 +364,7 @@
                           (some->> (:width el-rect)
                                    (/ touching-x-offset)))
         repo               (state/get-current-repo)
-        ]
+        page-name (state/get-current-page)]
 
     (rum/use-effect!
      #(js/setTimeout
@@ -416,7 +422,7 @@
        [:nav.px-4.flex.flex-col.gap-1.cp__menubar-repos
         {:aria-label "Navigation menu"} 
 
-        [:div.nav-header.flex.flex-col.mt-2
+        [:div.nav-header.flex.flex-col.mt-2.mb-4
          (let [page (:page default-home)]
            (if (and page (not (state/enable-journals? repo)))
              (sidebar-item
@@ -473,28 +479,43 @@
 
        [:div.nav-contents-container.flex.flex-col.gap-1.pt-1
         {:on-scroll on-contents-scroll}
-        (favorites t)
-
-        (when (not config/publishing?)
-          (recent-pages t))]
-       
-        (when (page (state/get-current-page))
+        (favorites t)]
        [:div.nav-contents-container.flex.flex-col.gap-1.pt-1
         {:on-scroll on-contents-scroll}
-        (tagged-pages repo page)])
+        (when (not config/publishing?)
+          (recent-pages t))]
 
 
-       [:footer.px-2 {:class "create"}
+       (when page-name
+         [:div.nav-contents-container.flex.flex-col.gap-1.pt-1
+          {:on-scroll on-contents-scroll}
+            ;; (hierarchy/structures page-name) 
+            ;; hierarchy
+          (let [namespace page-name]
+            (when-not (string/blank? namespace)
+              (let [namespace (string/lower-case (page-ref/get-page-name! namespace))
+                    children (db-model/get-namespace-hierarchy (state/get-current-repo) namespace)]
+                (com-block/namespace-hierarchy {} namespace children false))))])
+
+
+       (when page-name
+         [:div.nav-contents-container.flex.flex-col.gap-1.pt-1
+          {:on-scroll on-contents-scroll}
+            ;; tagged pages
+          (com-page/tagged-pages repo page-name)])
+
+       [:footer.px-2.mt-1.create
         (when-not config/publishing?
           (if enable-whiteboards?
             (create-dropdown)
-            [:a.item.group.flex.items-center.px-2.py-2.text-sm.font-medium.rounded-md.new-page-link
-             {:on-click (fn []
+            [:button#create-button
+             {:title (t :right-side-bar/new-page)
+              :on-click (fn []
                           (and (util/sm-breakpoint?)
                                (state/toggle-left-sidebar!))
                           (state/pub-event! [:go/search]))}
-             (ui/icon "circle-plus" {:style {:font-size 20}})
-             [:span.flex-1 (t :right-side-bar/new-page)]]))]]]
+             (ui/icon "circle-plus" {:style {:font-size 20}})]))]]]
+     
      [:span.shade-mask
       (cond-> {:on-click close-fn}
         (number? offset-ratio)
@@ -622,7 +643,7 @@
                    state)}
   [{:keys [route-match margin-less-pages? route-name indexeddb-support? db-restoring? main-content show-action-bar? show-recording-bar?]}]
   (let [left-sidebar-open?   (state/sub :ui/left-sidebar-open?)
-        onboarding-and-home? (and (or (nil? repo) (config/demo-graph?))
+        onboarding-and-home? (and (or (nil? (state/get-current-repo)) (config/demo-graph?))
                                   (not config/publishing?)
                                   (= :home route-name))
         margin-less-pages?   (or (and (mobile-util/native-platform?) onboarding-and-home?) margin-less-pages?)]
@@ -720,7 +741,7 @@
         current-repo (state/sub :git/current-repo)
         loading-files? (when current-repo (state/sub [:repo/loading-files? current-repo]))
         journals-length (state/sub :journals-length)
-        latest-journals (db/get-latest-journals repo journals-length)
+        latest-journals (db/get-latest-journals (state/get-current-repo) journals-length)
         graph-parsing-state (state/sub [:graph/parsing-state current-repo])]
     (cond
       (or
@@ -808,7 +829,7 @@
 
 (def help-menu-items
   [;;{:title (t :help/handbook) :icon "book-2" :on-click #(handbooks/toggle-handbooks)}
-   {:title (t :help/shortcuts) :icon "command" :on-click #(state/sidebar-add-block! repo "shortcut-settings" :shortcut-settings)}
+   {:title (t :help/shortcuts) :icon "command" :on-click #(state/sidebar-add-block! (state/get-current-repo) "shortcut-settings" :shortcut-settings)}
    {:title (t :help/docs) :icon "help" :href "https://docs.logseq.com/"}
    :hr
   ;;  {:title (t :help/bug) :icon "bug" :on-click #(rfe/push-state :bug-report)}

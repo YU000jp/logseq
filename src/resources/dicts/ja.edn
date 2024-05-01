@@ -389,6 +389,8 @@
  :left-side-bar/switch "グラフを切り替え：" 
  :left-side-bar/demo-graph "デモ グラフ" 
  :left-side-bar/graph-unlink "このグラフのリンクを解除"
+ :left-side-bar/hierarchy "階層ノート"
+ :left-side-bar/tagged-pages "タグ付けされたノート"
  :linked-references/filter-search "引用リンクを検索"
  :loading "読み込み中..."
  :loading-files "ファイルロード中"
