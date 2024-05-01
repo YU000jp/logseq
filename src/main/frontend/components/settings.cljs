@@ -883,10 +883,10 @@
         ;; plugins-of-settings (and config/lsp-enabled? (seq (plugin-handler/get-enabled-plugins-if-setting-schema)))
         ]
     [:div.panel-wrap.is-advanced
+     (language-row preferred-language)
      (version-row version)
      (when (or util/mac? util/win32?)
-       (app-auto-update-row))
-     (language-row preferred-language)
+       (app-auto-update-row)) 
      (when current-repo
        (edit-config-edn))
      (when (config/global-config-enabled?)
@@ -900,7 +900,8 @@
      (filename-format-row)
      (usage-diagnostics-row instrument-disabled?)
      (clear-cache-row)
-     (when-not (mobile-util/native-platform?) (developer-mode-row developer-mode?))
+     (when-not (mobile-util/native-platform?) 
+       (developer-mode-row developer-mode?))
 
     ;;  (ui/admonition
     ;;   :warning
@@ -1165,10 +1166,10 @@
                              (when (= "Enter" (util/ekey e))
                                (update-home-page e)))}]]]])
      (whiteboards-switcher-row enable-whiteboards?)
-     (when (and (util/electron?) config/feature-plugin-system-on?)
-       (plugin-system-switcher-row))
      (flashcards-switcher-row enable-flashcards?)
-     (when (util/electron?) 
+     (when (util/electron?)
+       (when (and (util/electron?) config/feature-plugin-system-on?)
+         (plugin-system-switcher-row))
        (zotero-settings-row))
      (when (util/electron?)
        (http-server-switcher-row))
