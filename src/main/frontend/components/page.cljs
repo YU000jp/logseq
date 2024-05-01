@@ -517,9 +517,9 @@
       ;;      (today-queries repo today? sidebar?))
       ;;    (when today?
       ;;      (scheduled/scheduled-and-deadlines page-name)))
-
-       (when-not block?
-         (tagged-pages repo page-name))
+       (when whiteboard? ;; whiteboard
+         (when-not (or block? sidebar? journal?)
+           (tagged-pages repo page-name)))
 
        ;; referenced blocks
        (when-not block-or-whiteboard?
