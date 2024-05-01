@@ -532,10 +532,9 @@
          (when (not journal?)
            (hierarchy/structures route-page-name)))
 
-       (when-not block-or-whiteboard?
-         (when-not sidebar?
+       (when-not (or block-or-whiteboard? sidebar? journal?)
            [:div {:key "page-unlinked-references"}
-            (reference/unlinked-references route-page-name)]))])))
+            (reference/unlinked-references route-page-name)])])))
 
 (defonce layout (atom [js/window.innerWidth js/window.innerHeight]))
 
