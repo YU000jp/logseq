@@ -455,20 +455,21 @@
            [:div.flashcards-nav
             (flashcards srs-open?)])
 
-         (sidebar-item ;; TODO: グラフビュー機能のトグル
-          {:class "graph-view-nav"
-           :title (t :right-side-bar/graph-view)
-           :href (rfe/href :graph)
-           :active (and (not srs-open?) (= route-name :graph))
-           :icon "hierarchy"
-           :shortcut :go/graph-view})
+        ;;  (sidebar-item
+        ;;   {:class "graph-view-nav"
+        ;;    :title (t :right-side-bar/graph-view)
+        ;;    :href (rfe/href :graph)
+        ;;    :active (and (not srs-open?) (= route-name :graph))
+        ;;    :icon "network"
+        ;;    :shortcut :go/graph-view})
 
-         (sidebar-item
-          {:class "all-pages-nav"
-           :title (t :right-side-bar/all-pages)
-           :href (rfe/href :all-pages)
-           :active (and (not srs-open?) (= route-name :all-pages))
-           :icon "files"})]]
+        ;;  (sidebar-item
+        ;;   {:class "all-pages-nav"
+        ;;    :title (t :right-side-bar/all-pages)
+        ;;    :href (rfe/href :all-pages)
+        ;;    :active (and (not srs-open?) (= route-name :all-pages))
+        ;;    :icon "files"})
+         ]]
 
        [:div.nav-contents-container.flex.flex-col.gap-1.pt-1
         {:on-scroll on-contents-scroll}

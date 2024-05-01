@@ -112,6 +112,16 @@
           :options {:href (rfe/href :import)}
           :icon (ui/icon "file-upload")})
 
+        {:class "graph-view-nav"
+         :title (t :right-side-bar/graph-view)
+         :options {:href (rfe/href :graph)}
+         :icon (ui/icon "network")}
+
+        {:class "all-pages-nav"
+         :title (t :right-side-bar/all-pages)
+         :options {:href (rfe/href :all-pages)}
+         :icon (ui/icon "files")}
+
       ;;  {:title (t :help/shortcuts)
       ;;     :options {:on-click #(state/sidebar-add-block! (state/get-current-repo) "shortcut-settings" :shortcut-settings)} ;; :on-click #(state/pub-event! [:modal/keymap])
       ;;     :icon (ui/icon "keyboard")}
