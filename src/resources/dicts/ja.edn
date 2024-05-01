@@ -689,7 +689,7 @@
  :settings-page/enable-block-time "ブロックのタイムスタンプを有効にする"
  :settings-page/enable-flashcards "フラッシュカード"
 
- :settings-page/enable-journals "ジャーナル"
+ :settings-page/enable-journals "ジャーナルをホームとして設定する"
  :settings-page/enable-shortcut-tooltip "ツールチップ: ショートカットキーを表示"
  :settings-page/enable-timetracking "タスクのタイムトラッキング機能を有効にする"
  :settings-page/enable-tooltip "ツールチップ機能を有効にする (リンクにカーソルを合わせると表示される)"

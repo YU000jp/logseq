@@ -424,7 +424,7 @@
 
         [:div.nav-header.flex.flex-col.mt-2.mb-4
          (let [page (:page default-home)]
-           (if (and page (not (state/enable-journals? repo)))
+           (when (and page (not (state/enable-journals? repo)))
              (sidebar-item
               {:class "home-nav"
                :title page
@@ -433,18 +433,19 @@
                             (= route-name :page)
                             (= page (get-in route-match [:path-params :name])))
                :icon "home"
-               :shortcut :go/home})
-             (sidebar-item
-              {:class "journals-nav"
-               :active (and (not srs-open?)
-                            (or (= route-name :all-journals) (= route-name :home)))
-               :title (t :left-side-bar/journals)
-               :on-click-handler (fn [e]
-                                   (if (gobj/get e "shiftKey")
-                                     (route-handler/sidebar-journals!)
-                                     (route-handler/go-to-journals!)))
-               :icon "calendar-time"
-               :shortcut :go/journals})))
+               :shortcut :go/home})))
+
+         (sidebar-item
+          {:class "journals-nav"
+           :active (and (not srs-open?)
+                        (or (= route-name :all-journals) (= route-name :home)))
+           :title (t :left-side-bar/journals)
+           :on-click-handler (fn [e]
+                               (if (gobj/get e "shiftKey")
+                                 (route-handler/sidebar-journals!)
+                                 (route-handler/go-to-journals!)))
+           :icon "calendar-time"
+           :shortcut :go/journals})
 
          (when enable-whiteboards?
            (sidebar-item
