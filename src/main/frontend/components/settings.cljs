@@ -624,7 +624,9 @@
           enable-journals?
           (fn []
             (let [value (not enable-journals?)]
-              (config-handler/set-config! :feature/enable-journals? value)))))
+              (config-handler/set-config! :feature/enable-journals? value)
+              (when value
+                (update-home-page ""))))))
 
 (defn enable-all-pages-public-row [enable-all-pages-public?]
   (toggle "all pages public"
