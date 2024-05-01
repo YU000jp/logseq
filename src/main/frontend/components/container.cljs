@@ -490,7 +490,7 @@
           (recent-pages t))]
 
 
-       (when page-name
+       (if page-name
          [:div.nav-contents-container.flex.flex-col.gap-1.pt-1
           {:on-scroll on-contents-scroll}
             ;; (hierarchy/structures page-name) 
@@ -499,7 +499,9 @@
             (when-not (string/blank? namespace)
               (let [namespace (string/lower-case (page-ref/get-page-name! namespace))
                     children (db-model/get-namespace-hierarchy (state/get-current-repo) namespace)]
-                (com-block/namespace-hierarchy {} namespace children false))))])
+                (com-block/namespace-hierarchy {} namespace children false))))]
+         [:div.nav-contents-container.flex.flex-col.gap-1.pt-1
+          ""])
 
 
        (when page-name
