@@ -35,9 +35,12 @@
       :on-click (fn [e]
                    (when (mobile-util/native-iphone?)
                      (state/set-left-sidebar-open! false))
-                   (if (util/shift-key? e)
-                     (route-handler/redirect-to-page! (date/today))
-                     (route-handler/redirect-to-home!)))}
+                   (cond
+                     (util/shift-key? e) (route-handler/sidebar-journals!)
+                     (util/alt-key? e) (route-handler/redirect-to-page! (date/today))
+                     :else
+                     (route-handler/redirect-to-home!))
+                  )}
      (ui/icon "home" {:size ui/icon-size})]))
 
 (rum/defc login < rum/reactive

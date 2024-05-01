@@ -8,7 +8,8 @@
             [frontend.components.onboarding :as onboarding]
             [frontend.components.plugins :as plugins]
             ;; [frontend.components.repo :as repo]
-            [frontend.components.hierarchy :as hierarchy]
+            ;; [frontend.components.hierarchy :as hierarchy]
+            [frontend.date :as date]
             [frontend.components.right-sidebar :as right-sidebar]
             [frontend.components.select :as select]
             [frontend.components.theme :as theme]
@@ -441,9 +442,11 @@
                         (or (= route-name :all-journals) (= route-name :home)))
            :title (t :left-side-bar/journals)
            :on-click-handler (fn [e]
-                               (if (gobj/get e "shiftKey")
-                                 (route-handler/sidebar-journals!)
-                                 (route-handler/go-to-journals!)))
+                               (cond
+                                 (util/shift-key? e) (route-handler/sidebar-journals!)
+                                 (util/alt-key? e) (route-handler/redirect-to-page! (date/today))
+                                 :else
+                                 (route-handler/redirect-to-home!)))
            :icon "calendar-time"
            :shortcut :go/journals})
 
