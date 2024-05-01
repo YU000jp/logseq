@@ -528,9 +528,8 @@
             (reference/references route-page-name)
             (str route-page-name "-refs"))])
 
-       (when-not block-or-whiteboard?
-         (when (not journal?)
-           (hierarchy/structures route-page-name)))
+      ;;  (when-not (or block-or-whiteboard? sidebar? journal?)
+      ;;      (hierarchy/structures route-page-name))
 
        (when-not (or block-or-whiteboard? sidebar? journal?)
            [:div {:key "page-unlinked-references"}
