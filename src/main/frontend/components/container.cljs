@@ -9,6 +9,7 @@
             [frontend.components.plugins :as plugins]
             ;; [frontend.components.repo :as repo]
             ;; [frontend.components.hierarchy :as hierarchy]
+            [frontend.components.cmdk :as cmdk]
             [frontend.date :as date]
             [frontend.components.right-sidebar :as right-sidebar]
             [frontend.components.select :as select]
@@ -312,7 +313,7 @@
        (state/toggle-left-sidebar!)))
 
 (defn create-dropdown
-  []
+  [enable-whiteboards? page-name]
   (ui/dropdown-with-links
    (fn [{:keys [toggle-fn]}]
      [:button#create-button
@@ -322,20 +323,43 @@
    (->>
     [{:title (t :left-side-bar/new-page)
       :class "new-page-link"
-      :options {:on-click #(do (close-sidebar-on-mobile!)
-                               (state/pub-event! [:go/search]))
+      :options {:on-click (fn [e]
+                            (close-sidebar-on-mobile!)
+                            (state/set-modal! cmdk/cmdk-modal
+                                              {:fullscreen? false
+                                               :close-btn?  false
+                                               :panel?      false
+                                               :label "ls-modal-search"}))
                 :shortcut (ui/keyboard-shortcut-from-config :go/search)}
       :icon (ui/type-icon {:name "new-page"
                            :class "highlight"
                            :extension? true})}
-     {:title (t :left-side-bar/new-whiteboard)
-      :class "new-whiteboard-link"
-      :options {:on-click #(do (close-sidebar-on-mobile!)
-                               (whiteboard-handler/create-new-whiteboard-and-redirect!))
-                :shortcut (ui/keyboard-shortcut-from-config :editor/new-whiteboard)}
-      :icon (ui/type-icon {:name "new-whiteboard"
-                           :class "highlight"
-                           :extension? true})}])
+    ;;  (when page-name
+    ;;    {:title (t :left-side-bar/new-sub-page)
+    ;;     :class "new-page-link"
+    ;;     :options {:on-click (fn [e]
+    ;;                           (close-sidebar-on-mobile!)
+                                 
+    ;;                           (state/set-modal! cmdk/cmdk-modal
+    ;;                                             {:fullscreen? false
+    ;;                                              :close-btn?  false
+    ;;                                              :panel?      true
+    ;;                                              :label "ls-modal-search"})
+    ;;                           ;;TODO: 検索に文字列(page-name)を入力する方法
+                              
+    ;;                           )}
+    ;;     :icon (ui/type-icon {:name "new-page"
+    ;;                          :class "highlight"
+    ;;                          :extension? true})})
+     (when enable-whiteboards?
+       {:title (t :left-side-bar/new-whiteboard)
+        :class "new-whiteboard-link"
+        :options {:on-click #(do (close-sidebar-on-mobile!)
+                                 (whiteboard-handler/create-new-whiteboard-and-redirect!))
+                  :shortcut (ui/keyboard-shortcut-from-config :editor/new-whiteboard)}
+        :icon (ui/type-icon {:name "new-whiteboard"
+                             :class "highlight"
+                             :extension? true})})])
    {}))
 
 (rum/defc ^:large-vars/cleanup-todo sidebar-nav
@@ -421,7 +445,7 @@
        ;    (ui/icon "menu-2" {:size ui/icon-size})]])
 
        [:nav.px-4.flex.flex-col.gap-1.cp__menubar-repos
-        {:aria-label "Navigation menu"} 
+        {:aria-label "Navigation menu"}
 
         [:div.nav-header.flex.flex-col.mt-2.mb-4
          (let [page (:page default-home)]
@@ -512,15 +536,7 @@
 
        [:footer.px-2.mt-1.create
         (when-not config/publishing?
-          (if enable-whiteboards?
-            (create-dropdown)
-            [:button#create-button
-             {:title (t :right-side-bar/new-page)
-              :on-click (fn []
-                          (and (util/sm-breakpoint?)
-                               (state/toggle-left-sidebar!))
-                          (state/pub-event! [:go/search]))}
-             (ui/icon "circle-plus" {:style {:font-size 20}})]))]]]
+          (create-dropdown enable-whiteboards? page-name))]]]
      
      [:span.shade-mask
       (cond-> {:on-click close-fn}

@@ -897,7 +897,7 @@
              (assoc state
                     ::ref (atom nil)
                     ::filter (if (and search-mode
-                                      (not (contains? #{:global :graph} search-mode))
+                                      (not (contains? #{:global :graph :create} search-mode))
                                       (not (:sidebar? opts)))
                                (atom {:group search-mode})
                                (atom nil))
