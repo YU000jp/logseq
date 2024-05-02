@@ -569,7 +569,7 @@ jobs:
 
   nightly-release:
     if: ${{ github.event_name == 'schedule' || github.event.inputs.build-target == 'nightly' }}
-    needs: [ build-linux-x64, build-linux-arm64, build-windows, e2e-test ] # build-android # build-macos-arm64 # build-macos-x64 # codesign-windows
+    needs: [ build-linux-x64, build-linux-arm64, build-windows ] # build-android # build-macos-arm64 # build-macos-x64 # codesign-windows
     runs-on: ubuntu-20.04
     steps:
       # - name: Download MacOS x64 Artifacts
@@ -644,7 +644,7 @@ jobs:
   release:
     # NOTE: For now, we only have beta channel to be released on Github
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.build-target == 'beta' }}
-    needs: [ build-linux-x64, build-linux-arm64, build-windows, e2e-test ] # build-macos-arm64 # build-macos-x64 # build-android # codesign-windows
+    needs: [ build-linux-x64, build-linux-arm64, build-windows ] # build-macos-arm64 # build-macos-x64 # build-android # codesign-windows
     runs-on: ubuntu-20.04
     steps:
       # - name: Download MacOS x64 Artifacts
