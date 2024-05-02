@@ -4,6 +4,7 @@
   "main": "electron.js",
   "author": "YU000jp",
   "license": "AGPL-3.0",
+  "version": "0.0.1",
   "description": "'Logseq Classic' is a customized derivative version of Logseq.",
   "repository": "https://github.com/YU000jp/fork-logseq",
   "scripts": {
