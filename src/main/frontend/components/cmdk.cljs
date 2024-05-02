@@ -952,7 +952,7 @@
                     :class (cond-> "w-full h-full relative flex flex-col justify-start"
                              (not sidebar?) (str " rounded-lg"))}
      (input-row state all-items opts)
-     [:div {:class (cond-> "w-full flex-1 overflow-y-auto min-h-[65dvh] max-h-[65dvh]"
+     [:div {:class (cond-> "w-full flex-1 overflow-y-auto max-h-[65dvh]"
                      (not sidebar?) (str " pb-14"))
             :ref #(let [*ref (::scroll-container-ref state)]
                     (when-not @*ref (reset! *ref %)))
