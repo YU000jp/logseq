@@ -866,10 +866,21 @@
           nil)]])))
 
 (rum/defc search-only
-  [state group-name]
+  [state action]
   [:div.flex.flex-row.gap-1.items-center
-   [:div "Search only:"]
-   [:div group-name]
+   [:div (str (t :search/filters) ":")]
+   [:div (case action
+            "Pages"  (t :search/pages)
+            "Blocks" (t :search/blocks)
+            "Files"  (t :search/files)
+            "Recents" (t :search/recents)
+            "Whiteboards" (t :search/whiteboards)
+            "Commands" (t :search/commands)
+            "Filters" (t :search/filters)
+            "Current Page" (t :search/current-page)
+            "Graph" (t :search/graph)
+            "Create" (t :search/create)
+           )]
    (shui-ui/button
      {:variant  :ghost
       :size     :icon

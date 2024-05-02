@@ -329,28 +329,31 @@
                                               {:fullscreen? false
                                                :close-btn?  false
                                                :panel?      false
-                                               :label "ls-modal-search"}))
+                                               :label "ls-modal-search"})
+                            (state/set-search-mode! :pages))
                 :shortcut (ui/keyboard-shortcut-from-config :go/search)}
       :icon (ui/type-icon {:name "new-page"
                            :class "highlight"
                            :extension? true})}
-    ;;  (when page-name
-    ;;    {:title (t :left-side-bar/new-sub-page)
-    ;;     :class "new-page-link"
-    ;;     :options {:on-click (fn [e]
-    ;;                           (close-sidebar-on-mobile!)
-                                 
-    ;;                           (state/set-modal! cmdk/cmdk-modal
-    ;;                                             {:fullscreen? false
-    ;;                                              :close-btn?  false
-    ;;                                              :panel?      true
-    ;;                                              :label "ls-modal-search"})
-    ;;                           ;;TODO: 検索に文字列(page-name)を入力する方法
-                              
-    ;;                           )}
-    ;;     :icon (ui/type-icon {:name "new-page"
-    ;;                          :class "highlight"
-    ;;                          :extension? true})})
+     (when page-name
+       {:title (t :left-side-bar/new-sub-page)
+        :class "new-page-link"
+        :options {:on-click (fn [e]
+                              (close-sidebar-on-mobile!)
+                              (state/set-modal! cmdk/cmdk-modal
+                                                {:fullscreen? false
+                                                 :close-btn?  false
+                                                 :panel?      true
+                                                 :label "ls-modal-search"})
+                              (state/set-search-mode! :pages)
+                              (let [original-name (db-model/get-page-original-name page-name)]
+                                (js/setTimeout #(let [input (gdom/getElement "search")]
+                                                  (set! (.-value input) (str original-name "/"))
+                                                  (.focus input))
+                                               100)))}
+        :icon (ui/type-icon {:name "new-page"
+                             :class "highlight"
+                             :extension? true})})
      (when enable-whiteboards?
        {:title (t :left-side-bar/new-whiteboard)
         :class "new-whiteboard-link"
