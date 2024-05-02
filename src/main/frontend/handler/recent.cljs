@@ -14,7 +14,7 @@
 
     (when (or (and click-from-recent? (not ((set pages) page-name)))
               (not click-from-recent?))
-      (let [new-pages (take 15 (distinct (cons page-name pages)))]
+      (let [new-pages (take 20 (distinct (cons page-name pages)))]
         (db/set-key-value repo :recent/pages new-pages)))))
 
 (defn update-or-add-renamed-page [repo old-page-name new-page-name]
