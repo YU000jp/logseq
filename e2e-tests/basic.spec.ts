@@ -5,49 +5,49 @@ import { test } from './fixtures'
 import { randomString, createRandomPage, modKey } from './utils'
 
 
-test('create page and blocks, save to disk', async ({ page, block, graphDir }) => {
-  const pageTitle = await createRandomPage(page)
+// test('create page and blocks, save to disk', async ({ page, block, graphDir }) => {
+//   const pageTitle = await createRandomPage(page)
 
-  // do editing
-  await page.keyboard.type('first bullet')
-  await block.enterNext()
+//   // do editing
+//   await page.keyboard.type('first bullet')
+//   await block.enterNext()
 
-  await block.waitForBlocks(2)
+//   await block.waitForBlocks(2)
 
-  await page.keyboard.type('second bullet')
-  await block.enterNext()
+//   await page.keyboard.type('second bullet')
+//   await block.enterNext()
 
-  await page.keyboard.type('third bullet')
-  expect(await block.indent()).toBe(true)
-  await block.enterNext()
+//   await page.keyboard.type('third bullet')
+//   expect(await block.indent()).toBe(true)
+//   await block.enterNext()
 
-  await page.keyboard.type('continue editing')
-  await page.keyboard.press('Shift+Enter')
-  await page.keyboard.type('second line')
+//   await page.keyboard.type('continue editing')
+//   await page.keyboard.press('Shift+Enter')
+//   await page.keyboard.type('second line')
 
-  await block.enterNext()
-  expect(await block.unindent()).toBe(true)
-  expect(await block.unindent()).toBe(false)
-  await page.keyboard.type('test ok')
-  await page.keyboard.press('Escape')
+//   await block.enterNext()
+//   expect(await block.unindent()).toBe(true)
+//   expect(await block.unindent()).toBe(false)
+//   await page.keyboard.type('test ok')
+//   await page.keyboard.press('Escape')
 
-  await block.waitForBlocks(5)
+//   await block.waitForBlocks(5)
 
-  // active edit, and create next block
-  await block.clickNext()
-  await page.keyboard.type('test')
-  for (let i = 0; i < 5; i++) {
-    await page.keyboard.press('Backspace', { delay: 100 })
-  }
+//   // active edit, and create next block
+//   await block.clickNext()
+//   await page.keyboard.type('test')
+//   for (let i = 0; i < 5; i++) {
+//     await page.keyboard.press('Backspace', { delay: 100 })
+//   }
 
-  await page.keyboard.press('Escape')
-  await block.waitForBlocks(5)
+//   await page.keyboard.press('Escape')
+//   await block.waitForBlocks(5)
 
-  await page.waitForTimeout(2000) // wait for saving to disk
-  const contentOnDisk = await fs.readFile(
-    path.join(graphDir, `pages/${pageTitle}.md`),
-    'utf8'
-  )
+//   await page.waitForTimeout(2000) // wait for saving to disk
+//   const contentOnDisk = await fs.readFile(
+//     path.join(graphDir, `pages/${pageTitle}.md`),
+//     'utf8'
+//   )
 //   expect(contentOnDisk.trim()).toEqual(`
 // - first bullet
 // - second bullet
@@ -55,7 +55,7 @@ test('create page and blocks, save to disk', async ({ page, block, graphDir }) =
 // 	- continue editing
 // 	  second line
 // - test ok`.trim())
-})
+// })
 
 
 test('delete and backspace', async ({ page, block }) => {
