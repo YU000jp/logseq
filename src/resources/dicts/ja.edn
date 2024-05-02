@@ -382,7 +382,7 @@
  :left-side-bar/create "新規作成"
  :left-side-bar/journals "ジャーナル"
  :left-side-bar/nav-favorites "ブックマーク"
- :left-side-bar/nav-recent-pages "履歴"
+ :left-side-bar/nav-recent-pages "開いたページ"
  :left-side-bar/new-page "新しいノート"
  :left-side-bar/new-sub-page "新しいサブノート"
  :left-side-bar/new-whiteboard "新しいホワイトボード"
