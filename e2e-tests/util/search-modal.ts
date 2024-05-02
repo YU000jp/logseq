@@ -1,6 +1,8 @@
 import { Page, Locator, ElementHandle } from '@playwright/test'
 import { randomString } from './basic'
 
+const placeholder = "What are you looking for? Search word/new page name (Enter here)"
+
 export async function closeSearchBox(page: Page): Promise<void> {
     await page.keyboard.press("Escape", { delay: 50 }) // escape (potential) search box typing
     await page.waitForTimeout(500)
@@ -13,7 +15,7 @@ export async function createRandomPage(page: Page) {
     // Click #search-button
     await page.click('#search-button')
     // Fill [placeholder="What are you looking for?"]
-    await page.fill('[placeholder="What are you looking for?"]', randomTitle)
+    await page.fill(placeholder, randomTitle)
     await page.keyboard.press('Enter', { delay: 50 })
     // Wait for h1 to be from our new page
     await page.waitForSelector(`h1 >> text="${randomTitle}"`, { state: 'visible' })
@@ -27,7 +29,7 @@ export async function createPage(page: Page, page_name: string) {// Click #searc
     await closeSearchBox(page)
     await page.click('#search-button')
     // Fill [placeholder="What are you looking for?"]
-    await page.fill('[placeholder="What are you looking for?"]', page_name)
+    await page.fill(placeholder, page_name)
     await page.locator('text="Create page"').waitFor({ state: 'visible' })
     await page.keyboard.press('Enter', { delay: 100 })
     // wait for textarea of first block
@@ -39,7 +41,7 @@ export async function createPage(page: Page, page_name: string) {// Click #searc
 export async function searchAndJumpToPage(page: Page, pageTitle: string) {
     await closeSearchBox(page)
     await page.click('#search-button')
-    await page.type('[placeholder="What are you looking for?"]', pageTitle)
+    await page.type(placeholder, pageTitle)
     await page.waitForTimeout(200)
     await page.keyboard.press('Enter', { delay: 50 })
     return pageTitle;
@@ -56,8 +58,8 @@ export async function searchAndJumpToPage(page: Page, pageTitle: string) {
 export async function searchPage(page: Page, query: string): Promise<ElementHandle<SVGElement | HTMLElement>[]> {
     await closeSearchBox(page)
     await page.click('#search-button')
-    await page.waitForSelector('[placeholder="What are you looking for?"]')
-    await page.fill('[placeholder="What are you looking for?"]', query)
+    await page.waitForSelector(placeholder)
+    await page.fill(placeholder, query)
     await page.waitForTimeout(2000) // wait longer for search contents to render
 
     return page.$$('.search-results>div');
