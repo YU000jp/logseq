@@ -323,7 +323,7 @@
    (->>
     [{:title (t :left-side-bar/new-page)
       :class "new-page-link"
-      :options {:on-click (fn [e]
+      :options {:on-click (fn []
                             (close-sidebar-on-mobile!)
                             (state/set-modal! cmdk/cmdk-modal
                                               {:fullscreen? false
@@ -338,7 +338,7 @@
      (when page-name
        {:title (t :left-side-bar/new-sub-page)
         :class "new-page-link"
-        :options {:on-click (fn [e]
+        :options {:on-click (fn []
                               (close-sidebar-on-mobile!)
                               (state/set-modal! cmdk/cmdk-modal
                                                 {:fullscreen? false
