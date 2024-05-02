@@ -1,7 +1,7 @@
 import { Page, Locator, ElementHandle } from '@playwright/test'
 import { randomString } from './basic'
 
-const placeholder = "What are you looking for? Search word/new page name (Enter here)"
+const placeholder = '[placeholder="What are you looking for? Search word/new page name (Enter here)"]'
 
 export async function closeSearchBox(page: Page): Promise<void> {
     await page.keyboard.press("Escape", { delay: 50 }) // escape (potential) search box typing
