@@ -1,6 +1,5 @@
 {
     "name": "logseq",
-    "version": "0.0.1",
     "private": true,
     "main": "static/electron.js",
     "devDependencies": {
