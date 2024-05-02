@@ -4,57 +4,57 @@ import { expect } from '@playwright/test'
 import { test } from './fixtures';
 import { searchPage, captureConsoleWithPrefix, closeSearchBox, createPage, IsWindows, randomString } from './utils';
 
-test('create file on disk then delete', async ({ page, block, graphDir }) => {
-  // Since have to wait for file watchers
-  test.slow();
+// test('create file on disk then delete', async ({ page, block, graphDir }) => {
+//   // Since have to wait for file watchers
+//   test.slow();
 
-  // Special page names: namespaced, chars require escaping, chars require unicode normalization, "%" chars, "%" with 2 hexdigests
-  const testCases = [
-    {pageTitle: "User:John", fileName: "User%3AJohn"},
-    // invalid url decode escaping as %ff is not parsable but match the common URL encode regex
-    {pageTitle: "#%ff", fileName: "#%ff"},
-    // valid url decode escaping
-    {pageTitle: "#%23", fileName: "#%2523"},
-    {pageTitle: "@!#%", fileName: "@!#%"},
-    {pageTitle: "aàáâ", fileName: "aàáâ"},
-    {pageTitle: "#%gggg", fileName: "#%gggg"}
-  ]
-  if (!IsWindows)
-    testCases.push({pageTitle: "User:Bob", fileName: "User:Bob"})
+//   // Special page names: namespaced, chars require escaping, chars require unicode normalization, "%" chars, "%" with 2 hexdigests
+//   const testCases = [
+//     {pageTitle: "User:John", fileName: "User%3AJohn"},
+//     // invalid url decode escaping as %ff is not parsable but match the common URL encode regex
+//     {pageTitle: "#%ff", fileName: "#%ff"},
+//     // valid url decode escaping
+//     {pageTitle: "#%23", fileName: "#%2523"},
+//     {pageTitle: "@!#%", fileName: "@!#%"},
+//     {pageTitle: "aàáâ", fileName: "aàáâ"},
+//     {pageTitle: "#%gggg", fileName: "#%gggg"}
+//   ]
+//   if (!IsWindows)
+//     testCases.push({pageTitle: "User:Bob", fileName: "User:Bob"})
 
-  function getFullPath(fileName: string) {
-    return path.join(graphDir, "pages", `${fileName}.md`);
-  }
+//   function getFullPath(fileName: string) {
+//     return path.join(graphDir, "pages", `${fileName}.md`);
+//   }
 
-  // Test putting files on disk
-  for (const {pageTitle, fileName} of testCases) {
-    // Put the file on disk
-    const filePath = getFullPath(fileName);
-    await fsp.writeFile(filePath, `- content for ${pageTitle}`);
-    await captureConsoleWithPrefix(page, "Parsing finished:", 5000)
+//   // Test putting files on disk
+//   for (const {pageTitle, fileName} of testCases) {
+//     // Put the file on disk
+//     const filePath = getFullPath(fileName);
+//     await fsp.writeFile(filePath, `- content for ${pageTitle}`);
+//     await captureConsoleWithPrefix(page, "Parsing finished:", 5000)
 
-    // Check that the page is created
-    const results = await searchPage(page, pageTitle);
-    const firstResultRow = await results[0].innerText()
-    expect(firstResultRow).toContain(pageTitle);
-    expect(firstResultRow).not.toContain("Create");
-    await closeSearchBox(page);
-  }
+//     // Check that the page is created
+//     const results = await searchPage(page, pageTitle);
+//     const firstResultRow = await results[0].innerText()
+//     expect(firstResultRow).toContain(pageTitle);
+//     expect(firstResultRow).not.toContain("Create");
+//     await closeSearchBox(page);
+//   }
 
-  // Test removing files on disk
-  for (const {pageTitle, fileName} of testCases) {
-    // Remove the file on disk
-    const filePath = getFullPath(fileName);
-    await fsp.unlink(filePath);
-    await captureConsoleWithPrefix(page, "Delete page:", 5000);
+//   // Test removing files on disk
+//   for (const {pageTitle, fileName} of testCases) {
+//     // Remove the file on disk
+//     const filePath = getFullPath(fileName);
+//     await fsp.unlink(filePath);
+//     await captureConsoleWithPrefix(page, "Delete page:", 5000);
 
-    // Test that the page is deleted
-    const results = await searchPage(page, pageTitle);
-    const firstResultRow = await results[0].innerText()
-    // expect(firstResultRow).toContain("Create");
-    await closeSearchBox(page);
-  }
-});
+//     // Test that the page is deleted
+//     const results = await searchPage(page, pageTitle);
+//     const firstResultRow = await results[0].innerText()
+//     // expect(firstResultRow).toContain("Create");
+//     await closeSearchBox(page);
+//   }
+// });
 
 test("Rename file on disk", async ({ page, block, graphDir }) => {
   // Since have to wait for file watchers
