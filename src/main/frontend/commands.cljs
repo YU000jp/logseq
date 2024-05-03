@@ -27,6 +27,8 @@
 
 ;; TODO: move to frontend.handler.editor.commands
 
+;; TODO: コマンド操作をオフにする設定項目を追加する
+
 (defonce angle-bracket "<")
 (defonce hashtag "#")
 (defonce colon ":")
