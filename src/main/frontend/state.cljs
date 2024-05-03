@@ -12,6 +12,7 @@
             [frontend.storage :as storage]
             [frontend.util :as util]
             [frontend.util.cursor :as cursor]
+            ;; [frontend.handler.recent :as recent-handler]
             [goog.dom :as gdom]
             [goog.object :as gobj]
             [logseq.graph-parser.config :as gp-config]
@@ -1129,17 +1130,19 @@ Similar to re-frame subscriptions"
   (swap! state assoc :ui/sidebar-open? false))
 
 (defn sidebar-add-block!
-  [repo db-id block-type]
+  [repo uuid block-type]
   (when (not (util/sm-breakpoint?))
-    (when db-id
+    (when uuid
       (update-state! :sidebar/blocks (fn [blocks]
-                                       (->> (remove #(= (second %) db-id) blocks)
-                                            (cons [repo db-id block-type])
+                                       (->> (remove #(= (second %) uuid) blocks)
+                                            (cons [repo uuid block-type])
                                             (distinct))))
-      (set-state! [:ui/sidebar-collapsed-blocks db-id] false)
+      (set-state! [:ui/sidebar-collapsed-blocks uuid] false)
       (open-right-sidebar!)
       (when-let [elem (gdom/getElementByClass "sidebar-item-list")]
-        (util/scroll-to elem 0)))))
+        (util/scroll-to elem 0))
+      ;; (recent-handler/add-page-to-recent! repo uuid true) ;; TODO: サイドバーで開いたノートを履歴に追加する 処理がうまくいかない。要修正。サイドバー専用の履歴にするか、履歴に追加するか検討
+      )))
 
 (defn sidebar-move-block!
   [from to]
