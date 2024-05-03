@@ -17,7 +17,7 @@ on:
       git-ref:
         description: "Release Git Ref (Which branch or tag to build?)"
         required: true
-        default: "logseq-classic-develop"
+        default: "develop"
       is-draft:
         description: 'Draft Release? (Beta only, Nightly will always be a non-draft)'
         type: boolean
@@ -56,9 +56,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Check build options
-        if: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.build-target == 'nightly' || github.event.inputs.build-target == 'beta') && github.event.inputs.git-ref != 'logseq-classic-develop' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.build-target == 'nightly' || github.event.inputs.build-target == 'beta') && github.event.inputs.git-ref != 'develop' }}
         run: |
-          echo "::error title=CheckFail::Nightly and Beta Release MUST be built from logseq-classic-develop branch"
+          echo "::error title=CheckFail::Nightly and Beta Release MUST be built from develop branch"
           exit 1
 
       - name: Check out Git repository
