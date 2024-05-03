@@ -3,7 +3,9 @@
   (:require [frontend.db :as db]
             [frontend.db.model :as model]
             [frontend.state :as state]
-            [frontend.util :as util]))
+            [frontend.util :as util]
+            ;; [frontend.date :as date]
+            ))
 
 (defn add-page-to-recent!
   [repo page-name-or-block-uuid click-from-recent?]
@@ -15,9 +17,16 @@
                     page-name-or-block-uuid)
         favorites (:favorites (state/sub-config))
         favorited? (contains? (set (map util/page-name-sanity-lc favorites))
-                              page-name)] 
-    (when (and (not click-from-recent?) (not ((set pages) page-name)) (not favorited?));;fix: ブックマークに含まれるものは履歴に入れない
-      (let [new-pages (take 20 (distinct (cons page-name pages)))]
+                              page-name)
+        ;; journal? (date/valid-journal-title? page-name) ;TODO: ジャーナルを追加するかどうかの設定項目を追加する
+        ] 
+    (when (and 
+           (not click-from-recent?)
+           (not ((set pages) page-name))
+           (not favorited?)
+          ;;  (not journal?)
+          );;fix: ブックマークに含まれるものは履歴に入れない
+      (let [new-pages (take 30 (distinct (cons page-name pages)))]
         (db/set-key-value repo :recent/pages new-pages)))))
 
 (defn update-or-add-renamed-page [repo old-page-name new-page-name]
