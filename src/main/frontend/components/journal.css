@@ -10,12 +10,14 @@
     border-top-color: var(--lx-gray-07, var(--ls-border-color, var(--rx-gray-06)));
     margin: 24px 0;
     padding: 24px 0;
-    min-height: 250px;
+    min-height: 100px;
 
     &:first-child {
       padding-top: 0;
       border-top: none;
-      min-height: 500px;
+    }
+    &>div.journal>div.flex>div.initial {
+      min-height: 90vh;
     }
   }
 }
