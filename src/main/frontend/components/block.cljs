@@ -2602,6 +2602,7 @@
                    (model/query-block-by-uuid block-id)) ;; return page entity when received page uuid
           page-name (:block/name page)
           page-original-name (:block/original-name page)
+          journal? (:block/journal? page)
           show? (or (seq parents) show-page? page-name)
           parents (if (= page-name (:block/name (first parents)))
                     (rest parents)
@@ -2643,6 +2644,8 @@
                               " my-2")
                             (when indent?
                               " ml-4")))}
+             (when journal?
+               (ui/icon "calendar-time" {:class "text-lg"}))
              (when (and (false? (:top-level? config))
                         (seq parents))
                (breadcrumb-separator))
