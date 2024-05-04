@@ -231,6 +231,7 @@
  :editor/block-search "すべてのブロックを検索"
  :editor/collapse-block-children "ブロックを折りたたむ"
  :editor/copy "コピー"
+ :editor/copied "コピーしました"
  :editor/cut "切り取り"
  :editor/cycle-todo "TODOの状態を切り替える"
  :editor/delete-selection "選択したブロックを削除する"

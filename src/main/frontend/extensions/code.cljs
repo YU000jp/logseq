@@ -132,15 +132,18 @@
             [frontend.extensions.calc :as calc]
             [frontend.handler.editor :as editor-handler]
             [frontend.handler.code :as code-handler]
+            [frontend.ui :as ui]
             [frontend.state :as state]
             [frontend.util :as util]
             [frontend.config :as config]
+            [frontend.context.i18n :refer [t]]
             [goog.dom :as gdom]
             [goog.object :as gobj]
             [frontend.schema.handler.common-config :refer [Config-edn]]
             [malli.util :as mu]
             [malli.core :as m]
-            [rum.core :as rum]))
+            [rum.core :as rum]
+            [frontend.handler.notification :as notification]))
 
 ;; codemirror
 
@@ -506,9 +509,24 @@
   [state _config id attr code _theme _options]
   [:div.extensions__code
    (when-let [mode (:data-lang attr)]
-     (when-not (= mode "calc")
-       [:div.extensions__code-lang
-        (string/lower-case mode)]))
+     [(when-not (= mode "calc")
+        [:div.extensions__code-lang
+         [(string/lower-case mode)
+          [:button   ;;コピーボタン
+           {:title (t :editor/copy)
+            :on-mouse-down (fn [e]
+                       [(util/stop e)
+                        (.focus e)])
+            :on-click (fn [e]
+                        (util/stop e)
+                        (when code
+                          [(util/copy-to-clipboard! code)
+                           (notification/show! (t :editor/copied) :success)]))}
+           [(ui/icon "copy" {:size 26
+                             :class "ml-4"})]]]])])
+
+   
+    
    [:div.code-editor.flex.flex-1.flex-row.w-full
     [:textarea (merge {:id id
                        ;; Expose the textarea associated with the CodeMirror instance via

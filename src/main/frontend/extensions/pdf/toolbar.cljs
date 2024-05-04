@@ -122,7 +122,7 @@
                  (let [text (.-innerText (js/document.querySelector "#pdf-docinfo > .inner-text"))
                        text (string/replace text #"[\n\t]+" "\n")]
                    (util/copy-to-clipboard! text)
-                   (notification/show! "Copied!" :success)
+                   (notification/show! (t :editor/copied) :success)
                    (close-fn!))))]])
 
 (defn make-docinfo-in-modal

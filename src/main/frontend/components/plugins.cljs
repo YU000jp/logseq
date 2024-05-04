@@ -336,7 +336,7 @@
                               (reset! *search-key (str "@" author))
                               (.select el))} (str "@" author)]
         [:small {:on-click #(do
-                              (notification/show! "Copied!" :success)
+                              (notification/show! (t :editor/copied) :success)
                               (util/copy-to-clipboard! id))}
          (str "ID: " id)]]]
 

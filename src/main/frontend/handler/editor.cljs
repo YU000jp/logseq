@@ -2,6 +2,7 @@
   (:require [clojure.set :as set]
             [clojure.string :as string]
             [clojure.walk :as w]
+            [frontend.context.i18n :refer [t]]
             [dommy.core :as dom]
             [frontend.commands :as commands]
             [frontend.config :as config]
@@ -1019,7 +1020,7 @@
               copied-blocks (get-all-blocks-by-ids repo top-level-block-uuids)]
           (common-handler/copy-to-clipboard-without-id-property! (:block/format block) content (when html? html) copied-blocks))
         (state/set-block-op-type! :copy)
-        (notification/show! "Copied!" :success)))))
+        (notification/show! (t :editor/copied) :success)))))
 
 (defn copy-block-refs
   []
