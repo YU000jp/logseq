@@ -218,9 +218,9 @@
                                (mapv #(db/entity [:block/name %]))
                                (remove nil?))]
     (nav-content-item
-     [:a.flex.items-center.text-sm.font-medium.rounded-md.wrap-th
-      (ui/icon "star" {:size 16})
-      [:strong.flex-1.ml-2
+     [:a.flex.items-center.rounded-md.wrap-th
+      (ui/icon "star" {:size 26})
+      [:span.flex-1.ml-2.text-l
        (t :left-side-bar/nav-favorites)]]
 
      {:class "favorites"
@@ -246,8 +246,8 @@
                    (map :page))]
     (nav-content-item
      [:a.flex.items-center.rounded-md.wrap-th
-      (ui/icon "history" {:size 16})
-      [:strong.flex-1.ml-2
+      (ui/icon "history" {:size 26})
+      [:span.flex-1.ml-2.text-l
        (t :left-side-bar/nav-recent-pages)]]
 
      {:class "recent"
