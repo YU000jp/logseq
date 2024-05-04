@@ -188,7 +188,7 @@
        (page-cp repo page-name)])
 
     :search
-    [[:.flex.items-center.page-title
+    [[:.flex.items-center
       (ui/icon "search" {:class "mr-1"})
       (let [input (rum/react *db-id)
             input' (if (string/blank? input) (t :search/blank-input) input)]

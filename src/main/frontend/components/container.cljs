@@ -84,7 +84,7 @@
   (let [delta (delta-y e)]
     (< delta 14)))
 
-(rum/defc page-name
+(rum/defc page-name-dot
   [name icon recent?]
   (let [original-name (db-model/get-page-original-name name)
         whiteboard-page? (db-model/whiteboard-page? name)
@@ -140,7 +140,7 @@
     (shui/context-menu
       (shui/context-menu-trigger
         [:a.flex.items-center.justify-between.relative.group
-         {:on-click ;; TODO: ブックマークや履歴のリンクにツールチップをつける
+         {:on-click
           (fn [e]
             (let [name (if (empty? source-page) name (:block/name source-page))]
               (if (gobj/get e "shiftKey")
@@ -205,7 +205,7 @@
                                                    :up? (move-up? e)})
                  (reset! up? nil)
                  (reset! dragging-over nil))}
-     (page-name name icon false)]))
+     (page-name-dot name icon false)]))
 
 (rum/defc favorites < rum/reactive
   [t]
@@ -262,7 +262,7 @@
             :draggable true
             :on-drag-start (fn [event] (editor-handler/block->data-transfer! name event))
             :data-ref name}
-           (page-name name (get-page-icon entity) true)]))])))
+           (page-name-dot name (get-page-icon entity) true)]))])))
 
 (rum/defcs flashcards < db-mixins/query rum/reactive
   {:did-mount (fn [state]
