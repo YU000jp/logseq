@@ -399,7 +399,7 @@
                           (some->> (:width el-rect)
                                    (/ touching-x-offset)))
         repo               (state/get-current-repo)
-        page-name (state/get-current-page)]
+        page-name (or (state/get-current-page) (state/get-current-whiteboard))]
 
     (rum/use-effect!
      #(js/setTimeout

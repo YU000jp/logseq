@@ -218,7 +218,7 @@
         custom-home-page? (and (state/custom-home-page?)
                                (= (state/sub-default-home-page) (state/get-current-page)))
         ;; sync-enabled? (file-sync-handler/enable-sync?)
-        current-page (state/get-current-page)
+        current-page (or (state/get-current-page) (state/get-current-whiteboard))
         favorited? (contains?
                     (set (map util/page-name-sanity-lc (:favorites (state/sub-config))))
                     current-page)]
