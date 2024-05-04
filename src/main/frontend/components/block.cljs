@@ -1865,6 +1865,7 @@
       (ui/checkbox {:class class
                     :style {:margin-right 5}
                     :checked checked?
+                    :title "(Alt + Click to cancel)"
                     :on-mouse-down (fn [e]
                                      (util/stop-propagation e))
                     :on-change (fn [e]
@@ -1873,7 +1874,7 @@
                                      (editor-handler/uncheck block)
                                      (if (not alt-pressed?)
                                        (editor-handler/check block)
-                                       (editor-handler/cancel block)))))}))))
+                                       (editor-handler/check-cancel block)))))}))))
 
 (defn list-checkbox
   [config checked?]
