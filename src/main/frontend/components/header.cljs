@@ -2,6 +2,7 @@
   (:require [cljs-bean.core :as bean]
             [frontend.components.export :as export]
             [frontend.components.page-menu :as page-menu]
+            [frontend.handler.page :as page-handler]
             [frontend.components.plugins :as plugins]
             [frontend.components.server :as server]
             [frontend.components.right-sidebar :as sidebar]
@@ -24,7 +25,8 @@
             [frontend.version :refer [version]]
             [reitit.frontend.easy :as rfe]
             [rum.core :as rum]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [frontend.components.journal :as journal]))
 
 (rum/defc home-button
   < {:key-fn #(identity "home-button")}
@@ -216,7 +218,10 @@
         custom-home-page? (and (state/custom-home-page?)
                                (= (state/sub-default-home-page) (state/get-current-page)))
         ;; sync-enabled? (file-sync-handler/enable-sync?)
-        ]
+        current-page (state/get-current-page)
+        favorited? (contains?
+                    (set (map util/page-name-sanity-lc (:favorites (state/sub-config))))
+                    current-page)]
     [:div.cp__header.drag-region#head
      {:class           (util/classnames [{:electron-mac   electron-mac?
                                           :native-ios     (mobile-util/native-ios?)
@@ -249,12 +254,60 @@
                  (user-handler/alpha-or-beta-user?))
         (fs-sync/indicator))
 
+      (when current-page
+        [;; ブックマークボタン
+         [:div.text-sm
+          [:button.button.icon
+           {:on-click (fn []
+                        (if favorited?
+                          (page-handler/unfavorite-page! current-page)
+                          (page-handler/favorite-page! current-page)))
+            :title (if favorited?
+                     (t :page/unfavorite)
+                     (t :page/add-to-favorites))}
+           (if favorited?
+             (ui/icon "star-off" {:class "icon" :size 24})
+             (ui/icon "star" {:class "icon" :size 24}))]]
+
+                  ;; Linked Referencesを表示する
+         [:div.text-sm
+          [:button.button.icon
+           {:on-click (fn []
+                        (state/sidebar-add-block!
+                         current-repo
+                         "page-reference"
+                         :reference))
+            :title (t :linked-references/sidebar-open)}
+           (ui/icon "layers-difference" {:class "icon" :size 24})]]
+
+         ;; ページのグラフを表示する
+        [:div.text-sm
+         [:button.button.icon
+          {:on-click (fn []
+                       (state/sidebar-add-block!
+                        current-repo
+                        "page-graph"
+                        :page-graph))
+           :title (t :right-side-bar/page-graph)}
+          (ui/icon "hierarchy" {:class "icon" :size 24})]]
+        
+        ;; 削除ボタン
+        (when-not (or (= current-page "contents")
+                      config/publishing?)
+          [:div.text-sm
+           [:button.button.icon
+            {:on-click (fn []
+                         (state/set-modal! (page-menu/delete-page-dialog current-page)))
+             :title (t :page/delete)}
+            (ui/icon "trash-x" {:class "icon" :size 20 :color "red"})]])])
+
       (when (and (not= (state/get-current-route) :home)
                  (not custom-home-page?))
         (home-button))
 
       ;; (when sync-enabled?
       ;;   (login))
+
 
       ;; search button for non-mobile
       (when current-repo

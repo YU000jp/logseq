@@ -514,29 +514,6 @@
                                                          :title (t :command.go/keyboard-shortcuts)}
           (ui/icon "keyboard" {:class "icon" :color "gray"})]]
 
-        ;; TODO: ページタイトルの横に移植する予定
-        ;; ページのグラフを表示する
-        [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn []
-                                                                     (when-let [page (get-current-page)]
-                                                                       (state/sidebar-add-block!
-                                                                        repo
-                                                                        "page-graph"
-                                                                        :page-graph)))
-                                                         :title (t :right-side-bar/page-graph)}
-          (ui/icon "hierarchy" {:class "icon" :color "gray"})]]
-
-        ;; Linked Referencesを表示する
-        [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn []
-                                                                     (when-let [page (get-current-page)]
-                                                                       (state/sidebar-add-block!
-                                                                        repo
-                                                                        "page-reference"
-                                                                        :reference)))
-                                                         :title (t :linked-references/sidebar-open)}
-          (ui/icon "layers-difference" {:class "icon" :color "gray"})]]
-
         ;; [:div.text-sm
         ;;  [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
         ;;                                                              (state/sidebar-add-block! repo "help" :help))}
