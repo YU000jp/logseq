@@ -200,6 +200,9 @@
                         (reset! up? (move-up? e))))
       :on-drag-leave (fn [_e]
                        (reset! dragging-over nil))
+
+;; TODO: ツールチップ実装
+
       :on-drop (fn [e]
                  (page-handler/reorder-favorites! {:to name
                                                    :up? (move-up? e)})
