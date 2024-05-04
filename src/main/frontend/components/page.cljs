@@ -510,7 +510,7 @@
              (let [config {:id "block-parent"
                            :block? true}]
                [:div.mb-4
-                (component-block/breadcrumb config repo block-id {:level-limit 3})]))
+                (component-block/breadcrumb config repo block-id {:level-limit 6})]))
 
            ;; blocks
            (let [page (if block?
