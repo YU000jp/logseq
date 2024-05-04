@@ -397,26 +397,28 @@
  :linked-references/filter-heading "フィルター：" ;"Filter: " 
  :linked-references/filter-includes "含む：" ;"Includes: "
  :linked-references/filter-search "引用リンクを検索"
+ :linked-references/sidebar-open "現在のノートの 関連ログ" 
+ :linked-references/sidebar-not-page "ノート以外を開いています。関連ログは表示されません。"
  :linked-references/reference-count (fn [filtered-count total]
                                        ;; 1 Linked Reference
                                        ;; 1 of 1 Linked Reference
                                        ;; 2 of 5 Linked References
                                       (str
-                                       "関連ログ ["
+                                       "関連ログ "
                                        (when filtered-count
                                          (str filtered-count " of "))
                                        total
                                       ;; (if (= total 1) " Linked Reference" " Linked References")
-                                       "]"))
- :linked-references/unexpected-error " グラフを再インデックスしてください。" ;"Linked References: Unexpected error. Please re-index your graph first." 
+                                       (when total "件")))
+ :linked-references/unexpected-error " これが何度も表示される場合は、グラフの再インデックスをおこなってください。" ;"Linked References: Unexpected error. Please re-index your graph first." 
  :unlinked-references/reference-count (fn [total]
                                          ;; 1 Unlinked Reference
                                          ;; 5 Unlinked References
                                         (str 
-                                          "リンクされていないログ ["
+                                         "リンクされていない関連ログ "
                                          total
                                           ;;    (if (= total 1) " Unlinked Reference" " Unlinked References")
-                                          "]"))
+                                         (when total "件")))
  :loading "読み込み中..."
  :loading-files "ファイルロード中"
  :login "ログイン"
@@ -594,11 +596,13 @@
  :remove-heading "見出しを消去"
  :remove-orphaned-pages "孤立したノートを削除しますか？"
  :right-side-bar/all-pages "すべてのノート"
- :right-side-bar/block-ref "ブロック引用"
+ :right-side-bar/block-ref "(ブロック引用) "
  :right-side-bar/contents "自由スペース"
  :right-side-bar/flashcards "フラッシュカード"
  :right-side-bar/graph-view "グラフビュー"
  :right-side-bar/help "ヘルプ"
+ :right-side-bar/opened-block "(ブロック) "
+ :right-side-bar/opened-page "(ノート) "
  :right-side-bar/history "(開発) 「元に戻す/やり直し」の履歴"
  :right-side-bar/history-global "全体"
  :right-side-bar/history-pageonly "ノートのみ"

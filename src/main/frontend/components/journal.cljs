@@ -60,14 +60,15 @@
       (if today?
         (blocks-cp repo page)
         (ui/lazy-visible
-         (fn [] (blocks-cp repo page))
+         (fn [] (blocks-cp repo page))))
          ;;{:debug-id (str "journal-blocks " page)}
-         ))
+
 
       {})
 
+    ;; サイドバーに移設したためコメントアウト
+    ;; TODO: ジャーナルを開いたときに、サイドバーで呼び出すかどうかを選択できるようにする設定項目をつくる
     ;;  (page/today-queries repo today? false)
-
     ;;  (when today?
     ;;    (scheduled/scheduled-and-deadlines page))
 
@@ -80,10 +81,16 @@
   [:div#journals
    (ui/infinite-list
     "main-content-container"
-    (for [{:block/keys [name]} latest-journals]
+    [(when-let [repo (state/get-current-repo)]
+       [(when-not (js/document.getElementById "open-sidebar-default-queries")
+          (state/sidebar-add-block! repo "default-queries" :default-queries))
+        (when-not (js/document.getElementById "open-sidebar-scheduled-and-deadline")
+          (state/sidebar-add-block! repo "scheduled-and-deadline" :scheduled-and-deadline))])
+     
+     (for [{:block/keys [name]} latest-journals]
       [:div.journal-item.content {:key name}
        (journal-cp name)])
-    {:has-more (page-handler/has-more-journals?)
+]    {:has-more (page-handler/has-more-journals?)
      :more-class "text-l"
      :on-load (fn []
                 (page-handler/load-more-journals!))})])

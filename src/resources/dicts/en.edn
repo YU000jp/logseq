@@ -406,6 +406,8 @@
  :linked-references/filter-heading "Filter"
  :linked-references/filter-includes "Includes: "
  :linked-references/filter-search "Search in linked pages"
+ :linked-references/sidebar-open "Linked References of current page" 
+ :linked-references/sidebar-not-page "You are not viewing a page. Linked references will not be displayed."
  :linked-references/reference-count (fn [filtered-count total]
                                       ;; 1 Linked Reference
                                       ;; 1 of 1 Linked Reference
@@ -593,13 +595,15 @@
  :remove-heading "Remove heading"
  :remove-orphaned-pages "Remove orphaned pages?"
  :right-side-bar/all-pages "All pages"
- :right-side-bar/block-ref "Block references"
+ :right-side-bar/block-ref "(Block reference) "
  :right-side-bar/contents "Contents"
  :right-side-bar/flashcards "Flashcards"
  :right-side-bar/graph-view "Graph view"
- :right-side-bar/help "Help"
+ :right-side-bar/help "Help" 
+ :right-side-bar/opened-blocks "(Block) "
+ :right-side-bar/opened-page "(Page) "
  :right-side-bar/history "(Dev) Undo/Redo history"
- :right-side-bar/history-global "global"
+ :right-side-bar/history-global "global" 
  :right-side-bar/history-pageonly "page only"
  :right-side-bar/history-redos "Redos"
  :right-side-bar/history-undos "Undos"

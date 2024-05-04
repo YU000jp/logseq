@@ -323,14 +323,16 @@
    (->>
     [{:title (t :left-side-bar/new-page)
       :class "new-page-link"
-      :options {:on-click (fn []
-                            (close-sidebar-on-mobile!)
-                            (state/set-modal! cmdk/cmdk-modal
-                                              {:fullscreen? false
-                                               :close-btn?  false
-                                               :panel?      false
-                                               :label "ls-modal-search"})
-                            (state/set-search-mode! :pages))
+      :options {:on-click (fn [e]
+                            [(close-sidebar-on-mobile!)
+                             (if (util/shift-key? e)
+                               (state/sidebar-add-block! (state/get-current-repo) "" :search)
+                               [(state/set-modal! cmdk/cmdk-modal
+                                                  {:fullscreen? false
+                                                   :close-btn?  false
+                                                   :panel?      false
+                                                   :label "ls-modal-search"})])
+                               (state/set-search-mode! :pages)])
                 :shortcut (ui/keyboard-shortcut-from-config :go/search)}
       :icon (ui/type-icon {:name "new-page"
                            :class "highlight"
@@ -338,19 +340,21 @@
      (when page-name
        {:title (t :left-side-bar/new-sub-page)
         :class "new-page-link"
-        :options {:on-click (fn []
-                              (close-sidebar-on-mobile!)
-                              (state/set-modal! cmdk/cmdk-modal
-                                                {:fullscreen? false
-                                                 :close-btn?  false
-                                                 :panel?      true
-                                                 :label "ls-modal-search"})
-                              (state/set-search-mode! :pages)
-                              (let [original-name (db-model/get-page-original-name page-name)]
-                                (js/setTimeout #(let [input (gdom/getElement "search")]
-                                                  (set! (.-value input) (str original-name "/"))
-                                                  (.focus input))
-                                               100)))}
+        :options {:on-click (fn [e]
+                              (let [sub-page (str (db-model/get-page-original-name page-name) "/")]
+                                [(close-sidebar-on-mobile!)
+                                 (if (util/shift-key? e)
+                                   (state/sidebar-add-block! (state/get-current-repo) sub-page :search)
+                                   [(state/set-modal! cmdk/cmdk-modal
+                                                      {:fullscreen? false
+                                                       :close-btn?  false
+                                                       :panel?      true
+                                                       :label "ls-modal-search"})
+                                    ((js/setTimeout #(let [input (gdom/getElement "search")];; ページ名とスラッシュを自動入力
+                                                       (set! (.-value input) sub-page)
+                                                       (.focus input))
+                                                    100))])
+                                 (state/set-search-mode! :pages)]))}
         :icon (ui/type-icon {:name "new-page"
                              :class "highlight"
                              :extension? true})})

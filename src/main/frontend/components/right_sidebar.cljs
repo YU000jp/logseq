@@ -15,6 +15,7 @@
             [frontend.extensions.slide :as slide]
             [frontend.handler.editor :as editor-handler]
             ;; [frontend.handler.user :as user-handler]
+            [frontend.components.reference :as reference]
             [frontend.handler.ui :as ui-handler]
             [frontend.handler.page :as page-handler]
             [frontend.state :as state]
@@ -67,8 +68,9 @@
 (defn- block-with-breadcrumb
   [repo block idx sidebar-key ref?]
   (when-let [block-id (:block/uuid block)]
-    [[:.flex.items-center {:class (when ref? "ml-8")}
-      (ui/icon "block" {:class "text-md mr-2"})
+    [[:.flex.items-center
+      [:span.text-sm.mr-4 (if ref? (t :right-side-bar/block-ref)
+                         (t :right-side-bar/opened-block))] 
       (block/breadcrumb {:id     "block-parent"
                          :block? true
                          :sidebar-key sidebar-key} repo block-id {:indent? false})]
@@ -129,32 +131,43 @@
     ;; [[:.flex.items-center (ui/icon "help" {:class "text-md mr-2"}) (t :right-side-bar/help)] (onboarding/help)]
 
     :scheduled-and-deadline
-    [[:.flex.items-center.page-title
+    [[:.flex.items-center#open-sidebar-scheduled-and-deadline
       (ui/icon "calendar-time" {:class "text-sm mr-1"})
       [:span.overflow-hidden.text-ellipsis (t :right-side-bar/scheduled-and-deadline)]]
      (scheduled/scheduled-and-deadlines (date/today))]
 
     :default-queries
-    [[:.flex.items-center.page-title
-      (ui/icon "brand-4chan" {:class "text-sm mr-1"})
+    [[:.flex.items-center#open-sidebar-default-queries
+      (ui/icon "brand-4chan" {:class "mr-2"})
       [:span.overflow-hidden.text-ellipsis (t :right-side-bar/default-queries)]]
      (ui/lazy-visible
       (fn [] (page/today-queries repo)))]
 
+    :reference
+    [[:.flex.items-center#open-sidebar-reference
+      (ui/icon "layers-difference" {:class "mr-2"})
+      [:span.overflow-hidden.text-ellipsis (t :linked-references/sidebar-open)]]
+     (ui/lazy-visible
+      (fn [] (if-let [current-page-name (state/get-current-page)]
+               [[:div {:key "page-references"}
+                 (reference/references current-page-name)]
+                [:div {:key "page-unlinked-references"}
+                 (reference/unlinked-references current-page-name)]]
+               (t :linked-references/sidebar-not-page))))]
+
     :page-graph
-    [[:.flex.items-center (ui/icon "hierarchy" {:class "text-sm mr-2"}) (t :right-side-bar/page-graph)]
+    [[:.flex.items-center (ui/icon "hierarchy" {:class "mr-2"}) (t :right-side-bar/page-graph)]
      (page/page-graph)]
 
     :history
-    [[:.flex.items-center (ui/icon "history" {:class "text-md mr-2"}) (t :right-side-bar/history)]
+    [[:.flex.items-center (ui/icon "history" {:class "mr-2"}) (t :right-side-bar/history)]
      (history)]
 
     :block-ref
     #_:clj-kondo/ignore
     (let [lookup (if (integer? db-id) db-id [:block/uuid db-id])]
       (when-let [block (db/entity repo lookup)]
-        [(t :right-side-bar/block-ref)
-         (block-with-breadcrumb repo block idx [repo db-id block-type] true)]))
+        (block-with-breadcrumb repo block idx [repo db-id block-type] true)))
 
     :block
     #_:clj-kondo/ignore
@@ -167,15 +180,16 @@
           page (db/entity repo lookup)
           page-name (:block/name page)]
       [[:.flex.items-center.page-title
+        [:span.text-sm.mr-4 (t :right-side-bar/opened-page)]
         (if-let [icon (get-in page [:block/properties :icon])]
-          [:.text-md.mr-1 icon]
-          (ui/icon (if (= "whiteboard" (:block/type page)) "whiteboard" "page") {:class "text-sm mr-1"}))
+          [icon]
+          (ui/icon (if (= "whiteboard" (:block/type page)) "whiteboard" "page") {:class "mr-2"}))
         [:span.overflow-hidden.text-ellipsis (db-model/get-page-original-name page-name)]]
        (page-cp repo page-name)])
 
     :search
     [[:.flex.items-center.page-title
-      (ui/icon "search" {:class "text-sm mr-1"})
+      (ui/icon "search" {:class "mr-1"})
       (let [input (rum/react *db-id)
             input' (if (string/blank? input) (t :search/blank-input) input)]
         [:span.overflow-hidden.text-ellipsis input'])]
@@ -454,28 +468,28 @@
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
                                                                       ;; サイドバーで検索を開く
                                                                      (let [repo (state/get-current-repo)]
-                                                                       (state/close-modal!)
-                                                                       (state/sidebar-add-block! repo "" :search)))
+                                                                       [(state/close-modal!)
+                                                                       (state/sidebar-add-block! repo "" :search)]))
                                                          :title (t :header/search)}
           (ui/icon "search" {:class "icon" :size 23 :color "gray"})]]
 
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
-                                                                     (state/sidebar-add-block! repo "contents" :contents))
+                                                                     (state/sidebar-add-block! repo "" :contents))
                                                          :title (t :right-side-bar/contents)}
           (ui/icon "note" {:class "icon" :size 23 :color "gray"})]]
 
         ;; SCHEDULED AND DEADLINEを表示する
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
-                                                                     (state/sidebar-add-block! repo (t :right-side-bar/scheduled-and-deadline) :scheduled-and-deadline))
+                                                                     (state/sidebar-add-block! repo "scheduled-and-deadline" :scheduled-and-deadline))
                                                          :title (t :right-side-bar/scheduled-and-deadline)}
           (ui/icon "calendar-time" {:class "icon" :size 23 :color "gray"})]]
 
         ;; :dafault-queries
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
-                                                                     (state/sidebar-add-block! repo (t :right-side-bar/default-queries "DEFAULT QUERIES") :default-queries))
+                                                                     (state/sidebar-add-block! repo "default-queries" :default-queries))
                                                          :title (t :right-side-bar/default-queries "DEFAULT QUERIES")}
           (ui/icon "brand-4chan" {:class "icon" :size 23 :color "gray"})]]
         
@@ -501,16 +515,28 @@
           (ui/icon "keyboard" {:class "icon" :color "gray"})]]
 
         ;; TODO: ページタイトルの横に移植する予定
+        ;; ページのグラフを表示する
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn []
                                                                      (when-let [page (get-current-page)]
                                                                        (state/sidebar-add-block!
                                                                         repo
-                                                                        page
+                                                                        "page-graph"
                                                                         :page-graph)))
                                                          :title (t :right-side-bar/page-graph)}
           (ui/icon "hierarchy" {:class "icon" :color "gray"})]]
-        
+
+        ;; Linked Referencesを表示する
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn []
+                                                                     (when-let [page (get-current-page)]
+                                                                       (state/sidebar-add-block!
+                                                                        repo
+                                                                        "page-reference"
+                                                                        :reference)))
+                                                         :title (t :linked-references/sidebar-open)}
+          (ui/icon "layers-difference" {:class "icon" :color "gray"})]]
+
         ;; [:div.text-sm
         ;;  [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
         ;;                                                              (state/sidebar-add-block! repo "help" :help))}

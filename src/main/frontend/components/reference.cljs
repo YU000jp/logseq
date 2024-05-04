@@ -241,7 +241,7 @@
       (when (or (seq filter-state) (> filter-n 0))
         [:div.references.page-linked.flex-1.flex-row
          (sub-page-properties-changed page-name page-props-v filters-atom)
-         [:div.content.pt-6
+         [:div.content
           (references-cp page-name filters filters-atom filter-state total filter-n filtered-ref-blocks' *ref-pages)]]))))
 
 (rum/defc references
