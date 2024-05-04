@@ -30,7 +30,8 @@
 
   [:div.desc-item.as-input
    {:data-key key :key key}
-   [:h2 [:code key] (ui/icon "caret-right") [:strong title]]
+   [:h2 {:title key}
+    (ui/icon "caret-right") [:strong title]]
 
    [:label.form-control
     (html-content description)
@@ -50,7 +51,7 @@
   (let [val (if (boolean? val) val (boolean default))]
     [:div.desc-item.as-toggle
      {:data-key key}
-     [:h2 [:code key] (ui/icon "caret-right") [:strong title]]
+     [:h2 {:title key} (ui/icon "caret-right") [:strong title]]
 
      [:label.form-control
       (ui/checkbox {:checked   val
@@ -67,7 +68,7 @@
         picker (keyword enumPicker)]
     [:div.desc-item.as-enum
      {:data-key key}
-     [:h2 [:code key] (ui/icon "caret-right") [:strong title]]
+     [:h2 {:title key} (ui/icon "caret-right") [:strong title]]
 
      [:div.form-control
       [(if (contains? #{:radio :checkbox} picker) :div.wrap :label.wrap)
@@ -85,7 +86,7 @@
 
   [:div.desc-item.as-object
    {:data-key key}
-   [:h2 [:code key] (ui/icon "caret-right") [:strong title]]
+   [:h2 {:title key} (ui/icon "caret-right") [:strong title]]
 
    [:div.form-control
     (html-content description)
