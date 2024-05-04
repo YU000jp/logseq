@@ -521,7 +521,7 @@
                         (util/stop e)
                         (when code
                           [(util/copy-to-clipboard! code)
-                           (notification/show! (t :editor/copied) :success)]))}
+                           (notification/show! (t :notification/copied-to-clipboard) :success)]))}
            [(ui/icon "copy" {:size 26
                              :class "ml-4"})]]]])])
 

@@ -1020,7 +1020,7 @@
               copied-blocks (get-all-blocks-by-ids repo top-level-block-uuids)]
           (common-handler/copy-to-clipboard-without-id-property! (:block/format block) content (when html? html) copied-blocks))
         (state/set-block-op-type! :copy)
-        (notification/show! (t :editor/copied) :success)))))
+        (notification/show! (t :notification/copied-to-clipboard) :success)))))
 
 (defn copy-block-refs
   []

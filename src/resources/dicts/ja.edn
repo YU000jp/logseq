@@ -426,6 +426,7 @@
  :new-graph "新規のグラフを選択する"
  :new-page "新しいノート："
  :notification/clear-all "すべてクリア"
+ :notification/copied-to-clipboard "クリップボードにコピーしました"
  :on-boarding/add-graph "新規のグラフを選択"
  :on-boarding/click-here-to-edit-block "クリックして編集..."
  :on-boarding/command-palette-quick-tour "初心者のためのクイックツアー"

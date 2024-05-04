@@ -285,7 +285,7 @@
             :on-click      (fn [e]
                              (util/stop e)
                              (-> (util/copy-image-to-clipboard (gp-config/remove-asset-protocol asset-path))
-                                 (p/then #(notification/show! (t :editor/copied) :success))))}
+                                 (p/then #(notification/show! (t :notification/copied-to-clipboard) :success))))}
            (ui/icon "copy")])
 
         [:button.asset-action-btn.px-1

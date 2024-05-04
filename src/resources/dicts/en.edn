@@ -425,6 +425,7 @@
  :new-graph "Add new graph"
  :new-page "New page:"
  :notification/clear-all "Clear all"
+ :notification/copied-to-clipboard "Copied to clipboard!"
  :on-boarding/add-graph "Add a graph"
  :on-boarding/click-here-to-edit-block "Click here to edit..."
  :on-boarding/command-palette-quick-tour "Quick tour for onboarding"
