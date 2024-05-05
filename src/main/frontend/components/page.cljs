@@ -7,7 +7,6 @@
             ;; [frontend.components.hierarchy :as hierarchy]
             [frontend.components.plugins :as plugins]
             [frontend.components.query :as query]
-            ;; [frontend.components.reference :as reference]
             ;;[frontend.components.scheduled-deadlines :as scheduled]
             [frontend.components.svg :as svg]
             [frontend.config :as config]

@@ -115,8 +115,11 @@
   (let [state (undo-redo/get-state)
         page-only-mode? (state/sub :history/page-only-mode?)]
     [:div.ml-4
-     [:div.ml-3.font-bold (if page-only-mode? (t :right-side-bar/history-pageonly) (t :right-side-bar/history-global))]
-     [:div.p-4 [:.ml-4.mb-2
+     [:div.ml-3.font-bold (if page-only-mode? 
+                            (t :right-side-bar/history-pageonly) 
+                            (t :right-side-bar/history-global))]
+     [:div.p-4
+      [:.ml-4.mb-2
                 (history-stack (t :right-side-bar/history-undos) (rum/react (:undo-stack state)))
                 (history-stack (t :right-side-bar/history-redos) (rum/react (:redo-stack state)))]]]))
 
@@ -124,7 +127,9 @@
   [repo idx db-id block-type *db-id init-key]
   (case (keyword block-type)
     :contents
-    [[:.flex.items-center (ui/icon "note" {:class "text-sm mr-2"}) (t :right-side-bar/contents)]
+    [[:.flex.items-center
+      (ui/icon "note" {:class "text-sm mr-2"})
+      (t :right-side-bar/contents)]
      (contents)]
 
     ;; :help
@@ -146,7 +151,8 @@
     :reference
     [[:.flex.items-center#open-sidebar-reference
       (ui/icon "layers-difference" {:class "mr-2"})
-      [:span.overflow-hidden.text-ellipsis (t :linked-references/sidebar-open)]]
+      [:span.overflow-hidden.text-ellipsis
+       (t :linked-references/sidebar-open)]]
      (ui/lazy-visible
       (fn [] (if-let [current-page-name (state/get-current-page)]
                [[:div {:key "page-references"}
@@ -156,11 +162,17 @@
                (t :linked-references/sidebar-not-page))))]
 
     :page-graph
-    [[:.flex.items-center (ui/icon "hierarchy" {:class "mr-2"}) (t :right-side-bar/page-graph)]
-     (page/page-graph)]
+    [[:.flex.items-center
+      [(ui/icon "hierarchy" {:class "mr-2"})
+       (t :right-side-bar/page-graph)]
+      [:span.text-sm.opacity-50.ml-4 (t :right-side-bar/long-time)]]
+     (ui/lazy-visible
+      (fn [] (page/page-graph)))]
 
     :history
-    [[:.flex.items-center (ui/icon "history" {:class "mr-2"}) (t :right-side-bar/history)]
+    [[:.flex.items-center
+      (ui/icon "history" {:class "mr-2"})
+      (t :right-side-bar/history)]
      (history)]
 
     :block-ref

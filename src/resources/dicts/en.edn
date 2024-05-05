@@ -610,6 +610,7 @@
  :right-side-bar/history-undos "Undos"
  :right-side-bar/new-page "New page"
  :right-side-bar/page-graph "Page graph"
+ :right-side-bar/long-time "If there are many related notes, it may take some time to load the graph."
  :right-side-bar/pane-close "Close"
  :right-side-bar/pane-close-all "Close all"
  :right-side-bar/pane-close-others "Close others"
