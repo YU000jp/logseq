@@ -1,5 +1,5 @@
 .tippy-popper {
-  max-width: 800px;
+  max-width: 860px;
 
   .tippy-tooltip.transparent-theme {
     background-color: var(--ls-primary-background-color);
