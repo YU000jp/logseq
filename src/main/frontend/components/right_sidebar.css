@@ -16,7 +16,7 @@ html[data-theme=light] {
 }
 
 .sidebar-item-list {
-  @apply ml-1 mt-[-8px] pb-[150px];
+  @apply pb-[150px];
 
   height: calc(100vh - 48px);
 }
@@ -174,6 +174,7 @@ html[data-theme=light] a.toggle:hover {
     overflow-y: scroll;
 
     .sidebar-item-header {
+      font-size:1.2em;
       .breadcrumb {
         margin-top: 0;
         margin-bottom: 0;
@@ -197,10 +198,22 @@ html[data-theme=light] a.toggle:hover {
       flex: 0;
       overflow: initial;
       min-height: initial;
-      opacity: 0.3; 
+      opacity: 0.35;
+      cursor: pointer;
 
       .sidebar-item-header {
+        display: flex;
         font-size: 1.4em;
+        height: 100%;
+        align-items: flex-start;
+
+        >button {
+          height: 100%;
+        }
+        
+        .item-actions {
+          align-items: flex-start;
+        }
       }
 
       &.item-type-block .sidebar-item-header {

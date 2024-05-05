@@ -317,7 +317,7 @@
                                 (when (= (.-which (.-nativeEvent event)) 2)
                                   (state/sidebar-remove-block! idx)))}
 
-              [:button.flex.flex-row.p-2.items-center.w-full.overflow-hidden
+              [:button.flex.flex-row.p-2.w-full.overflow-hidden
                {:aria-expanded (str (not collapsed?))
                 :id            (str "sidebar-panel-header-" idx)
                 :aria-controls (str "sidebar-panel-content-" idx)
@@ -328,7 +328,7 @@
                 (ui/rotating-arrow collapsed?)]
                [:div.ml-1.font-medium.overflow-hidden.whitespace-nowrap
                 title]]
-              [:.item-actions.flex.items-center
+              [:.item-actions.flex
                (shui/dropdown-menu
                  (shui/dropdown-menu-trigger
                    {:as-child true}
