@@ -58,16 +58,6 @@ html {
     }
   }
 
-  &[data-color=logseq] {
-    .references-blocks-item {
-      --lx-bg-override: var(--rx-gray-03-alpha);
-    }
-
-    .block-children-left-border:hover {
-      --ls-block-left-color: var(--rx-logseq-11);
-    }
-  }
-
   &[data-color=none] {
     --ls-block-bullet-color: var(--rx-gray-08);
     --ls-block-bullet-active-color: var(--rx-gray-12);
@@ -109,11 +99,6 @@ html {
 }
 
 html[data-theme=light] {
-  &[data-color=logseq] {
-    .references-blocks-item {
-      --lx-bg-override: var(--rx-gray-03-alpha);
-    }
-  }
 
   .extensions__pdf-container {
     --lx-pdf-container-dark-bg: var(--lx-gray-11, #042f3c);
@@ -132,10 +117,6 @@ html[data-theme=dark] {
 
     .tippy-tooltip {
       @apply border-accent-02;
-    }
-
-    .references-blocks-item {
-      border-color: var(--lx-gray-06);
     }
 
     .cp__themes-installed {
