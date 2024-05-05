@@ -426,7 +426,7 @@
   (let [color-accent (state/sub :ui/radix-color)
         pick-theme [:div.cp__accent-colors-list-wrap
                     {:class (if _in-modal? "as-modal-picker" "")}
-                    (for [color (concat [:logseq] colors/color-list [:none])
+                    (for [color (concat  colors/color-list [:logseq])
                           :let [active? (= color color-accent)
                                 logseq? (= color :logseq)
                                 none? (= color :none)]]
