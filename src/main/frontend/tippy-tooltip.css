@@ -1,61 +1,61 @@
 .tippy-popper {
   max-width: 800px;
-}
 
-.tippy-popper[x-placement^=top] [x-arrow],
-.tippy-popper[x-placement^=top] [x-arrow].arrow-small,
-.tippy-popper[x-placement^=top] [x-arrow].arrow-big {
-  border-top-color: var(--ls-tertiary-background-color);
-}
+  .tippy-tooltip.transparent-theme {
+    background-color: var(--ls-primary-background-color);
 
-.tippy-popper[x-placement^=top] .tippy-tooltip.transparent-theme [x-circle],
-.tippy-popper[x-placement^=bottom] .tippy-tooltip.transparent-theme [x-circle],
-.tippy-popper[x-placement^=left] .tippy-tooltip.transparent-theme [x-circle],
-.tippy-popper[x-placement^=right] .tippy-tooltip.transparent-theme [x-circle],
-.tippy-popper .tippy-tooltip.transparent-theme {
-  background-color: var(--ls-secondary-background-color);
-}
+    [x-circle] {
+      background-color: var(--ls-primary-background-color);
+    }
+  }
 
-.tippy-popper[x-placement^=top] .tippy-tooltip.transparent-theme [x-arrow],
-.tippy-popper[x-placement^=top] .tippy-tooltip.transparent-theme [x-arrow].arrow-small,
-.tippy-popper[x-placement^=top] .tippy-tooltip.transparent-theme [x-arrow].arrow-big {
-  border-top-color: var(--ls-secondary-background-color);
-}
+  [x-placement^=top] {
+    [x-arrow] {
+      border-top-color: var(--ls-tertiary-background-color);
+    }
 
-.tippy-popper[x-placement^=bottom] [x-arrow],
-.tippy-popper[x-placement^=bottom] [x-arrow].arrow-small,
-.tippy-popper[x-placement^=bottom] [x-arrow].arrow-big {
-  border-bottom-color: var(--ls-tertiary-background-color);
-}
+    .tippy-tooltip.transparent-theme [x-arrow] {
+      border-top-color: var(--ls-primary-background-color);
+    }
+  }
 
-.tippy-popper[x-placement^=bottom] .tippy-tooltip.transparent-theme [x-arrow],
-.tippy-popper[x-placement^=bottom] .tippy-tooltip.transparent-theme [x-arrow].arrow-small,
-.tippy-popper[x-placement^=bottom] .tippy-tooltip.transparent-theme [x-arrow].arrow-big {
-  border-bottom-color: var(--ls-secondary-background-color);
-}
+  [x-placement^=bottom] {
+    [x-arrow] {
+      border-bottom-color: var(--ls-tertiary-background-color);
+    }
 
-.tippy-popper[x-placement^=left] [x-arrow],
-.tippy-popper[x-placement^=left] [x-arrow].arrow-small,
-.tippy-popper[x-placement^=left] [x-arrow].arrow-big {
-  border-left-color: var(--ls-tertiary-background-color);
-}
+    .tippy-tooltip.transparent-theme [x-arrow] {
+      border-bottom-color: var(--ls-primary-background-color);
+    }
+  }
 
-.tippy-popper[x-placement^=left] .tippy-tooltip.transparent-theme [x-arrow],
-.tippy-popper[x-placement^=left] .tippy-tooltip.transparent-theme [x-arrow].arrow-small,
-.tippy-popper[x-placement^=left] .tippy-tooltip.transparent-theme [x-arrow].arrow-big {
-  border-left-color: var(--ls-secondary-background-color);
-}
+  [x-placement^=left] {
+    [x-arrow] {
+      border-left-color: var(--ls-tertiary-background-color);
+    }
 
-.tippy-popper[x-placement^=right] [x-arrow],
-.tippy-popper[x-placement^=right] [x-arrow].arrow-small,
-.tippy-popper[x-placement^=right] [x-arrow].arrow-big {
-  border-right-color: var(--ls-tertiary-background-color);
-}
+    .tippy-tooltip.transparent-theme [x-arrow] {
+      border-left-color: var(--ls-primary-background-color);
+    }
+  }
 
-.tippy-popper[x-placement^=right] .tippy-tooltip.transparent-theme [x-arrow],
-.tippy-popper[x-placement^=right] .tippy-tooltip.transparent-theme [x-arrow].arrow-small,
-.tippy-popper[x-placement^=right] .tippy-tooltip.transparent-theme [x-arrow].arrow-big {
-  border-right-color: var(--ls-tertiary-background-color);
+  [x-placement^=right] {
+    [x-arrow] {
+      border-right-color: var(--ls-tertiary-background-color);
+    }
+
+    .tippy-tooltip.transparent-theme [x-arrow] {
+      border-right-color: var(--ls-tertiary-background-color);
+    }
+  }
+
+  .tippy-tooltip.customized-theme * {
+    text-align: left;
+  }
+
+  .tippy-tooltip.monospace-theme {
+    font-family: 'Fira Code', Monaco, Menlo, Consolas, 'COURIER NEW', monospace;
+  }
 }
 
 .tippy-tooltip {
@@ -63,15 +63,12 @@
 
   will-change: auto;
   color: var(--ls-primary-text-color, hsl(var(--foreground)));
-  background-color: var(--lx-gray-03, var(--ls-tertiary-background-color, var(--rx-gray-03)));
-}
+  background-color: var(--ls-primary-background-color);
+  box-shadow: 0 0 3px 3px var(--ls-tertiary-background-color);
 
-.tippy-tooltip [x-circle] {
-  will-change: auto;
-}
-
-.tippy-popper .tippy-tooltip.customized-theme * {
-  text-align: left;
+  [x-circle] {
+    will-change: auto;
+  }
 }
 
 .tippy-wrapper {
@@ -81,8 +78,4 @@
 
 .tippy-hover {
   cursor: pointer;
-}
-
-.tippy-popper .tippy-tooltip.monospace-theme {
-  font-family: 'Fira Code', Monaco, Menlo, Consolas, 'COURIER NEW', monospace;
 }
