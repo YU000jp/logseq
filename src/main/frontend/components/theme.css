@@ -23,7 +23,7 @@
 
   ::-webkit-scrollbar {
     background-color: var(--lx-gray-02, var(--ls-scrollbar-background-color, var(--rx-gray-02)));
-    width: var(--ls-scrollbar-width, 12px);
+    width: var(--ls-scrollbar-width, 14px);
     height: 8px;
   }
 

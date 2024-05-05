@@ -134,8 +134,7 @@
     (ui/foldable
      [:div.flex.flex-row.flex-1.justify-between.items-center
       [:h2.font-medium
-       [(t :linked-references/reference-count (if (seq filters) filter-n nil) total)]
-       [:span.text-sm.opacity-50.ml-4#long-time-message (t :right-side-bar/long-time)]]
+       [(t :linked-references/reference-count (if (seq filters) filter-n nil) total)]]
       [:a.filter.fade-link
        {:title (t :linked-references/filter-heading)
         :on-mouse-over (fn [_e]

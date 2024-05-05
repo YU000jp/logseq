@@ -158,7 +158,9 @@
                [[:div {:key "page-references"}
                  (reference/references current-page-name)]
                 [:div {:key "page-unlinked-references"}
-                 (reference/unlinked-references current-page-name)]]
+                 (reference/unlinked-references current-page-name)]
+                [:div.text-sm.opacity-50.ml-4.mt-6#long-time-message (t :right-side-bar/long-time)]
+                ]
                (t :linked-references/sidebar-not-page))))]
 
     :page-graph
