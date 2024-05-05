@@ -693,9 +693,9 @@ jobs:
           pkgver=$(cat VERSION)
           echo "version=$pkgver" >> $GITHUB_OUTPUT
 
-      - name: Fix .nupkg name in RELEASES file
-        run: |
-          sed -i "s/Logseq-.*.nupkg/Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}-full.nupkg/g" RELEASES
+      # - name: Fix .nupkg name in RELEASES file
+      #   run: |
+      #     sed -i "s/Logseq-.*.nupkg/Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}-full.nupkg/g" RELEASES
 
       # - name: Generate SHA256 checksums
       #   # sha256sum *-darwin-* > SHA256SUMS.txt
