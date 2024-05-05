@@ -447,6 +447,7 @@
  :on-boarding/new-graph-desc-4 "/pages - store the other pages"
  :on-boarding/new-graph-desc-5 "/logseq - store configuration, custom.css, and some metadata."
  :on-boarding/open-local-dir "Open a local directory"
+ :on-boarding/open-block-ref "Open block reference"
  :on-boarding/quick-tour-btn-back "Back"
  :on-boarding/quick-tour-btn-finish "Finish"
  :on-boarding/quick-tour-btn-next "Next"
