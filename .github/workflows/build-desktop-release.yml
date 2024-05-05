@@ -322,60 +322,60 @@ jobs:
           name: logseq-linux-arm64-builds
           path: builds
 
-  build-windows:
-    runs-on: windows-latest
-    needs: [ compile-cljs ]
-    steps:
-      - name: Download The Static Asset
-        uses: actions/download-artifact@v3
-        with:
-          name: static
-          path: static
+  # build-windows:
+  #   runs-on: windows-latest
+  #   needs: [ compile-cljs ]
+  #   steps:
+  #     - name: Download The Static Asset
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: static
+  #         path: static
 
-      - name: Retrieve tag version
-        id: ref
-        run: echo "version=$(cat ./static/VERSION)" >> $env:GITHUB_OUTPUT
+  #     - name: Retrieve tag version
+  #       id: ref
+  #       run: echo "version=$(cat ./static/VERSION)" >> $env:GITHUB_OUTPUT
 
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
+  #     - name: Install Node.js, NPM and Yarn
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
 
-      # - name: Cache Node Modules
-      #   uses: actions/cache@v3
-      #   with:
-      #    path: |
-      #      **/node_modules
-      #    key: ${{ runner.os }}-node-modules
+  #     # - name: Cache Node Modules
+  #     #   uses: actions/cache@v3
+  #     #   with:
+  #     #    path: |
+  #     #      **/node_modules
+  #     #    key: ${{ runner.os }}-node-modules
 
-      - name: Deps Electron app
-        run: yarn install
-        working-directory: ./static
+  #     - name: Deps Electron app
+  #       run: yarn install
+  #       working-directory: ./static
 
-      - name: Fix Deps Electron app
-        run: yarn run postinstall
-        working-directory: ./static/node_modules/dugite/
+  #     - name: Fix Deps Electron app
+  #       run: yarn run postinstall
+  #       working-directory: ./static/node_modules/dugite/
 
-      - name: Build/Release Electron app
-        run: yarn electron:make
-        working-directory: ./static
-        #env:
-        #  CODE_SIGN_CERTIFICATE_FILE: ../codesign.pfx
-        #  CODE_SIGN_CERTIFICATE_PASSWORD: ${{ secrets.CODE_SIGN_CERTIFICATE_PASSWORD }}
+  #     - name: Build/Release Electron app
+  #       run: yarn electron:make
+  #       working-directory: ./static
+  #       #env:
+  #       #  CODE_SIGN_CERTIFICATE_FILE: ../codesign.pfx
+  #       #  CODE_SIGN_CERTIFICATE_PASSWORD: ${{ secrets.CODE_SIGN_CERTIFICATE_PASSWORD }}
 
-      - name: Save Artifact
-        run: |
-          mkdir builds
-          mv static\out\make\squirrel.windows\x64\*.exe    builds\Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}.exe
-          mv static\out\make\squirrel.windows\x64\*.nupkg  builds\Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}-full.nupkg
-          mv static\out\make\zip\win32\x64\*.zip           builds\Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}.zip
-          mv static\out\make\squirrel.windows\x64\RELEASES builds\RELEASES
+  #     - name: Save Artifact
+  #       run: |
+  #         mkdir builds
+  #         mv static\out\make\squirrel.windows\x64\*.exe    builds\Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}.exe
+  #         mv static\out\make\squirrel.windows\x64\*.nupkg  builds\Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}-full.nupkg
+  #         mv static\out\make\zip\win32\x64\*.zip           builds\Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}.zip
+  #         mv static\out\make\squirrel.windows\x64\RELEASES builds\RELEASES
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: logseq-win64-builds
-          path: builds
+  #     - name: Upload Artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: logseq-win64-builds
+  #         path: builds
 
   # build-macos-x64:
   #   needs: [ compile-cljs ]
@@ -569,7 +569,7 @@ jobs:
 
   nightly-release:
     if: ${{ github.event_name == 'schedule' || github.event.inputs.build-target == 'nightly' }}
-    needs: [ build-linux-x64, build-linux-arm64, build-windows ] # build-android # build-macos-arm64 # build-macos-x64 # codesign-windows
+    needs: [ build-linux-x64, build-linux-arm64  ] # build-windows # build-android # build-macos-arm64 # build-macos-x64 # codesign-windows
     runs-on: ubuntu-20.04
     steps:
       # - name: Download MacOS x64 Artifacts
@@ -596,11 +596,11 @@ jobs:
           name: logseq-linux-arm64-builds
           path: ./
 
-      - name: Download The Windows Artifact (Signed)
-        uses: actions/download-artifact@v3
-        with:
-          name: logseq-win64-builds # logseq-win64-signed-builds
-          path: ./
+      # - name: Download The Windows Artifact (Signed)
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: logseq-win64-builds # logseq-win64-signed-builds
+      #     path: ./
 
       # - name: Download Android Artifacts
       #   uses: actions/download-artifact@v3
@@ -644,7 +644,7 @@ jobs:
   release:
     # NOTE: For now, we only have beta channel to be released on Github
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.build-target == 'beta' }}
-    needs: [ build-linux-x64, build-linux-arm64, build-windows ] # build-macos-arm64 # build-macos-x64 # build-android # codesign-windows
+    needs: [ build-linux-x64, build-linux-arm64  ] # build-windows # build-macos-arm64 # build-macos-x64 # build-android # codesign-windows
     runs-on: ubuntu-20.04
     steps:
       # - name: Download MacOS x64 Artifacts
@@ -671,11 +671,11 @@ jobs:
           name: logseq-linux-arm64-builds
           path: ./
 
-      - name: Download The Windows Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: logseq-win64-builds # logseq-win64-signed-builds
-          path: ./
+      # - name: Download The Windows Artifact
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: logseq-win64-builds # logseq-win64-signed-builds
+      #     path: ./
 
       # - name: Download Android Artifacts
       #   uses: actions/download-artifact@v3
