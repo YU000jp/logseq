@@ -3453,7 +3453,7 @@
            :has-more has-more?
            :more (cond
                    (or (:preview? config) (:sidebar? config))
-                   "More"
+                   (t :header/more)
 
                    @*loading?
                    (ui/lazy-loading-placeholder 88)
