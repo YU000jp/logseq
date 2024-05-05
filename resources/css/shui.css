@@ -135,13 +135,7 @@ html[data-theme=dark] {
     }
 
     .references-blocks-item {
-      background-color: var(--lx-gray-03, var(--ls-secondary-background-color));
-    }
-
-    .cp__right-sidebar-inner {
-      .references-blocks-item {
-        background-color: var(--lx-gray-04, var(--ls-tertiary-background-color));
-      }
+      border-color: var(--lx-gray-06);
     }
 
     .cp__themes-installed {

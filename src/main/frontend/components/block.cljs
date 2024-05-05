@@ -3562,7 +3562,7 @@
                 (ui/foldable
                  [:div
                   (page-cp config page)
-                  (when alias? [:span.text-sm.font-medium.opacity-50 " Alias"])]
+                  (when alias? [:span.text-sm.opacity-50 " Alias"])]
                  (for [[parent blocks] parent-blocks]
                    (let [blocks' (map (fn [b]
                                         ;; Block might be a datascript entity
