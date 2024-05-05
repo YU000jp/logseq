@@ -318,6 +318,7 @@
        :auto-focus    true
        :style         {:outline "none"
                        :width "100%"
+                       :fontSize "unset"
                        :font-weight "inherit"}
        :auto-complete (if (util/chrome?) "chrome-off" "off") ; off not working here
        :value         (rum/react *input-value)
