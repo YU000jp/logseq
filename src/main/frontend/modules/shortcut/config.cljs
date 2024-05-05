@@ -457,6 +457,9 @@
    :go/keyboard-shortcuts                   {:binding "g s"
                                              :fn      #(state/pub-event! [:modal/keymap])}
 
+   :go/yesterday                            {:binding "j y"
+                                             :fn      journal-handler/go-to-yesterday!}
+
    :go/today                                {:binding "j t"
                                              :fn      journal-handler/go-to-today!}
 
@@ -716,6 +719,7 @@
             :go/all-graphs
             :go/whiteboards
             :go/keyboard-shortcuts
+            :go/yesterday
             :go/today
             :go/tomorrow
             :go/next-journal
@@ -801,6 +805,7 @@
       :go/all-graphs
       :go/whiteboards
       :go/flashcards
+      :go/yesterday
       :go/today
       :go/tomorrow
       :go/next-journal

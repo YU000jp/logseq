@@ -144,6 +144,7 @@
  :command.go/prev-journal "前のジャーナルへ移動"
  :command.go/search "検索"
  :command.go/search-in-page "ノート内のブロックを検索"
+ :command.go/yesterday "昨日のジャーナルを開く"
  :command.go/today "今日のジャーナルを開く"
  :command.go/tomorrow "明日のジャーナルを開く"
  :command.go/whiteboards "ホワイトボードへ移動"
