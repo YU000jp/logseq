@@ -9,27 +9,26 @@
 
 (defn add-page-to-recent!
   [repo page-name-or-block-uuid click-from-recent?]
-  (let [pages (or (db/get-key-value repo :recent/pages)
-                  '())
-        page-name (if (uuid? page-name-or-block-uuid)
-                    (when-let [block (model/get-block-by-uuid page-name-or-block-uuid)]
-                      (get-in block [:block/page :block/original-name]))
-                    page-name-or-block-uuid)
-        favorites (:favorites (state/sub-config))
-        favorited? (contains? (set (map util/page-name-sanity-lc favorites))
-                              page-name)
+  (when-not click-from-recent?
+    (let [pages (or (db/get-key-value repo :recent/pages) '())
+          page-name (if (uuid? page-name-or-block-uuid)
+                      (let [block (model/get-block-by-uuid page-name-or-block-uuid)]
+                        (get-in block [:block/page :block/original-name]))
+                      page-name-or-block-uuid)
+          favorited? (contains? (set (map util/page-name-sanity-lc (:favorites (state/sub-config))))
+                                page-name)
         ;; journal? (date/valid-journal-title? page-name) ;TODO: ジャーナルを追加するかどうかの設定項目を追加する
-        ] 
-    (when (and 
-           (not click-from-recent?)
-           (not ((set pages) page-name))
-           (not favorited?)
+          ]
+      (when (and
+             (not ((set pages) page-name))
+             (not favorited?)
           ;;  (not journal?)
-          );;fix: ブックマークに含まれるものは履歴に入れない
-      (let [new-pages (take 30 (distinct (cons page-name pages)))]
-        (db/set-key-value repo :recent/pages new-pages)))))
+);;fix: ブックマークに含まれるものは履歴に入れない
+        (let [new-pages (take 30 (distinct (cons page-name pages)))]
+          (db/set-key-value repo :recent/pages new-pages))))))
 
-(defn update-or-add-renamed-page [repo old-page-name new-page-name]
+(defn update-or-add-renamed-page
+  [repo old-page-name new-page-name]
   (let [pages (or (db/get-key-value repo :recent/pages)
                   '())
         updated-pages (replace {old-page-name new-page-name} pages)

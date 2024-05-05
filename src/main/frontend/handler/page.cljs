@@ -377,7 +377,6 @@
                 (db/transact! txs)))
             (db/transact! [[:db.fn/retractEntity [:block/name page-name]]])))
 
-        ;; TODO: ブックマークボタン
         (unfavorite-page! page-name)
 
         (when (fn? ok-handler) (ok-handler))
