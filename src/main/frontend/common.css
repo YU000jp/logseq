@@ -83,7 +83,7 @@ body {
 
   a {
     cursor: pointer;
-    color: var(--lx-accent-11, var(--ls-link-text-color, hsl(var(--primary)/.8)));
+    border-bottom: 1px solid var(--lx-accent-11, var(--ls-link-text-color, hsl(var(--primary)/.8)));
     text-decoration: none;
   }
 
