@@ -57,13 +57,15 @@
        [:h1.title
         (gp-util/capitalize-all title)]]
 
-      (if today?
-        (blocks-cp repo page)
-        (ui/lazy-visible
-         (fn [] (blocks-cp repo page))))
+      [(if today?
+         (blocks-cp repo page)
+         (ui/lazy-visible
+          (fn [] (blocks-cp repo page))))
          ;;{:debug-id (str "journal-blocks " page)}
-
-
+       [:div.mt-20]
+       (rum/with-key
+         (reference/references title)
+         (str title "-refs"))]
       {})
 
     ;; サイドバーに移設したためコメントアウト
@@ -71,10 +73,7 @@
     ;;  (page/today-queries repo today? false)
     ;;  (when today?
     ;;    (scheduled/scheduled-and-deadlines page))
-
-     (rum/with-key
-       (reference/references title) ;; TODO: サイドバーを開いているときと、そうでないときにLinked Refrencesの配置を変える
-       (str title "-refs"))]))
+     ]))
 
 (rum/defc journals < rum/reactive
   [latest-journals]
