@@ -9,7 +9,6 @@
     "Logseq-Classic" is a customized derivative version of Logseq.<br/><br/>
     This app will include features that Logseq has not approved for implementation.<br/>
     <br/>
-    🚧 Active development is underway. <a href="https://github.com/YU000jp/fork-logseq/blob/logseq-classic-develop/CHANGELOG.md">CHANGELOG</a><br/>
 </h4>
 
 <p align="center">
@@ -24,44 +23,35 @@
   * [<g-emoji class="g-emoji" alias="thinking" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f914.png">🤔</g-emoji> Why was a derivative version created?](#-why-was-a-derivative-version-created?)
   * [<g-emoji class="g-emoji" alias="pray" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f64f.png">🙏</g-emoji> Note!](#-note)
   * [<g-emoji class="g-emoji" alias="eyes" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f440.png">👀</g-emoji> How can I use it?](#-how-can-i-use-it)
-  * [<g-emoji class="g-emoji" alias="books" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f4da.png">📚</g-emoji> Links](#-links-logseq)
-  * [<g-emoji class="g-emoji" alias="star2" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f31f.png">🌟</g-emoji> Contributors](#-contributors-logseq)
+  * [<g-emoji class="g-emoji" alias="star2" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f31f.png">🌟</g-emoji> Contribute](#-contribute)
+
+<br/><p align="center"><img src="https://github.com/YU000jp/fork-logseq/assets/111847207/ad79abe8-f35d-47cc-8ef7-89db3d3b5a97" height="400"/></p><br/>
 
 ## 🤔 Why was a derivative version created?
 
 1. My belief is to create an environment that is easier to use and has a higher degree of freedom on local. The reason for a derivative version is to go beyond plugins and add free customization. I am satisfied with the existing system. I want to add ideas to the fundamental aspects of the system, both functionally and design-wise.
-1. Logseq has plans to migrate to a database version that includes extensive changes. When Logseq migrates to the version, many plugins and themes will lose compatibility. Migration isn't always the right thing to do. Some people may want to continue using legacy version.
 
 ## 🙏 Note!
 
 1. My resources are limited. This derivative version only works on local **desktop**.
 1. Compatible with **Windows** or **Linux only**. Not available on *Mac*.
     > If it becomes popular and we get enough donations, we will make it compatible with *Mac*. This is because it costs $99 per year to perform "code signing" and "notarization" in order to be established as a *Mac* app.
-1. It is based on **Logseq v0.10.8** and does not include any later updates.
-1. The graphs used in Logseq and derived versions are common. You can switch at any time.
-1. If you have any new suggestions, please open an issue or discussion. 
+1. Merge after a new version of Logseq is released. Incompatible features may be omitted in the future.
+
 
 ## 👀 How can I use it?
 
+1. The graphs used in Logseq and derived versions are common. You can switch at any time.
 - ⭕Windows / Linux: <a href="https://github.com/YU000jp/fork-logseq/releases/latest/"><img src="https://img.shields.io/badge/Download_Logseq_Classic-100000?style=for-the-badge&logo=flatpak&logoColor=white&labelColor=002b36&color=85c8c8" alt="Download Logseq-Classic"/></a>
 - ❌Mac: If we receive enough donations, we may be able to release a Mac version. (https://www.buymeacoffee.com/yu000japan)
 
 ## 🚧 History
 
+- 🚧 *Active development is underway.* <a href="https://github.com/YU000jp/fork-logseq/blob/develop/CHANGELOG.md">CHANGELOG</a>
+1. 2024-05-05 Release v1.2.0 (Ithe latest version from upstream.): Improved sidebar.
 1. 2024-04-06 Building a release environment other than Mac and mobile
 1. 2024-04-04 Planning started
 
-## 📚 Links (Logseq)
-* Homepage: [Logseq.com](https://logseq.com)
-* Documentation: [docs.logseq.com](https://docs.logseq.com) ([FAQ](https://docs.logseq.com/#/page/faq))
-* Forum: [Discuss](https://discuss.logseq.com), ([FAQ category](https://discuss.logseq.com/c/faq/6))
-* Extensions: [Awesome Logseq](https://github.com/logseq/awesome-logseq)
-* Discord: [discord.gg/logseq](https://discord.gg/logseq)
-    > [中文 Discord](https://discord.gg/xYqcrXWymg)
+## 🌟 Contribute
 
-## 🌟 Contributors (Logseq)
-
-<p align="center">
-    <a href="https://github.com/YU000jp/fork-logseq/graphs/contributors">
-        <img src="https://contrib.rocks/image?repo=YU000jp/fork-logseq&max=300&columns=14" width="600"/></a>
-</p>
+1. If you have any new suggestions, please open an issue or discussion. 
