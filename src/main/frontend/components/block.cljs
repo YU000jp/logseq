@@ -505,6 +505,8 @@
 
 (declare page-reference)
 
+
+;; TODO: ページリンクを開いたとき
 (defn open-page-ref
   [e page-name redirect-page-name page-name-in-block contents-page? whiteboard-page?]
   (util/stop e)

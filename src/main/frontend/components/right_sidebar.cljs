@@ -514,19 +514,33 @@
                                                          :title (t :command.go/today)}
           (ui/icon "clock" {:class "icon" :size 23 :color "gray"})]]
 
-        ;; サイドバーをクリアにする
-        [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
-                                                                     (state/clear-sidebar-blocks!))
-                                                         :title (t :command.sidebar/clear)}
-          (ui/icon "trash-x" {:class "icon" :color "red"})]]
-
         ;; キーボードショートカットへ移動
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
                                                                      (state/sidebar-add-block! (state/get-current-repo) "shortcut-settings" :shortcut-settings))
                                                          :title (t :command.go/keyboard-shortcuts)}
           (ui/icon "keyboard" {:class "icon" :color "gray"})]]
+        
+        ;; すべて折りたたむ
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (state/sidebar-block-set-collapsed-all! true))
+                                                         :title (t  :right-side-bar/pane-collapse-all)}
+          (ui/icon "box-multiple-0" {:class "icon" :size 23 :color "gray"})]]
+
+        ;; すべて展開する
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (state/sidebar-block-set-collapsed-all! false))
+                                                         :title (t :right-side-bar/pane-expand-all)}
+          (ui/icon "box-multiple" {:class "icon" :size 23 :color "gray"})]]
+
+                ;; サイドバーをクリアにする
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (state/clear-sidebar-blocks!))
+                                                         :title (t :command.sidebar/clear)}
+          (ui/icon "trash-x" {:class "icon" :color "red"})]]
 
         ;; [:div.text-sm
         ;;  [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
