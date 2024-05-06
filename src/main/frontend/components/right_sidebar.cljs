@@ -15,6 +15,7 @@
             [frontend.extensions.slide :as slide]
             [frontend.handler.editor :as editor-handler]
             ;; [frontend.handler.user :as user-handler]
+            [frontend.handler.route :as route-handler]
             [frontend.components.reference :as reference]
             [frontend.handler.ui :as ui-handler]
             [frontend.handler.page :as page-handler]
@@ -243,26 +244,36 @@
         multi-items? (> block-count 1)]
 
     (menu-content
-      {:on-click toggle-fn :class "w-48" :align "end"}
+     {:on-click toggle-fn
+      :class "w-48"
+      :align "end"}
+     (when multi-items?
+       (menu-item
+        {:on-click #(state/sidebar-remove-rest! db-id)}
+        (t :right-side-bar/pane-close-others)))
 
-      (menu-item {:on-click #(state/sidebar-remove-block! idx)} (t :right-side-bar/pane-close))
-      (when multi-items? (menu-item {:on-click #(state/sidebar-remove-rest! db-id)} (t :right-side-bar/pane-close-others)))
-      (when multi-items? (menu-item {:on-click (fn []
-                                                 (state/clear-sidebar-blocks!)
-                                                 (state/hide-right-sidebar!))} (t :right-side-bar/pane-close-all)))
-      (when (and (not collapsed?) multi-items?) [:hr.menu-separator])
-      (when-not collapsed? (menu-item {:on-click #(state/sidebar-block-toggle-collapse! db-id)} (t :right-side-bar/pane-collapse)))
-      (when multi-items? (menu-item {:on-click #(state/sidebar-block-collapse-rest! db-id)} (t :right-side-bar/pane-collapse-others)))
-      (when multi-items? (menu-item {:on-click #(state/sidebar-block-set-collapsed-all! true)} (t :right-side-bar/pane-collapse-all)))
-      (when (and collapsed? multi-items?) [:hr.menu-separator])
-      (when collapsed? (menu-item {:on-click #(state/sidebar-block-toggle-collapse! db-id)} (t :right-side-bar/pane-expand)))
-      (when multi-items? (menu-item {:on-click #(state/sidebar-block-set-collapsed-all! false)} (t :right-side-bar/pane-expand-all)))
-      (when (= type :page) [:hr.menu-separator])
-      (when (= type :page)
-        (let [name (:block/name (db/entity db-id))]
-          (menu-item {:href (if (db-model/whiteboard-page? name)
-                              (rfe/href :whiteboard {:name name})
-                              (rfe/href :page {:name name}))} (t :right-side-bar/pane-open-as-page)))))))
+     (when multi-items?
+       (menu-item
+        {:on-click #(state/sidebar-block-collapse-rest! db-id)}
+        (t :right-side-bar/pane-collapse-others)))
+     (when-not multi-items?
+       (when-not collapsed?
+         (menu-item
+          {:on-click #(state/sidebar-block-toggle-collapse! db-id)}
+          (t :right-side-bar/pane-collapse)))
+       (when collapsed?
+         (menu-item
+          {:on-click #(state/sidebar-block-toggle-collapse! db-id)}
+          (t :right-side-bar/pane-expand))))
+     (when (= type :page)
+       (let [page-name (:block/name (db/entity db-id))]
+         (menu-item
+          {:on-click (fn []
+                       (if (db-model/whiteboard-page? page-name)
+                         (route-handler/redirect-to-whiteboard! page-name)
+                         (route-handler/redirect-to-page! page-name)))}
+          (t :right-side-bar/pane-open-as-page)))))))
+
 
 (rum/defc drop-indicator
   [idx drag-to]
@@ -323,7 +334,9 @@
                 :aria-controls (str "sidebar-panel-content-" idx)
                 :on-click      (fn [event]
                                  (util/stop event)
-                                 (state/sidebar-block-toggle-collapse! db-id))}
+                                 (if (and (util/shift-key? event) (not collapsed?))
+                                   (state/sidebar-block-collapse-rest! db-id)
+                                   (state/sidebar-block-toggle-collapse! db-id)))}
                [:span.opacity-50.hover:opacity-100.flex.items-center.pr-1
                 (ui/rotating-arrow collapsed?)]
                [:div.ml-1.font-medium.overflow-hidden.whitespace-nowrap
