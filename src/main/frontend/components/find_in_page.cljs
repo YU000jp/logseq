@@ -5,6 +5,7 @@
             [frontend.util :as util]
             [frontend.handler.search :as search-handler :refer [debounced-search, stop-debounced-search!]]
             [goog.object :as gobj]
+            [frontend.context.i18n :refer [t]]
             [goog.dom :as gdom]
             [frontend.mixins :as mixins]
             [clojure.string :as string]))
@@ -24,10 +25,10 @@
                                (rum/set-ref! *composing? false))
                          (when-not (rum/deref *composing?)
                            (debounced-search))))]
-    [:div.flex.w-48.relative
+    [:div.flex.w-150.relative
      [:input#search-in-page-input.form-input.block.sm:text-sm.sm:leading-5.my-2.border-none.mr-4.outline-none
       {:auto-focus true
-       :placeholder "Find in page"
+       :placeholder (t :command.go/electron-find-in-page)
        :aria-label "Find in page"
        :value q
        :on-composition-start on-change-fn
@@ -61,7 +62,7 @@
                 (debounced-search))
     :intent "link"
     :small? true
-    :title "Match case"
+    :title (t :on-boarding/search-match-case)
     :class (str (when match-case? "active ") "text-lg"))
 
    (ui/button
@@ -72,7 +73,7 @@
     :intent "link"
     :small? true
     :class "text-lg"
-    :title "Previous result")
+    :title (t :paginates/prev))
 
    (ui/button
     (ui/icon "caret-down")
@@ -82,7 +83,7 @@
     :intent "link"
     :small? true
     :class "text-lg"
-    :title "Next result")
+    :title (t :paginates/next))
 
    (ui/button
     (ui/icon "x")
@@ -91,7 +92,7 @@
     :intent "link"
     :small? true
     :class "text-lg"
-    :title "Close")])
+    :title (t :close))])
 
 (rum/defc search < rum/reactive
   []
