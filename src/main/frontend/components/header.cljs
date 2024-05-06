@@ -26,7 +26,8 @@
             [reitit.frontend.easy :as rfe]
             [rum.core :as rum]
             [clojure.string :as string]
-            [frontend.components.journal :as journal]))
+            ;; [frontend.components.journal :as journal]
+            ))
 
 (rum/defc home-button
   < {:key-fn #(identity "home-button")}
