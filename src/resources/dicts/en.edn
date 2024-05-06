@@ -440,6 +440,7 @@
  :on-boarding/importing-title "Do you already have notes that you want to import?"
  :on-boarding/insert-a-journal "Create a journal?"
  :on-boarding/ref-journal "Referring from a journal"
+ :on-boading/title-edit-message "Do you really want to change?"
  :on-boarding/main-desc "First you need to choose a folder where Logseq will store your thoughts, ideas, notes."
  :on-boarding/main-title (fn [] ["Welcome to " [:strong "Logseq!"]])
  :on-boarding/new-graph-desc-1 "Logseq supports both Markdown and Org-mode. You can open an existing directory or create a new one on your device, a directory is also known simply as a folder. Your data will be stored only on this device."

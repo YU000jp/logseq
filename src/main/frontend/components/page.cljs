@@ -278,7 +278,7 @@
                        (ui/make-confirm-modal
                         {:title         (if (collide?)
                                           (str "Page “" @*title-value "” already exists, merge to it?")
-                                          (str "Do you really want to change the page name to “" new-page-name "”?"))
+                                          (str (t :on-boading/title-edit-message) " “" new-page-name "”"))
                          :on-confirm    (fn [_e {:keys [close-fn]}]
                                           (close-fn)
                                           (page-handler/rename! (or title page-name) @*title-value)

@@ -441,6 +441,7 @@
  :on-boarding/importing-title "既に存在するノートを読み込みますか？"
  :on-boarding/insert-a-journal "その日のジャーナルを作成しますか？"
  :on-boarding/ref-journal "ジャーナルから引用"
+ :on-boading/title-edit-message "このタイトルに変更しますか？"
  :on-boarding/main-desc "はじめに、ノートを保存しておくためのフォルダを選択する必要があります。"
  :on-boarding/main-title (fn [] [[:strong "Logseq-Classic"] "へようこそ！"])
  :on-boarding/new-graph-desc-1 "Logseqは、マークダウンとOrgモードの両方をサポートしています。あなたのローカル端末の既存フォルダ（ディレクトリ）を選ぶか、新しいフォルダを作成してください。あなたのローカル端末にデータが保存されます。"
