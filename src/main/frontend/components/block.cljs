@@ -649,7 +649,8 @@
                                       (if (and (string? page-original-name)
                                                (text/namespace-page? page-original-name))
                                         ;; 階層が含まれる場合
-                                        [:div.my-2
+                                        [:h1.page-title.my-2.mb-3
+                                         {:style {:font-size "1.4em"}}
                                          (->>
                                           (for [namespace-page (gp-util/split-namespace-pages page-original-name)]
                                             (when (and (string? namespace-page) namespace-page)
@@ -658,7 +659,9 @@
                                           (interpose [:span.mx-2.opacity-30 model/ns-char]))]
                                         
                                         ;; 階層が含まれない場合
-                                        [:h1.page-title (if (= page-name redirect-page-name)
+                                        [:h1.page-title.my-2.mb-3
+                                         {:style {:font-size "1.5em"}}
+                                         (if (= page-name redirect-page-name)
                                                                  page-original-name
                                                                  [:span
                                                                   [:span.text-sm.mr-2 "Alias:"]
