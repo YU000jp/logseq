@@ -635,7 +635,7 @@
                                     [])
 
                                    (when redirect-page-name
-                                     [:div.tippy-wrapper.overflow-y-auto.p-4.outline-none
+                                     [:div.tippy-wrapper.overflow-y-auto.p-6.outline-none
                                       {:ref   *el-popup
                                        :tab-index -1
                                        :style {:width          600
@@ -643,7 +643,10 @@
                                                :font-weight    500
                                                :max-height     600
                                                :padding-bottom 64}}
-                                      (if (and (string? page-original-name) (text/namespace-page? page-original-name))
+                                      ;; 階層リンク作成方法
+                                      (if (and (string? page-original-name)
+                                               (text/namespace-page? page-original-name))
+                                        ;; 階層が含まれる場合
                                         [:div.my-2
                                          (->>
                                           (for [namespace-page (gp-util/split-namespace-pages page-original-name)]
@@ -651,11 +654,14 @@
                                               (let [label (second (gp-util/split-last model/ns-char namespace-page))]
                                                 (page-reference false namespace-page {:preview? true} label))))
                                           (interpose [:span.mx-2.opacity-30 model/ns-char]))]
-                                        [:h2.font-bold.text-lg (if (= page-name redirect-page-name)
+                                        
+                                        ;; 階層が含まれない場合
+                                        [:h1.page-title (if (= page-name redirect-page-name)
                                                                  page-original-name
                                                                  [:span
                                                                   [:span.text-sm.mr-2 "Alias:"]
                                                                   page-original-name])])
+                                      
                                       (let [page (db/entity [:block/name (util/page-name-sanity-lc redirect-page-name)])]
                                         (editor-handler/insert-first-page-block-if-not-exists! redirect-page-name {:redirect? false})
                                         (let [page-blocks-cp (state/get-page-blocks-cp)
@@ -758,6 +764,7 @@
     (when draw-component
       (draw-component {:file file :block-uuid block-uuid}))))
 
+;; ページリファレンスのコンポーネント
 (rum/defc page-reference < rum/reactive
   "Component for page reference"
   [html-export? s {:keys [nested-link? id] :as config} label]
@@ -768,6 +775,7 @@
       [:div.draw {:on-click (fn [e]
                               (.stopPropagation e))}
        (excalidraw s block-uuid)]
+      ;; excalidraw以外の場合
       [:span.page-reference
        {:data-ref s}
        (when (and (or show-brackets? nested-link?)
