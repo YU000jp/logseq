@@ -812,19 +812,37 @@
   [config uuid]
   (when-let [block (db/entity [:block/uuid uuid])]
     (let [blocks (db/get-paginated-blocks (state/get-current-repo) (:db/id block)
-                                          {:scoped-block-id (:db/id block)})]
-      [:div.color-level.embed-block.bg-base-2
-       {:style {:z-index 2}
+                                          {:scoped-block-id (:db/id block)})
+          page-name (util/page-name-sanity-lc (get-in block [:block/page :block/name]))
+          fmt-journal? (if page-name (boolean (date/journal-title->int page-name)) false) ;; ジャーナルノートかどうか
+          ]
+      [:div.embed-block.mt-3.p-3
+       {:style {:z-index 2
+                :border "3px dotted var(--lx-gray-03, var(--ls-primary-background-color))"
+                :borderRadius "0.2em"}
         :on-double-click #(edit-parent-block % config)
-        :on-mouse-down (fn [e] (.stopPropagation e))}
-       [:div.px-3.pt-1.pb-2
+        :on-mouse-down (fn [e] (.stopPropagation e))
+        :title (when page-name page-name)}
+       [:div
         (blocks-container blocks (assoc config
                                         :db/id (:db/id block)
                                         :id (str uuid)
                                         :embed-id uuid
                                         :embed? true
                                         :embed-parent (:block config)
-                                        :ref? false))]])))
+                                        :ref? false))]
+       [:span
+        {:style {:position "absolute"
+                 :top      "3em"
+                 :right    "1em"
+                 :z-index  3}}
+        (if fmt-journal? ;; ジャーナルからの引用の場合、アイコンをつける
+          (ui/icon "calendar-time"
+                   {:size 16
+                    :color "yellow"
+                    :title (t :on-boarding/ref-journal)})
+          (when page-name
+            (ui/icon "page" {:size 16})))]])))
 
 (rum/defc page-embed < rum/reactive db-mixins/query
   [config page-name]
@@ -885,7 +903,10 @@
           block-type (keyword (get-in block [:block/properties :ls-type]))
           hl-type (get-in block [:block/properties :hl-type])
           repo (state/get-current-repo)
-          stop-inner-events? (= block-type :whiteboard-shape)]
+          stop-inner-events? (= block-type :whiteboard-shape)
+          page-name (util/page-name-sanity-lc (get-in block [:block/page :block/name]))
+          fmt-journal? (if page-name (boolean (date/journal-title->int page-name)) false) ;; ジャーナルノートかどうか
+          ]
       (if (and block (:block/content block))
         (let [title [:span.block-ref
                      (block-content (assoc config :block-ref? true :stop-events? stop-inner-events?)
@@ -897,48 +918,58 @@
                        :span.block-ref
                        (map-inline config label))
                       title)]
+
           [:div.block-ref-wrap.inline
            {:data-type    (name (or block-type :default))
             :data-hl-type hl-type
-            :on-mouse-down
-            (fn [^js/MouseEvent e]
-              (if (util/right-click? e)
-                (state/set-state! :block-ref/context {:block (:block config)
-                                                      :block-ref block-id})
+            :on-mouse-down (fn [^js/MouseEvent e]
+                             (if (util/right-click? e)
+                               (state/set-state! :block-ref/context {:block (:block config)
+                                                                     :block-ref block-id})
 
-                (when (and
-                       (or (gobj/get e "shiftKey")
-                           (not (.. e -target (closest ".blank"))))
-                       (not (util/right-click? e)))
-                  (util/stop e)
+                               (when (and
+                                      (or (gobj/get e "shiftKey")
+                                          (not (.. e -target (closest ".blank"))))
+                                      (not (util/right-click? e)))
+                                 (util/stop e)
 
-                  (cond
-                    (gobj/get e "shiftKey")
-                    (state/sidebar-add-block!
-                     (state/get-current-repo)
-                     (:db/id block)
-                     :block-ref)
+                                 (cond
+                                   (gobj/get e "shiftKey")
+                                   (state/sidebar-add-block!
+                                    (state/get-current-repo)
+                                    (:db/id block)
+                                    :block-ref)
 
-                    (and (util/meta-key? e) (whiteboard-handler/inside-portal? (.-target e)))
-                    (whiteboard-handler/add-new-block-portal-shape!
-                     (:block/uuid block)
-                     (whiteboard-handler/closest-shape (.-target e)))
+                                   (and (util/meta-key? e) (whiteboard-handler/inside-portal? (.-target e)))
+                                   (whiteboard-handler/add-new-block-portal-shape!
+                                    (:block/uuid block)
+                                    (whiteboard-handler/closest-shape (.-target e)))
 
-                    :else
-                    (match [block-type (util/electron?)]
+                                   :else
+                                   (match [block-type (util/electron?)]
                       ;; pdf annotation
-                      [:annotation true] (pdf-assets/open-block-ref! block)
+                                     [:annotation true] (pdf-assets/open-block-ref! block)
 
-                      [:whiteboard-shape true] (route-handler/redirect-to-whiteboard!
-                                                (get-in block [:block/page :block/name]) {:block-id block-id})
+                                     [:whiteboard-shape true] (route-handler/redirect-to-whiteboard!
+                                                               (get-in block [:block/page :block/name]) {:block-id block-id})
 
                       ;; default open block page
-                      :else (route-handler/redirect-to-page! id))))))}
+                                     :else (route-handler/redirect-to-page! id))))))}
+           (when fmt-journal? ;; ジャーナルからの引用の場合、アイコンをつける
+             [(ui/icon "calendar-time"
+                       {:size 16
+                        :color "yellow"
+                        :title (t :on-boarding/ref-journal)
+                        :style {:position "absolute"
+                                :top      "0.4em"
+                                :right    "2.2em"
+                                :z-index  3}})])
 
            (if (and (not (util/mobile?))
                     (not (:preview? config))
                     (not (:modal/show? @state/state))
                     (nil? block-type))
+             ;; ツールチップ
              (ui/tippy {:html        (fn []
                                        [:div.tippy-wrapper.overflow-y-auto.p-4
                                         {:style {:width      735
@@ -2651,7 +2682,9 @@
                             (when indent?
                               " ml-4")))}
              (when journal?
-               (ui/icon "calendar-time" {:class "text-lg"}))
+               (ui/icon "calendar-time" 
+                        {:color "yellow"
+                         :class "text-lg"}))
              (when (and (false? (:top-level? config))
                         (seq parents))
                (breadcrumb-separator))
