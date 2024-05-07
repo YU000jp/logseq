@@ -1,3 +1,3 @@
 (ns ^:no-doc frontend.version)
 
-(defonce version "1.2.0")
+(defonce version "1.3.0")
