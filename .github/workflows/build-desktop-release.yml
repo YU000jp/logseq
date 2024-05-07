@@ -368,7 +368,7 @@ jobs:
           mkdir builds
           mv static\out\make\squirrel.windows\x64\*.exe    builds\Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}.exe
           mv static\out\make\zip\win32\x64\*.zip           builds\Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}.zip
-          
+          mv static\out\make\squirrel.windows\x64\RELEASES builds\RELEASES
         # mv static\out\make\squirrel.windows\x64\*.nupkg  builds\Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}-full.nupkg
 
       - name: Upload Artifact
@@ -376,8 +376,6 @@ jobs:
         with:
           name: logseq-win64-builds
           path: builds
-
-  # mv static\out\make\squirrel.windows\x64\RELEASES builds\RELEASES
 
   # build-macos-x64:
   #   needs: [ compile-cljs ]
