@@ -10,6 +10,7 @@
             [logseq.graph-parser.util :as gp-util]
             [logseq.graph-parser.date-time-util :as date-time-util]
             [goog.object :as gobj]
+            [frontend.context.i18n :refer [t]]
             [lambdaisland.glogi :as log]))
 
 (defn nld-parse
@@ -256,3 +257,32 @@
               :LemonEndsAt nil,
               :LemonStatus "active"}]
     (->> info :LemonRenewsAt (tf/parse iso-parser) (< (js/Date.)))))
+
+
+
+;;-----------
+
+(defn journalDay->ts
+  "journal-day yyyyMMdd からts 20240507T000000"
+  [day]
+  (when day
+    (-> (tf/parse (tf/formatter "yyyyMMdd") (str day)))))
+
+(defn long->ts
+  "longからts 20240507T000000"
+  [long]
+  (tc/from-long long))
+
+;; day-of-week-number (date/ts->day-of-week-number ts) ;ts → 0-6
+(defn ts->day-of-week-number
+  "ts 20240507T000000から曜日を求める。0-6で返す。"
+  [ts]
+  (.getDay ts); 0-6
+  )
+
+;; jsから曜日を求めて言語指定で返す
+;; let [
+;; language (or (state/sub :preferred-language) "default")
+;;  day-of-week-string-js (.toLocaleDateString date language
+;;                                            (clj->js {:weekday "short"}))
+;;  ]
