@@ -35,7 +35,7 @@
 
 1. My resources are limited. This derivative version only works on local **desktop**.
 1. Compatible with **Windows** or **Linux only**. Not available on *Mac*.
-    > If it becomes popular and we get enough donations, we will make it compatible with *Mac*. This is because it costs $99 per year to perform "code signing" and "notarization" in order to be established as a *Mac* app.
+    > If it becomes popular and we get enough donations, we will make it compatible with *Mac*. This is because it costs $99 per year to perform "code signing" and "notarization" in order to be established as a *Mac* app. If we receive enough donations, we may be able to release a Mac version. (https://www.buymeacoffee.com/yu000japan)
 1. Merge after a new version of Logseq is released. Incompatible features may be omitted in the future.
 
 
@@ -43,7 +43,7 @@
 
 1. The graphs used in Logseq and derived versions are common. You can switch at any time.
 - ⭕Windows / Linux: <a href="https://github.com/YU000jp/fork-logseq/releases/latest/"><img src="https://img.shields.io/badge/Download_Logseq_Classic-100000?style=for-the-badge&logo=flatpak&logoColor=white&labelColor=002b36&color=85c8c8" alt="Download Logseq-Classic"/></a>
-- ❌Mac: If we receive enough donations, we may be able to release a Mac version. (https://www.buymeacoffee.com/yu000japan)
+- ❌Mac
 
 ## 🚧 History
 
