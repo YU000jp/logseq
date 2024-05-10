@@ -765,7 +765,6 @@
  :settings-page/show-brackets "ブラケットを表示"
  :settings-page/show-full-blocks "ブロック引用: すべての行を表示する"
  :settings-page/spell-checker "スペルチェッカー"
- :settings-page/switch-collapsed-zoom-buttons "ズームではなく折りたたみに変更する"
  :settings-page/sync "Sync(同期)"
  :settings-page/sync-desc-1 "Syncを設定し、使うための手引きを見るには、"
  :settings-page/sync-desc-2 "ここ"

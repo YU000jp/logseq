@@ -283,7 +283,7 @@ html.is-native-iphone-without-notch {
   }
 }
 
-/* Change to another cursor style if Shift key is active */
+/* Change to another cursor style if Shift key is active シフトキーのCSS */
 [data-active-keystroke*="Shift" i] :is(.journal-title, .page-title,
     .block-ref, .page-ref, a.tag,
     .bullet-container.cursor) {

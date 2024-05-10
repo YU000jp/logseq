@@ -815,7 +815,7 @@
   [e]
   (state/hide-custom-context-menu!)
   (let [block (.closest (.-target e) ".ls-block")]
-    (when-not (or (gobj/get e "shiftKey")
+    (when-not (or (util/shift-key? e)
                   (util/meta-key? e)
                   (state/get-edit-input-id)
                   (and block

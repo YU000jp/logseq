@@ -749,7 +749,6 @@
  :settings-page/show-brackets "Show brackets"
  :settings-page/show-full-blocks "Show all lines of a block reference"
  :settings-page/spell-checker "Spell checker"
- :settings-page/switch-collapsed-zoom-buttons "Switch collapsed zoom"
  :settings-page/sync "Sync"
  :settings-page/sync-desc-1 "Click"
  :settings-page/sync-desc-2 "here"

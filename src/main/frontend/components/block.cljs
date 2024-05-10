@@ -512,7 +512,7 @@
   (util/stop e)
   (when (not (util/right-click? e))
     (cond
-      (gobj/get e "shiftKey")
+      (util/shift-key? e)
       (when-let [page-entity (db/entity [:block/name redirect-page-name])]
         (state/sidebar-add-block!
          (state/get-current-repo)
@@ -933,13 +933,13 @@
                                                                      :block-ref block-id})
 
                                (when (and
-                                      (or (gobj/get e "shiftKey")
+                                      (or (util/shift-key? e)
                                           (not (.. e -target (closest ".blank"))))
                                       (not (util/right-click? e)))
                                  (util/stop e)
 
                                  (cond
-                                   (gobj/get e "shiftKey")
+                                   (util/shift-key? e)
                                    (state/sidebar-add-block!
                                     (state/get-current-repo)
                                     (:db/id block)
@@ -1756,7 +1756,7 @@
          (whiteboard-handler/closest-shape (.-target e)))
         (util/stop e)) 
     
-    (gobj/get e "altKey")
+    (util/alt-key? e)
     (do
          (when uuid (route-handler/redirect-to-page! uuid))
          (util/stop e))
@@ -1847,7 +1847,7 @@
                                          :on-click #(bullet-on-click % block uuid collapsed?)}
                    [:span.bullet-container 
                     {:id (str "dot-" uuid)
-                     :title (str "Alt + Click=> " (t :command.editor/zoom-in))
+                     :title (str "Alt-> " (t :command.editor/zoom-in))
                      :draggable true
                      :on-drag-start (fn [event]
                                       (bullet-drag-start event block uuid block-id))
@@ -1916,7 +1916,7 @@
                     :on-mouse-down (fn [e]
                                      (util/stop-propagation e))
                     :on-change (fn [e]
-                                 (let [alt-pressed? (gobj/get (.-nativeEvent e) "altKey")]
+                                 (let [alt-pressed? (util/alt-key? e)]
                                    (if checked?
                                      (editor-handler/uncheck block)
                                      (if (not alt-pressed?)
@@ -2230,7 +2230,7 @@
   (when-not (> (count content) (state/block-content-max-length (state/get-current-repo)))
     (let [target (gobj/get e "target")
           button (gobj/get e "buttons")
-          shift? (gobj/get e "shiftKey")
+          shift? (util/shift-key? e)
           meta? (util/meta-key? e)
           forbidden-edit? (target-forbidden-edit? target)]
       (when (and (not forbidden-edit?) (contains? #{1 0} button))
@@ -2397,7 +2397,7 @@
                              (when (and
                                     (state/in-selection-mode?)
                                     (not (string/includes? content "```"))
-                                    (not (gobj/get e "shiftKey"))
+                                    (not (util/shift-key? e))
                                     (not (util/meta-key? e)))
                                ;; clear highlighted text
                                (util/clear-selection!)))}
@@ -2458,7 +2458,7 @@
         {:title (t :on-boarding/open-block-ref)
          :style {:margin-top -1}
          :on-click (fn [e]
-                     (if (gobj/get e "shiftKey")
+                     (if (util/shift-key? e)
                        (state/sidebar-add-block!
                         (state/get-current-repo)
                         (:db/id block)
@@ -2604,7 +2604,7 @@
   [:a {:on-mouse-up
        (fn [e]
          (cond
-           (gobj/get e "shiftKey")
+           (util/shift-key? e)
            (do
              (util/stop e)
              (state/sidebar-add-block!

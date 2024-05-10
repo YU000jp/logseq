@@ -1263,7 +1263,7 @@
                 [:a {:on-click (fn [e]
                                  (.preventDefault e)
                                  (let [repo (state/get-current-repo)]
-                                   (when (gobj/get e "shiftKey")
+                                   (when (util/shift-key? e)
                                      (state/sidebar-add-block!
                                        repo
                                        (:db/id page)

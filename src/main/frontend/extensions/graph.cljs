@@ -4,7 +4,8 @@
             [frontend.extensions.graph.pixi :as pixi]
             [frontend.handler.route :as route-handler]
             [frontend.colors :as colors]
-            [goog.object :as gobj]
+            ;; [goog.object :as gobj]
+            [frontend.util :as util]
             [rum.core :as rum]))
 
 (defn- highlight-neighbours!
@@ -31,7 +32,7 @@
 
 (defn on-click-handler [graph node event *focus-nodes *n-hops drag? dark?]
   ;; shift+click to select the page
-  (if (or (gobj/get event "shiftKey") drag?)
+  (if (or (util/shift-key? event) drag?)
     (do
       (when-not @*n-hops
         (swap! *focus-nodes ;; Don't trigger re-render

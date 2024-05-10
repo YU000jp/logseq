@@ -13,7 +13,7 @@
             [frontend.util.text :as text-util]
             [promesa.core :as p]
             [electron.ipc :as ipc]
-            [goog.object :as gobj]
+            ;; [goog.object :as gobj]
             [cljs.core.async :as async :refer [go <!]]
             [frontend.handler.file-sync :as file-sync]
             [reitit.frontend.easy :as rfe]))
@@ -145,7 +145,7 @@
                                                          (ui/icon "cloud" {:size 18})])]
                            :hover-detail repo-url ;; show full path on hover
                            :options      {:on-click (fn [e]
-                                                      (if (gobj/get e "shiftKey")
+                                                      (if (util/shift-key? e)
                                                         (state/pub-event! [:graph/open-new-window url])
                                                         (if-not local?
                                                           (state/pub-event! [:graph/pull-down-remote-graph graph])

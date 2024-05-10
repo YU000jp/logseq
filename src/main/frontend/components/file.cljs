@@ -117,7 +117,7 @@
         [:a.bg-base-2.p-1.ml-1 {:style {:border-radius 4}
                                 :href (rfe/href :page {:name original-name})
                                 :on-click (fn [e]
-                                            (when (gobj/get e "shiftKey")
+                                            (when (util/shift-key? e)
                                               (when-let [page (db/entity [:block/name (util/page-name-sanity-lc original-name)])]
                                                 (state/sidebar-add-block!
                                                  (state/get-current-repo)
