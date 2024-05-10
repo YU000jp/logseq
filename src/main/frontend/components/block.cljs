@@ -1820,7 +1820,7 @@
      {:class (util/classnames [{:is-order-list order-list?
                                 :bullet-closed collapsed?}])}
      (when (or (not fold-button-right?) collapsable?)
-       [:a.block-control
+       [:a.block-control 
         {:id       (str "control-" uuid)
          :title (if collapsed?
                   (t :editor/expand-block-children)
@@ -1834,12 +1834,14 @@
                          (editor-handler/expand-block! uuid)
                          (editor-handler/collapse-block! uuid))))}
         [:span {:class (if (or (and control-show?
-                                    (or collapsed? (editor-handler/collapsable? uuid {:semantic? true})))
+                                    (or collapsed? collapsable?))
                                (and collapsed? order-list?))
                          "control-show cursor-pointer"
                          (when-not collapsed? "control-hide"))
                 }
          (ui/rotating-arrow collapsed?)]])
+     
+     
 
      (let [bullet [:a.bullet-link-wrap {:on-click #(bullet-on-click % block uuid collapsed?)}
                    [:span.bullet-container.cursor

@@ -544,7 +544,7 @@
                        :class         (when chosen? "chosen")
                        :on-mouse-down (fn [e]
                                         (util/stop e)
-                                        (if (and (gobj/get e "shiftKey") on-shift-chosen)
+                                        (if (and (util/shift-key? e) on-shift-chosen)
                                           (on-shift-chosen item)
                                           (on-chosen item)))}
                       (if item-render (item-render item chosen?) item)))]]

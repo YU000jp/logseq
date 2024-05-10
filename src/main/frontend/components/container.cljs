@@ -62,7 +62,7 @@
 (rum/defc nav-content-item < rum/reactive
   [name {:keys [class count]} child]
   (let [collapsed? (state/sub [:ui/navigation-item-collapsed? class])]
-    [:div.nav-content-item
+    [:div.nav-content-item 
      {:class (util/classnames [class {:is-expand (not collapsed?)
                                       :has-children (and (number? count) (> count 0))}])}
      [:div.nav-content-item-inner
@@ -143,7 +143,7 @@
          {:on-click
           (fn [e]
             (let [name (if (empty? source-page) name (:block/name source-page))]
-              (if (gobj/get e "shiftKey")
+              (if (util/shift-key? e)
                 (open-in-sidebar)
                 (if whiteboard-page?
                   (route-handler/redirect-to-whiteboard! name {:click-from-recent? recent?})
