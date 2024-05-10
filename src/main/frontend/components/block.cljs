@@ -1843,8 +1843,9 @@
      
      
 
-     (let [bullet [:a.bullet-link-wrap {:on-click #(bullet-on-click % block uuid collapsed?)}
-                   [:span.bullet-container.cursor
+     (let [bullet [:a.bullet-link-wrap {
+                                         :on-click #(bullet-on-click % block uuid collapsed?)}
+                   [:span.bullet-container 
                     {:id (str "dot-" uuid)
                      :title (str "Alt + Click=> " (t :command.editor/zoom-in))
                      :draggable true

@@ -34,7 +34,8 @@
   (when-not (util/sm-breakpoint?)
     (ui/with-shortcut :ui/toggle-right-sidebar "left"
       [:button.button.icon.toggle-right-sidebar
-       {:title (t :right-side-bar/toggle-right-sidebar)
+       {:style {:cursor "col-resize"}
+        :title (t :right-side-bar/toggle-right-sidebar)
         :on-click ui-handler/toggle-right-sidebar!}
        (ui/icon 
         "layout-sidebar-right"
@@ -329,7 +330,8 @@
                                   (state/sidebar-remove-block! idx)))}
 
               [:button.flex.flex-row.p-2.w-full.overflow-hidden
-               {:aria-expanded (str (not collapsed?))
+               {:style {:cursor "grab"}
+                :aria-expanded (str (not collapsed?))
                 :id            (str "sidebar-panel-header-" idx)
                 :aria-controls (str "sidebar-panel-content-" idx)
                 :on-click      (fn [event]

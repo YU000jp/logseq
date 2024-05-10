@@ -66,8 +66,9 @@
      {:class (util/classnames [class {:is-expand (not collapsed?)
                                       :has-children (and (number? count) (> count 0))}])}
      [:div.nav-content-item-inner
-      [:div.header.items-center
-       {:on-click (fn [^js/MouseEvent _e]
+      [:div.header.items-center 
+       {:style {:cursor "row-resize"}
+        :on-click (fn [^js/MouseEvent _e]
                     (state/toggle-navigation-item-collapsed! class))}
        [:div.a name]
        [:div.b (ui/icon "chevron-left" {:class "more" :size 14})]]
@@ -183,7 +184,8 @@
         dragging-over (get state ::dragging-over)
         target (state/sub :favorites/dragging)]
     [:li.favorite-item
-     {:key name
+     {:style {:cursor "grab"}
+      :key name
       :title name
       :data-ref name
       :class (if (and target @dragging-over (not= target @dragging-over))
@@ -222,6 +224,7 @@
                                (remove nil?))]
     (nav-content-item
      [:a.flex.items-center.rounded-md.wrap-th
+      {:style {:cursor "row-resize"}}
       (ui/icon "star" {:size 26})
       [:span.flex-1.ml-2.text-l
        (t :left-side-bar/nav-favorites)]]
@@ -249,6 +252,7 @@
                    (map :page))]
     (nav-content-item
      [:a.flex.items-center.rounded-md.wrap-th
+      {:style {:cursor "row-resize"}}
       (ui/icon "history" {:size 26})
       [:span.flex-1.ml-2.text-l
        (t :left-side-bar/nav-recent-pages)]]
@@ -259,7 +263,7 @@
      [:ul.text-sm
       (for [name pages]
         (when-let [entity (db/entity [:block/name (util/safe-page-name-sanity-lc name)])]
-          [:li.recent-item.select-none
+          [:li.recent-item.select-none.cursor
            {:key name
             :title name
             :draggable true
@@ -301,7 +305,7 @@
   [{:keys [on-click-handler class title icon icon-extension? active href shortcut]}]
   [:div
    {:class class}
-   [:a.item.group.flex.items-center.rounded-md
+   [:a.item.group.flex.items-center.rounded-md.cursor
     {:on-click on-click-handler
      :class (when active "active")
      :href href}

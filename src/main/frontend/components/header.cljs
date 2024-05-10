@@ -68,7 +68,8 @@
   [{:keys [on-click]}]
   (ui/with-shortcut :ui/toggle-left-sidebar "bottom"
     [:button.#left-menu.cp__header-left-menu.button.icon
-     {:title (t :header/toggle-left-sidebar)
+     {:style {:cursor "col-resize"}
+      :title (t :header/toggle-left-sidebar)
       :on-click on-click}
      (ui/icon "align-left" {:size 20})]))
 

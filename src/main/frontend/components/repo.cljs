@@ -208,7 +208,7 @@
                                  :title    repo-name}       ;; show full path on hover
                                 [:div.flex.flex-row.items-center 
                                  [:div.graphs
-                                  [:span#repo-switch.block.pr-2.whitespace-nowrap
+                                  [:span#repo-switch.block.pr-2.whitespace-nowrap.cursor
                                    [:span [:span#repo-name.font-medium
                                            [:span.overflow-hidden.text-ellipsis (if (= config/local-repo short-repo-name) (t :left-side-bar/demo-graph) short-repo-name)]
                                            (when remote? [:span.pl-1 (ui/icon "cloud")])]]
