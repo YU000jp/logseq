@@ -875,7 +875,7 @@
    {:title (str "Discord " (t :help/title-community)) :icon "brand-discord" :href "https://discord.com/invite/KpN4eHY"}
    {:title (t :help/forum-community) :icon "message" :href "https://discuss.logseq.com/"}
    :hr
-   {:title (t :help/changelog) :icon "asterisk" :href "https://github.com/YU000jp/fork-logseq/blob/logseq-classic-develop/CHANGELOG.md"}])
+   {:title (t :help/changelog) :icon "asterisk" :href "https://github.com/YU000jp/fork-logseq/blob/develop/CHANGELOG.md"}])
 
 (rum/defc help-menu-popup
   []

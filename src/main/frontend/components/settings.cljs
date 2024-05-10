@@ -93,7 +93,7 @@
 
        [:a.text-sm.fade-link.underline.inline
         {:target "_blank"
-         :href "https://github.com/YU000jp/fork-logseq/blob/logseq-classic-develop/CHANGELOG.md"}
+         :href "https://github.com/YU000jp/fork-logseq/blob/develop/CHANGELOG.md"}
         (t :settings-page/changelog)]]]
 
      (when-not (or update-pending?
