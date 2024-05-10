@@ -368,7 +368,7 @@
         :on-click (fn [e]
                     (when-not (= (.-nodeName (.-target e)) "INPUT")
                       (.preventDefault e)
-                      (if (gobj/get e "shiftKey")
+                      (if (util/shift-key? e)
                         (when-let [page (db/pull repo '[*] [:block/name page-name])]
                           (state/sidebar-add-block!
                            repo

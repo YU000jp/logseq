@@ -1742,7 +1742,7 @@
     (gp-whiteboard/shape-block? block)
     (route-handler/redirect-to-whiteboard! (get-in block [:block/page :block/name]) {:block-id uuid})
 
-    (gobj/get e "shiftKey")
+    (util/shift-key? e)
     (do
       (state/sidebar-add-block!
        (state/get-current-repo)
