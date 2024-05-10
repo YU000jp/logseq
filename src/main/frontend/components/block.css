@@ -557,6 +557,7 @@
   border-radius: 50%;
   justify-content: center;
   align-items: center;
+  cursor: grab;
 
   .bullet-heading {
     background-color: var(--ls-block-bullet-color, #8fbc8f);
@@ -567,7 +568,7 @@
   }
 
   .bullet {
-    @apply rounded-full w-[6px] h-[6px] text-[15px] opacity-80;
+    @apply rounded-full w-[8px] h-[8px] text-[1em] opacity-80;
 
     > * {
       @apply cursor-pointer;
