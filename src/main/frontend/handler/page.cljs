@@ -352,8 +352,7 @@
 (defn delete!
   [page-name ok-handler & {:keys [delete-file?]
                            :or {delete-file? true}}]
-  ;; (route-handler/redirect-to-home!)
-  (js/window.history.back) ;; ホームではなく、前のページに戻る
+  (route-handler/redirect-to-home!)
   (when page-name
     (when-let [repo (state/get-current-repo)]
       (let [page-name (util/page-name-sanity-lc page-name)
