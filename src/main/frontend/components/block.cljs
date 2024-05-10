@@ -649,7 +649,7 @@
                                       (if (and (string? page-original-name)
                                                (text/namespace-page? page-original-name))
                                         ;; 階層が含まれる場合
-                                        [:h1.page-title.my-2.mb-3
+                                        [:h1.page-title.my-2.mb-1
                                          {:style {:font-size "1.4em"}}
                                          (->>
                                           (for [namespace-page (gp-util/split-namespace-pages page-original-name)]
@@ -680,7 +680,7 @@
                  :in-editor?      true
                  :html            html-template
                  :interactive     true
-                 :delay           [600, 600]
+                 :delay           [600, 1200]
                  :fixed-position? fixed-position?
                  :position        (or tippy-position "top")
                  :distance        (or tippy-distance 10)
