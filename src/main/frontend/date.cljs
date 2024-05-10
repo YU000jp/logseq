@@ -10,7 +10,6 @@
             [logseq.graph-parser.util :as gp-util]
             [logseq.graph-parser.date-time-util :as date-time-util]
             [goog.object :as gobj]
-            [frontend.context.i18n :refer [t]]
             [lambdaisland.glogi :as log]))
 
 (defn nld-parse
@@ -286,3 +285,8 @@
 ;;  day-of-week-string-js (.toLocaleDateString date language
 ;;                                            (clj->js {:weekday "short"}))
 ;;  ]
+
+(defn ts->week-number-of-year
+  "ts 20240507T000000から週番号を求める。"
+  [ts]
+  (t/week-number-of-year ts))
