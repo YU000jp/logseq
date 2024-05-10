@@ -220,7 +220,7 @@
  :context-menu/toggle-number-list "数字付きリスト／通常のリスト 切り替え"
  :journals/click-to "クリックしてシングルページに移動"
  :journals/user-date-format-desc "ユーザーの日付書式" 
- :journals/user-date-format-desc-title "これはこのジャーナルへのリンクする際につかう文字列です。" 
+ :journals/user-date-format-desc-title "これはこのジャーナルへリンクする際につかう文字列です。(クリックしてコピー)" 
  :delete "削除"
  :dev/show-block-ast "(dev) 構造ツリーを表示"
  :dev/show-block-data "(dev) データの表示"

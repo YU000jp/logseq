@@ -19,6 +19,7 @@
             ;; [goog.object :as gobj]
             ;; [reitit.frontend.easy :as rfe]
             [frontend.handler.route :as route-handler]
+            [frontend.handler.notification :as notification]
             [rum.core :as rum]))
 
 (rum/defc blocks-cp < rum/reactive db-mixins/query
@@ -82,9 +83,14 @@
           formatted-date])
 
 
-         [:span.journal-title-hidden-area.text-sm
-          {:title (str (t :journals/user-date-format-desc-title) " [[" (state/get-date-formatter) "]]")}
-          (str (t :journals/user-date-format-desc) " [[" title "]]")]])
+         [:span.journal-title-right-area.text-sm
+          {:style {:cursor "copy"}
+           :title (str (t :journals/user-date-format-desc-title) "\n" (t :journals/user-date-format-desc) " [[" (state/get-date-formatter) "]]")
+           :on-click (fn [e]
+                       (util/stop e)
+                       (util/copy-to-clipboard! (str "[[" title "]]"))
+                       (notification/show! (t :notification/copied-to-clipboard) :success))}
+          (str " [[" title "]]")]])
 
       [(if today?
          (blocks-cp repo lower-case-page-name)

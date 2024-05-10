@@ -231,7 +231,7 @@
  :context-menu/toggle-number-list "Toggle number list"
  :journals/click-to "Click to this journal"
  :journals/user-date-format-desc "User date format"
- :journals/user-date-format-desc-title "It is the string to link to this journal."
+ :journals/user-date-format-desc-title "It is the string to link to this journal. Click to copy"
  :delete "Delete"
  :dev/show-block-ast "(Dev) Show block AST"
  :dev/show-block-data "(Dev) Show block data"
