@@ -119,11 +119,12 @@
   [:div#journals
    (ui/infinite-list
     "main-content-container"
-    [(when-let [repo (state/get-current-repo)]
-       [(when-not (js/document.getElementById "open-sidebar-default-queries")
-          (state/sidebar-add-block! repo "default-queries" :default-queries))
-        (when-not (js/document.getElementById "open-sidebar-scheduled-and-deadline")
-          (state/sidebar-add-block! repo "scheduled-and-deadline" :scheduled-and-deadline))])
+    [
+    ;;  (when-let [repo (state/get-current-repo)]
+    ;;    [(when-not (js/document.getElementById "open-sidebar-default-queries")
+    ;;       (state/sidebar-add-block! repo "default-queries" :default-queries))
+    ;;     (when-not (js/document.getElementById "open-sidebar-scheduled-and-deadline")
+    ;;       (state/sidebar-add-block! repo "scheduled-and-deadline" :scheduled-and-deadline))])
      
      (for [{:block/keys [name]} latest-journals]
       [:div.journal-item.content {:key name}

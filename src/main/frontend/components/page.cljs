@@ -531,10 +531,10 @@
        (when whiteboard? ;; ホワイトボードのみページタグを表示
          (when-not (or block? sidebar? journal?)
            (tagged-pages repo page-name)))
-       (when-not (or block? sidebar? journal? whiteboard? whiteboard-page?)
-         ;; 「#open-sidebar-reference」エレメントが存在しない場合のみ
-         (when-not (js/document.getElementById "open-sidebar-reference")
-           (state/sidebar-add-block! repo page :reference))) ;; 関連ログを自動的にサイドバーで開く
+      ;;  (when-not (or block? sidebar? journal? whiteboard? whiteboard-page?)
+      ;;    ;; 「#open-sidebar-reference」エレメントが存在しない場合のみ
+      ;;    (when-not (js/document.getElementById "open-sidebar-reference")
+      ;;      (state/sidebar-add-block! repo page :reference))) ;; 関連ログを自動的にサイドバーで開く
        ;; referenced blocks
       ;;  (when-not block-or-whiteboard?
       ;;    [:div.mt-6 {:key "page-references"} ;; TODO: サイドバーではLinked Refrencesを折りたたむ
