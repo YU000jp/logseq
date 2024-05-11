@@ -51,14 +51,14 @@
     {:key "copy"
      :on-click editor-handler/copy-selection-blocks
      :shortcut (ui/keyboard-shortcut-from-config :editor/copy)}
-    [(ui/icon "copy" {:class "icon"})(t :editor/copy)])
+    [(ui/icon "clipboard-copy" {:class "icon"})(t :editor/copy)])
    (ui/menu-link
     {:key "copy as"
      :on-click (fn [_]
                  (let [block-uuids (editor-handler/get-selected-toplevel-block-uuids)]
                    (state/set-modal!
                     #(export/export-blocks block-uuids {:whiteboard? false}))))}
-    (t :content/copy-export-as))
+    [(ui/icon "copy" {:class "icon"}) (t :content/copy-export-as)])
    (ui/menu-link
     {:key "copy block refs"
      :on-click editor-handler/copy-block-refs
@@ -85,7 +85,8 @@
 
    (ui/menu-link
      {:key "Toggle number list"
-      :on-click #(state/pub-event! [:editor/toggle-own-number-list (state/get-selection-block-ids)])}
+      :on-click #(state/pub-event! [:editor/toggle-own-number-list (state/get-selection-block-ids)])
+      :shortcut (ui/keyboard-shortcut-from-config :editor/toggle-number-list)}
      (str "1. " (t :context-menu/toggle-number-list)))
 
   ;;  (ui/menu-link
@@ -178,7 +179,7 @@
         :on-click (fn [e]
                     (util/stop e)
                     (reset! edit? true))}
-       (t :context-menu/make-a-template)))))
+       [(ui/icon "template" {:class "icon"}) (t :context-menu/make-a-template)]))))
 
 (rum/defc ^:large-vars/cleanup-todo block-context-menu-content <
   shortcut/disable-all-shortcuts
@@ -232,7 +233,7 @@
           {:key      "Copy as"
            :on-click (fn [_]
                        (state/set-modal! #(export/export-blocks [block-id] {:whiteboard? false})))}
-          (t :content/copy-export-as))
+          [(ui/icon "copy" {:class "icon"}) (t :content/copy-export-as)])
 
          (ui/menu-link
           {:key      "delete"
@@ -275,7 +276,8 @@
 
          (ui/menu-link
           {:key "Toggle number list"
-           :on-click #(state/pub-event! [:editor/toggle-own-number-list (state/get-selection-block-ids)])}
+           :on-click #(state/pub-event! [:editor/toggle-own-number-list (state/get-selection-block-ids)])
+           :shortcut (ui/keyboard-shortcut-from-config :editor/toggle-number-list)}
           (str "1. " (t :context-menu/toggle-number-list)))
 
          [:hr.menu-separator]
