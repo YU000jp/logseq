@@ -531,7 +531,8 @@
       (route-handler/redirect-to-page! redirect-page-name)
 
       :else
-      (state/pub-event! [:page/create page-name-in-block])))
+      (state/pub-event! [:page/create page-name-in-block]) ;; TODO:ページが存在しない場合、新規作成するかどうかの設定項目を追加する
+      ))
   (when (and contents-page?
              (util/mobile?)
              (state/get-left-sidebar-open?))
@@ -1779,8 +1780,17 @@
                (not collapsed?))
       [:div.block-children-container.flex
        [:div.block-children-left-border
-        {:on-click (fn [_]
-                     (editor-handler/toggle-open-block-children! (:block/uuid block)))}]
+        {:style {:cursor "zoom-in"}
+         :title (str (t :command.editor/zoom-in) "\n Shift-> " (t :shortcut.category/block-selection))
+         :on-click (fn [e]
+                     (util/stop e)
+                     (when-let [uuid (:block/uuid block)]
+                       (if (util/shift-key? e)
+                         [(editor-handler/clear-selection!)
+                       (editor-handler/select-block! uuid)
+                          ]
+                         (when uuid (route-handler/redirect-to-page! uuid))
+                         )))}]
        [:div.block-children.w-full {:style {:display (if collapsed? "none" "")}}
         (for [child children]
           (when (map? child)

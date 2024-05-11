@@ -3161,7 +3161,7 @@
   (util/stop e)
   (cut-blocks-and-clear-selections! false))
 
-(defn- copy-current-block-ref
+(defn- copy-current-block
   [format]
   (when-let [current-block (state/get-edit-block)]
     (when-let [block-id (:block/uuid current-block)]
@@ -3169,8 +3169,11 @@
        (copy-block-ref! block-id #(str "{{embed ((" % "))}}"))
        (copy-block-ref! block-id block-ref/->block-ref)))))
 
+(defn copy-current-block-ref []
+  (copy-current-block "ref"))
+
 (defn copy-current-block-embed []
-  (copy-current-block-ref "embed"))
+  (copy-current-block "embed"))
 
 (defn shortcut-copy
   "shortcut copy action:
@@ -3190,7 +3193,7 @@
             selected-end (util/get-selection-end input)]
         (save-current-block!)
         (when (= selected-start selected-end)
-          (copy-current-block-ref "ref")))
+          (copy-current-block "ref")))
 
       (and (state/get-current-pdf)
            (.closest (.. js/window getSelection -baseNode -parentElement)  ".pdfViewer"))

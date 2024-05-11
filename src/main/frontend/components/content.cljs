@@ -9,7 +9,8 @@
             [frontend.db :as db]
             [frontend.extensions.srs :as srs]
             [frontend.handler.common :as common-handler]
-            [frontend.handler.editor :as editor-handler]
+            [frontend.handler.editor :as editor-handler] 
+            [frontend.handler.route :as route-handler]
             [frontend.handler.editor.property :as editor-property]
             [frontend.handler.image :as image-handler]
             [frontend.handler.notification :as notification]
@@ -30,7 +31,7 @@
 ;; TODO i18n support
 
 (rum/defc custom-context-menu-content
-  []
+  [uuid]
   [:.menu-links-wrapper
    (ui/menu-background-color #(editor-property/batch-add-block-property! (state/get-selection-block-ids) :background-color %)
                              #(editor-property/batch-remove-block-property! (state/get-selection-block-ids) :background-color))
@@ -45,18 +46,12 @@
     {:key "cut"
      :on-click #(editor-handler/cut-selection-blocks true)
      :shortcut (ui/keyboard-shortcut-from-config :editor/cut)}
-    (t :editor/cut))
-   (ui/menu-link
-    {:key "delete"
-     :on-click #(do (editor-handler/delete-selection %)
-                    (state/hide-custom-context-menu!))
-     :shortcut (ui/keyboard-shortcut-from-config :editor/delete)}
-    (t :editor/delete-selection))
+    [(ui/icon "cut" {:class "icon"})(t :editor/cut)])
    (ui/menu-link
     {:key "copy"
      :on-click editor-handler/copy-selection-blocks
      :shortcut (ui/keyboard-shortcut-from-config :editor/copy)}
-    (t :editor/copy))
+    [(ui/icon "copy" {:class "icon"})(t :editor/copy)])
    (ui/menu-link
     {:key "copy as"
      :on-click (fn [_]
@@ -66,13 +61,20 @@
     (t :content/copy-export-as))
    (ui/menu-link
     {:key "copy block refs"
-     :on-click editor-handler/copy-block-refs}
+     :on-click editor-handler/copy-block-refs
+     :shortcut (ui/keyboard-shortcut-from-config :editor/copy-ref)}
     (t :content/copy-block-ref))
    (ui/menu-link
     {:key "copy block embeds"
-     :on-click editor-handler/copy-block-embeds}
+     :on-click editor-handler/copy-block-embeds
+     :shortcut (ui/keyboard-shortcut-from-config :editor/copy-embed)}
     (t :content/copy-block-emebed))
-
+   (ui/menu-link
+    {:key "delete"
+     :on-click #(do (editor-handler/delete-selection %)
+                    (state/hide-custom-context-menu!))
+     :shortcut (ui/keyboard-shortcut-from-config :editor/delete)}
+    [(ui/icon "trash-x" {:class "icon" :color "red"})(t :command.editor/delete-selection)])
    [:hr.menu-separator]
 
    (when (state/enable-flashcards?)
@@ -94,6 +96,18 @@
 
    [:hr.menu-separator]
 
+   (ui/menu-link
+    {:key "Zoom in"
+     :on-click (fn [] (route-handler/redirect-to-page! uuid))
+     :shortcut (ui/keyboard-shortcut-from-config :editor/zoom-in)}
+    [(ui/icon "zoom-in" {:class "icon"})(t :command.editor/zoom-in)])
+   
+   (ui/menu-link
+    {:key      "Open in sidebar"
+     :on-click (fn [_e]
+                 (editor-handler/open-block-in-sidebar! uuid))
+     :shortcut ["⇧+Click"]}
+    [(ui/icon "layout-sidebar-right" {:class "icon"})(t :content/open-in-sidebar)])
   ;;  (ui/menu-link
   ;;   {:key "Expand all"
   ;;    :on-click editor-handler/expand-all-selection!
@@ -181,26 +195,26 @@
                           #(editor-handler/remove-heading! block-id))
 
          [:hr.menu-separator]
-
+         
          (ui/menu-link
-          {:key      "Open in sidebar"
+          {:key      "Cut"
            :on-click (fn [_e]
-                       (editor-handler/open-block-in-sidebar! block-id))
-           :shortcut ["⇧+click"]}
-          (t :content/open-in-sidebar))
-
-         [:hr.menu-separator]
+                       (editor-handler/cut-block! block-id))
+           :shortcut (ui/keyboard-shortcut-from-config :editor/cut)}
+          [(ui/icon "cut" {:class "icon"})(t :editor/cut)])
 
          (ui/menu-link
           {:key      "Copy block ref"
            :on-click (fn [_e]
-                       (editor-handler/copy-block-ref! block-id block-ref/->block-ref))}
+                       (editor-handler/copy-block-ref! block-id block-ref/->block-ref))
+           :shortcut (ui/keyboard-shortcut-from-config :editor/copy-ref)}
           (t :content/copy-block-ref))
 
          (ui/menu-link
           {:key      "Copy block embed"
            :on-click (fn [_e]
-                       (editor-handler/copy-block-ref! block-id #(util/format "{{embed ((%s))}}" %)))}
+                       (editor-handler/copy-block-ref! block-id #(util/format "{{embed ((%s))}}" %)))
+           :shortcut (ui/keyboard-shortcut-from-config :editor/copy-embed)}
           (t :content/copy-block-emebed))
 
         ;;  ;; TODO Logseq protocol mobile support
@@ -221,17 +235,25 @@
           (t :content/copy-export-as))
 
          (ui/menu-link
-          {:key      "Cut"
-           :on-click (fn [_e]
-                       (editor-handler/cut-block! block-id))
-           :shortcut (ui/keyboard-shortcut-from-config :editor/cut)}
-          (t :editor/cut))
-
-         (ui/menu-link
           {:key      "delete"
            :on-click #(editor-handler/delete-block-aux! block true)
            :shortcut (ui/keyboard-shortcut-from-config :editor/delete)}
-          (t :editor/delete-selection))
+          [(ui/icon "trash-x" {:class "icon" :color "red"})(t :command.editor/delete-selection)])
+         
+         [:hr.menu-separator]
+
+         (ui/menu-link
+          {:key "Zoom in"
+           :on-click (fn [] (route-handler/redirect-to-page! block-id))
+           :shortcut (ui/keyboard-shortcut-from-config :editor/zoom-in)}
+          [(ui/icon "zoom-in" {:class "icon"}) (t :command.editor/zoom-in)])
+         
+         (ui/menu-link
+          {:key      "Open in sidebar"
+           :on-click (fn [_e]
+                       (editor-handler/open-block-in-sidebar! block-id))
+           :shortcut ["⇧+Click"]}
+          [(ui/icon "layout-sidebar-right" {:class "icon"}) (t :content/open-in-sidebar)])
 
          [:hr.menu-separator]
 
@@ -252,9 +274,9 @@
            nil)
 
          (ui/menu-link
-           {:key "Toggle number list"
-            :on-click #(state/pub-event! [:editor/toggle-own-number-list (state/get-selection-block-ids)])}
-           (t :context-menu/toggle-number-list))
+          {:key "Toggle number list"
+           :on-click #(state/pub-event! [:editor/toggle-own-number-list (state/get-selection-block-ids)])}
+          (t :context-menu/toggle-number-list))
 
          [:hr.menu-separator]
 
@@ -303,22 +325,13 @@
   (when (and block block-ref-id)
     [:.menu-links-wrapper
      (ui/menu-link
-      {:key "open-in-sidebar"
-       :on-click (fn []
-                   (state/sidebar-add-block!
-                    (state/get-current-repo)
-                    block-ref-id
-                    :block-ref))
-       :shortcut ["⇧+click"]}
-      (t :content/open-in-sidebar))
-     (ui/menu-link
       {:key "copy"
        :on-click (fn [] (editor-handler/copy-current-ref block-ref-id))}
-      (t :content/copy-ref))
+      [(ui/icon "copy" {:class "icon"})(t :content/copy-ref)])
      (ui/menu-link
       {:key "delete"
        :on-click (fn [] (editor-handler/delete-current-ref! block block-ref-id))}
-      (t :content/delete-ref))
+      [(ui/icon "trash-x" {:class "icon" :color "red"})(t :content/delete-ref)])
      (ui/menu-link
       {:key "replace-with-text"
        :on-click (fn [] (editor-handler/replace-ref-with-text! block block-ref-id))}
@@ -326,7 +339,14 @@
      (ui/menu-link
       {:key "replace-with-embed"
        :on-click (fn [] (editor-handler/replace-ref-with-embed! block block-ref-id))}
-      (t :content/replace-with-embed))]))
+      (t :content/replace-with-embed)) 
+     (ui/menu-link
+      {:key "open-in-sidebar"
+       :on-click (fn [] 
+                   (state/sidebar-add-block! (state/get-current-repo) block-ref-id :block-ref))
+       :shortcut ["⇧+click"]}
+      [(ui/icon "layout-sidebar-right" {:class "icon"}) (t :content/open-in-sidebar)])
+     ]))
 
 (rum/defc page-title-custom-context-menu-content
   [page]
@@ -371,7 +391,7 @@
                           (and (state/selection?) (not (d/has-class? target "bullet")))
                           (common-handler/show-custom-context-menu!
                            e
-                           (custom-context-menu-content))
+                           (custom-context-menu-content block-id))
 
                           (and block-id (parse-uuid block-id))
                           (let [block (.closest target ".ls-block")]

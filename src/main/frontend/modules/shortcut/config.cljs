@@ -258,6 +258,10 @@
 
    :editor/replace-block-reference-at-point {:binding "mod+shift+r"
                                              :fn      editor-handler/replace-block-reference-with-content-at-point}
+
+   :editor/copy-ref                         {:binding []
+                                             :fn      editor-handler/copy-current-block-ref}
+
    :editor/copy-embed                       {:binding "mod+e"
                                              :fn      editor-handler/copy-current-block-embed}
 
@@ -366,7 +370,7 @@
    :command-palette/toggle                  {:binding "mod+shift+p"
                                              :fn      #(search :commands)}
    :go/search-in-page                       {:binding "mod+shift+k"
-                                             :fn      #(search :current-page)}
+                                             :fn      #(search :graph)}
 
 
    :go/electron-find-in-page                {:binding  "mod+f"
@@ -647,6 +651,7 @@
             :editor/forward-kill-word
             :editor/backward-kill-word
             :editor/replace-block-reference-at-point
+            :editor/copy-ref
             :editor/copy-embed
             :editor/paste-text-in-one-block-at-point
             :editor/insert-youtube-timestamp])
@@ -840,6 +845,7 @@
       :editor/forward-kill-word
       :editor/backward-kill-word
       :editor/replace-block-reference-at-point
+      :editor/copy-ref
       :editor/copy-embed
       :editor/paste-text-in-one-block-at-point
       :editor/select-up
