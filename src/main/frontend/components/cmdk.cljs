@@ -515,10 +515,11 @@
         create-whiteboard? (= :whiteboard (:source-create item))
         create-page? (= :page (:source-create item))
         !input (::input state)]
-    (cond
-      create-whiteboard? (whiteboard-handler/create-new-whiteboard-and-redirect! @!input)
-      create-page? (page-handler/create! @!input {:redirect? true}))
-    (state/close-modal!)))
+    (when-not (db/page-exists? @!input)
+     (cond
+       create-whiteboard? (whiteboard-handler/create-new-whiteboard-and-redirect! @!input)
+       create-page? (page-handler/create! @!input {:redirect? true}))
+      (state/close-modal!))))
 
 (defn- get-filter-user-input
   [input]
