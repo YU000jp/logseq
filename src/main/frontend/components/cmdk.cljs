@@ -199,7 +199,8 @@
             ]
         (reset! !results (-> default-results
                              (assoc-in [:recents :items] recent-items)
-                             (assoc-in [:commands :items] command-items)))))))
+                            ;;  (assoc-in [:commands :items] command-items)
+                             ))))))
 
 ;; The commands search uses the command-palette handler
 (defmethod load-results :commands [group state]
@@ -493,11 +494,12 @@
         (and graph-view? page? (not shift?)) (do
                                                (state/add-graph-search-filter! @(::input state))
                                                (reset! (::input state) ""))
-        (and shift-or-sidebar? block?) (handle-action :open-block-right state event)
-        (and shift-or-sidebar? page?) (handle-action :open-page-right state event)
-        block? (handle-action :open-block state event)
-        page? (handle-action :open-page state event)
-        ))))
+        block? (if shift-or-sidebar?
+                 (handle-action :open-block-right state event)
+                 (handle-action :open-block state event))
+        page? (if shift-or-sidebar?
+                (handle-action :open-page-right state event)
+                (handle-action :open-page state event))))))
 
 (defmethod handle-action :search [_ state _event]
   (when-let [item (some-> state state->highlighted-item)]
@@ -517,10 +519,10 @@
         create-page? (= :page (:source-create item))
         !input (::input state)]
     (when-not (db/page-exists? @!input)
-     (cond
-       create-whiteboard? (whiteboard-handler/create-new-whiteboard-and-redirect! @!input)
-       create-page? (page-handler/create! @!input {:redirect? true}))
-      (state/close-modal!))))
+    (cond
+      create-whiteboard? (whiteboard-handler/create-new-whiteboard-and-redirect! @!input)
+      create-page? (page-handler/create! @!input {:redirect? true}))
+    (state/close-modal!))))
 
 (defn- get-filter-user-input
   [input]

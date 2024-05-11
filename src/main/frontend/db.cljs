@@ -8,7 +8,7 @@
             [frontend.db.model]
             [frontend.db.query-custom]
             [frontend.db.query-react]
-            [frontend.db.react :as react]
+            ;; [frontend.db.react :as react]
             [frontend.db.utils]
             [frontend.db.persist :as db-persist]
             [frontend.db.migrate :as db-migrate]
