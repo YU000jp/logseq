@@ -275,10 +275,7 @@
          [:div.text-sm
           [:button.button.icon
            {:on-click (fn []
-                        (state/sidebar-add-block!
-                         current-repo
-                         "page-reference"
-                         :reference))
+                        (state/sidebar-add-block! current-repo current-page :reference))
             :title (t :linked-references/sidebar-open)}
            (ui/icon "layers-difference" {:class "icon" :size 24})]]
 

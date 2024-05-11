@@ -196,8 +196,7 @@
              (assoc state ::filters filters)))}
   [state page-name]
   (when page-name
-    (let [page-name (util/page-name-sanity-lc page-name)
-          page-props-v (state/sub-page-properties-changed page-name)
+    (let [page-props-v (state/sub-page-properties-changed page-name)
           *ref-pages (::ref-pages state)
           repo (state/get-current-repo)
           filters-atom (get state ::filters)

@@ -536,18 +536,21 @@
 
        ;; referenced blocks
        (when-not block-or-whiteboard?
-         [:div.mt-6 {:key "page-references"}
-          (rum/with-key
-            (reference/references route-page-name)
-            (str route-page-name "-refs"))])
+         [[:div.mt-6 {:key "page-unlinked-references"}
+            (reference/unlinked-references route-page-name)]
+          [:div {:key "page-references"
+                 :title (str "Shift-> " (t :content/open-in-sidebar))
+                 :on-click (fn [e]
+                             (util/stop e)
+                             (when (util/shift-key? e)
+                               (state/sidebar-add-block! repo page-name :reference)))}
+           (rum/with-key
+             (reference/references route-page-name)
+             (str route-page-name "-refs"))]])])))
 
       ;;  (when-not (or block-or-whiteboard? sidebar? journal?)
       ;;      (hierarchy/structures route-page-name))
-
-       (when-not (or block-or-whiteboard? sidebar? journal?)
-           [:div {:key "page-unlinked-references"}
-            (reference/unlinked-references route-page-name)])
-       ])))
+       
 
 (defonce layout (atom [js/window.innerWidth js/window.innerHeight]))
 

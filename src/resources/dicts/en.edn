@@ -422,7 +422,7 @@
  :linked-references/filter-heading "Filter"
  :linked-references/filter-includes "Includes: "
  :linked-references/filter-search "Search in linked pages"
- :linked-references/sidebar-open "Linked References of current page" 
+ :linked-references/sidebar-open "Linked References of " 
  :linked-references/sidebar-not-page "You are not viewing a page. Linked references will not be displayed."
  :linked-references/reference-count (fn [filtered-count total]
                                       ;; 1 Linked Reference

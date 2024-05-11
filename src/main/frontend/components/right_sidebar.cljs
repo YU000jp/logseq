@@ -154,15 +154,14 @@
     [[:.flex.items-center#open-sidebar-reference
       (ui/icon "layers-difference" {:class "mr-2"})
       [:span.overflow-hidden.text-ellipsis
-       (t :linked-references/sidebar-open)]]
+       (t :linked-references/sidebar-open) db-id]]
      (ui/lazy-visible
-      (fn [] (if-let [current-page-name (state/get-current-page)]
-               [[:div {:key "page-references"}
-                 (reference/references current-page-name)]
-                [:div {:key "page-unlinked-references"}
-                 (reference/unlinked-references current-page-name)]
-                [:div.text-sm.opacity-50.ml-4.mt-6#long-time-message (t :right-side-bar/long-time)]
-                ]
+      (fn [] (if-let [page-name db-id]
+               [[:div {:key "page-unlinked-references"}
+                 (reference/unlinked-references page-name)]
+                [:div {:key "page-references"}
+                 (reference/references page-name)] 
+                [:div.text-sm.opacity-50.ml-4.mt-6#long-time-message (t :right-side-bar/long-time)]]
                (t :linked-references/sidebar-not-page))))]
 
     :page-graph
