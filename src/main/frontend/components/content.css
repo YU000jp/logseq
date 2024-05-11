@@ -14,6 +14,6 @@
 #custom-context-menu {
   @apply absolute animate-in zoom-in-95;
 
-  z-index: calc(var(--ls-z-index-level-1) + 1);
+  z-index: calc(var(--ls-z-index-level-5) + 1);
   width: 270px;
 }
