@@ -966,7 +966,6 @@
                     (not (state/enable-tooltip?))))]
     (Tippy (->
             (merge {:arrow true
-                    :arrowSize "small"
                     :sticky true
                     :delay 600
                     :theme "customized"
@@ -979,9 +978,12 @@
                                                 :hide {:enabled false}
                                                 :preventOverflow {:enabled false}}}
                     :onShow #(reset! *mounted? true)
-                    :onHide #(reset! *mounted? false)
+                    ;;:onHide #(reset! *mounted? false)
+                    :onRequestClose #(reset! *mounted? false)
+                    :hideOnClick false
                     :interactiveBorder 20
-                    :interactive true}
+                    :interactive true
+                    :touchHold true}
                    opts)
             (assoc :html (or
                           (when open?
