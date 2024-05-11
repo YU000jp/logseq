@@ -885,7 +885,7 @@
             "Whiteboards" (t :search/whiteboards)
             "Commands" (t :search/commands)
             "Filters" (t :search/filters)
-            "Current Page" (t :search/current-page)
+            "Current-page" (t :search/current-page)
             "Graph" (t :search/graph)
             "Create" (t :search/create)
            )]
