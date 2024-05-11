@@ -5,6 +5,7 @@
             [frontend.components.content :as content]
             [frontend.components.editor :as editor]
             ;; [frontend.components.hierarchy :as hierarchy]
+            [frontend.components.reference :as reference]
             [frontend.components.plugins :as plugins]
             [frontend.components.query :as query]
             ;;[frontend.components.scheduled-deadlines :as scheduled]
@@ -487,6 +488,7 @@
        (if (and whiteboard-page? (not sidebar?))
          [:div ((state/get-component :whiteboard/tldraw-preview) page-name)] ;; FIXME: this is not reactive
          [:div.relative
+          {:style {:min-height "70vh"}}
           (when (and (not sidebar?) (not block?))
             [:div.flex.flex-row.space-between
              (when (or (mobile-util/native-platform?) (util/mobile?))
