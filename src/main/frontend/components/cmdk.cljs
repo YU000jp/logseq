@@ -189,13 +189,14 @@
                                               :source-recent %
                                               :source-page (when (= :page (:type %)) (:data %))
                                               :source-search (when (= :search (:type %)) (:data %)))))
-            command-items (->> (cp-handler/top-commands 1000)
-                               (remove (fn [c] (= :window/close (:id c))))
-                               (map #(hash-map :icon "command"
-                                               :icon-theme :gray
-                                               :text (translate t %)
-                                               :shortcut (:shortcut %)
-                                               :source-command %)))]
+            ;; command-items (->> (cp-handler/top-commands 1000)
+            ;;                    (remove (fn [c] (= :window/close (:id c))))
+            ;;                    (map #(hash-map :icon "command"
+            ;;                                    :icon-theme :gray
+            ;;                                    :text (translate t %)
+            ;;                                    :shortcut (:shortcut %)
+            ;;                                    :source-command %)))
+            ]
         (reset! !results (-> default-results
                              (assoc-in [:recents :items] recent-items)
                              (assoc-in [:commands :items] command-items)))))))
