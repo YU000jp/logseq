@@ -145,10 +145,11 @@
               ((ui/make-confirm-modal
                 {:title    (t :on-boarding/insert-a-journal)
                  :on-confirm (fn []
-                               (state/pub-event! [:journal/insert-template page-name true])
-                               (ui-handler/toggle-right-sidebar!)
-                               (js/setTimeout #((ui-handler/toggle-right-sidebar!))
-                                              1300))}))]]])))
+                               (state/pub-event! [:journal/insert-template page-name true]) 
+                               (when (:ui/sidebar-open? @state/state)
+                                 [(ui-handler/toggle-right-sidebar!)
+                                  (js/setTimeout #((ui-handler/toggle-right-sidebar!))
+                                                 1300)]))}))]]])))
 
      [:div.flex.flex-row
       [:div.flex.flex-row.items-center.mr-2.ml-1 {:style {:height 24}}
