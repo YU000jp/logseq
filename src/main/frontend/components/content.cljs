@@ -86,7 +86,7 @@
    (ui/menu-link
      {:key "Toggle number list"
       :on-click #(state/pub-event! [:editor/toggle-own-number-list (state/get-selection-block-ids)])}
-     (t :context-menu/toggle-number-list))
+     (str "1. " (t :context-menu/toggle-number-list)))
 
   ;;  (ui/menu-link
   ;;   {:key "cycle todos"
@@ -276,7 +276,7 @@
          (ui/menu-link
           {:key "Toggle number list"
            :on-click #(state/pub-event! [:editor/toggle-own-number-list (state/get-selection-block-ids)])}
-          (t :context-menu/toggle-number-list))
+          (str "1. " (t :context-menu/toggle-number-list)))
 
          [:hr.menu-separator]
 
