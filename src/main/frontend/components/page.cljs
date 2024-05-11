@@ -531,23 +531,20 @@
        (when whiteboard? ;; ホワイトボードのみページタグを表示
          (when-not (or block? sidebar? journal?)
            (tagged-pages repo page-name)))
-      ;;  (when-not (or block? sidebar? journal? whiteboard? whiteboard-page?)
-      ;;    ;; 「#open-sidebar-reference」エレメントが存在しない場合のみ
-      ;;    (when-not (js/document.getElementById "open-sidebar-reference")
-      ;;      (state/sidebar-add-block! repo page :reference))) ;; 関連ログを自動的にサイドバーで開く
+
        ;; referenced blocks
-      ;;  (when-not block-or-whiteboard?
-      ;;    [:div.mt-6 {:key "page-references"} ;; TODO: サイドバーではLinked Refrencesを折りたたむ
-      ;;     (rum/with-key
-      ;;       (reference/references route-page-name)
-      ;;       (str route-page-name "-refs"))])
+       (when-not block-or-whiteboard?
+         [:div.mt-6 {:key "page-references"}
+          (rum/with-key
+            (reference/references route-page-name)
+            (str route-page-name "-refs"))])
 
       ;;  (when-not (or block-or-whiteboard? sidebar? journal?)
       ;;      (hierarchy/structures route-page-name))
 
-      ;;  (when-not (or block-or-whiteboard? sidebar? journal?)
-      ;;      [:div {:key "page-unlinked-references"}
-      ;;       (reference/unlinked-references route-page-name)])
+       (when-not (or block-or-whiteboard? sidebar? journal?)
+           [:div {:key "page-unlinked-references"}
+            (reference/unlinked-references route-page-name)])
        ])))
 
 (defonce layout (atom [js/window.innerWidth js/window.innerHeight]))
