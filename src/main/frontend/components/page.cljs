@@ -533,6 +533,15 @@
           (when (and (not sidebar?) (not block?)) 
             [[:div.flex
               {:style {:justify-content "flex-end"}}
+              ;; (let [updatedAt (:block/updated-at page)
+              ;;       createdAt (:block/created-at page)]
+              ;;   [[:div.flex.flex-row.items-center.mr-3
+              ;;    [:span.opacity-50.text-sm
+              ;;     (str (t :page/updated-at) " " (date/int->local-time-2 updatedAt))
+              ;;     [:br]
+              ;;     (str (t :page/created-at) " " (date/int->local-time-2 createdAt))
+              ;;     ]]]
+              ;;  )
               (when (and (not config/publishing?) (not whiteboard?))
                (when (and config/lsp-enabled? (not (config/demo-graph?))) 
                  [:div.flex.flex-row
