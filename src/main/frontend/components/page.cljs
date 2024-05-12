@@ -363,20 +363,11 @@
                     (date/journal-title->custom-format title)
                     title))
           old-name (or title page-name)
-          namespace-page? (text/namespace-page? title)]
+          namespace-page? (text/namespace-page? title)
+          ts (when fmt-journal?
+               (date/journalDay->ts (:block/journal-day (db/pull [:block/name page-name]))))]
 
-      [[:div.page-title-hierarchy.mb-2
-        {:class (when whiteboard-page? "text-sm")}
-        (when namespace-page?
-         (->>
-            (for [namespace-page (butlast (gp-util/split-namespace-pages title))]
-            (when (and (string? namespace-page) namespace-page)
-              (let [label (second (gp-util/split-last model/ns-char namespace-page))]
-                (component-block/page-reference false namespace-page {:preview? true} label)))) ;TODO: ツールチップが出ない
-          (interpose [:span.mx-2.opacity-30 model/ns-char])))]
-
-       
-       [:h1.page-title.flex.cursor-pointer.gap-1.w-full
+      [[:h1.page-title.flex.cursor-pointer.gap-1.w-full
         {:class (when-not whiteboard-page? "title")
          :on-mouse-down (fn [e]
                           (when (util/right-click? e)
@@ -409,18 +400,47 @@
           {:class (when namespace-page? "opacity-80")
            :data-value @*input-value
            :data-ref   page-name
-           :style      {:opacity (when @*edit? 0)}}
+           :style      {:opacity (when @*edit? 0)
+                        :border-bottom  (when fmt-journal?
+                                          (str (case (date/ts->day-of-week-number ts)
+                                                 0 "2px solid orange"
+                                                 1 "unset"
+                                                 2 "unset"
+                                                 3 "unset"
+                                                 4 "unset"
+                                                 5 "unset"
+                                                 6 "1px solid skyblue")))}}
           (let [nested? (and (string/includes? title page-ref/left-brackets)
                              (string/includes? title page-ref/right-brackets))]
             (cond @*edit? [:span {:style {:white-space "pre"}} (rum/react *input-value)]
                   untitled? [:span.opacity-50 (t :untitled)]
                   nested? (component-block/map-inline {} (gp-mldoc/inline->edn title (gp-mldoc/default-config
                                                                                       (:block/format page))))
-                  :else 
-                  (if namespace-page? 
-                    (second (gp-util/split-last model/ns-char title)) 
-                    title)
-                  ))]]]])))
+                  fmt-journal? (.toLocaleDateString (js/Date. ts) (or (state/sub :preferred-language) "default")
+                                                    (clj->js {:year "numeric" :month "long" :day "numeric" :weekday "short"}))
+                  namespace-page? (second (gp-util/split-last model/ns-char title))
+                  :else
+                  title))]]]
+
+       (when namespace-page?
+         [:div.page-title-hierarchy.mb-2.mr-3
+          {:class (when whiteboard-page? "text-sm")}
+          (->>
+           (for [namespace-page (butlast (gp-util/split-namespace-pages title))]
+             (when (and (string? namespace-page) namespace-page)
+               (let [label (second (gp-util/split-last model/ns-char namespace-page))]
+                 (component-block/page-reference false namespace-page {:preview? true} label)))) ;TODO: ツールチップが出ない
+           (interpose [:span.mx-2.opacity-30 model/ns-char]))])
+
+       (when fmt-journal?
+         [:span.journal-title-right-area.text-sm
+        {:style {:cursor "copy"}
+         :title (str (t :journals/user-date-format-desc-title) "\n" (t :journals/user-date-format-desc) " [[" (state/get-date-formatter) "]]")
+         :on-click (fn [e]
+                     (util/stop e)
+                     (util/copy-to-clipboard! (str "[[" title "]]"))
+                     (notification/show! (t :notification/copied-to-clipboard) :success))}
+        (str " [[" title "]]")])])))
                  
 
 (defn- page-mouse-over
@@ -510,8 +530,16 @@
          [:div ((state/get-component :whiteboard/tldraw-preview) page-name)] ;; FIXME: this is not reactive
          [:div.relative
           {:style {:min-height "70vh"}}
-          (when (and (not sidebar?) (not block?))
-            [:div.flex.flex-row.space-between
+          (when (and (not sidebar?) (not block?)) 
+            [[:div.flex
+              {:style {:justify-content "flex-end"}}
+              (when (and (not config/publishing?) (not whiteboard?))
+               (when (and config/lsp-enabled? (not (config/demo-graph?))) 
+                 [:div.flex.flex-row
+                  [(plugins/hook-ui-slot :page-head-actions-slotted nil)
+                  (plugins/hook-ui-items :pagebar)]]
+                 ))]
+             [:div.flex.flex-row.space-between
              (when (or (mobile-util/native-platform?) (util/mobile?))
                [:div.flex.flex-row.pr-2
                 {:style {:margin-left -15}
@@ -521,13 +549,9 @@
                                    (page-mouse-leave e *control-show?))}
                 (page-blocks-collapse-control title *control-show? *all-collapsed?)])
              (when-not whiteboard?
-               [:div.ls-page-title.flex-1.flex-row.w-full
+               [:div.ls-page-title.flex-1.flex-row.w-full.space-between
                 (page-title page-name icon title format fmt-journal?)])
-             (when (and (not config/publishing?) (not whiteboard?))
-               (when (and config/lsp-enabled? (not (config/demo-graph?)))
-                 [:div.flex.flex-row
-                  (plugins/hook-ui-slot :page-head-actions-slotted nil)
-                  (plugins/hook-ui-items :pagebar)]))])
+             ]])
           [:div
            (when (and block? (not sidebar?) (not whiteboard?))
              (let [config {:id "block-parent"
