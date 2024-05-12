@@ -534,7 +534,7 @@
        (if (and whiteboard-page? (not sidebar?))
          [:div ((state/get-component :whiteboard/tldraw-preview) page-name)] ;; FIXME: this is not reactive
          [:div.relative
-          {:style {:min-height "70vh"}}
+          {:style {:min-height (when-not (or whiteboard? whiteboard-page?) "70vh")}}
           (when (and (not sidebar?) (not block?)) 
             [[:div.flex
               {:style {:justify-content "flex-end"}}
