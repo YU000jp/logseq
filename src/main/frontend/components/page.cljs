@@ -493,17 +493,12 @@
           page-name path-page-name
           block-id (parse-uuid page-name)
           block? (boolean block-id)
-          format (let [page (if block-id
-                              (:block/name (:block/page (db/entity [:block/uuid block-id])))
-                              page-name)]
-                   (db/get-page-format page))
-          journal? (db/journal-page? page-name)
-          fmt-journal? (boolean (date/journal-title->int page-name))
+          journal? (db/journal-page? page-name) 
           sidebar? (:sidebar? option)
           whiteboard? (:whiteboard? option) ;; in a whiteboard portal shape?
           whiteboard-page? (model/whiteboard-page? page-name) ;; is this page a whiteboard?
           route-page-name path-page-name
-          page (if block?
+          page-entity (if block?
                  (->> (:db/id (:block/page (db/entity repo [:block/uuid block-id])))
                       (db/entity repo))
                  (do
@@ -511,10 +506,13 @@
                      (let [m (block/page-name->map path-page-name true)]
                        (db/transact! repo [m])))
                    (db/pull [:block/name page-name])))
-          {:keys [icon]} (:block/properties page)
-          page-name (:block/name page)
-          page-original-name (:block/original-name page)
-          title (or page-original-name page-name)
+          page-name (:block/name page-entity)
+          page-original-name (:block/original-name page-entity)
+          ;;fmt-journal? (boolean (date/journal-title->int page-name))
+          fmt-journal? (:block/journal-day page-entity)
+          format (db/get-page-format page-entity)
+          title (or path-page-name page-name page-original-name)
+          {:keys [icon]} (:block/properties page-entity)
           icon (or icon "")
           ;; today? (and
           ;;         journal?
@@ -524,16 +522,21 @@
           *current-block-page (::current-page state)
           block-or-whiteboard? (or block? whiteboard?)]
       [:div.flex-1.page.relative
-       (merge (if (seq (:block/tags page))
-                (let [page-names (model/get-page-names-by-ids (map :db/id (:block/tags page)))]
+       (merge (if (seq (:block/tags page-entity))
+                (let [page-names (model/get-page-names-by-ids (map :db/id (:block/tags page-entity)))]
                   {:data-page-tags (text-util/build-data-value page-names)})
                 {})
 
               {:key path-page-name
                :class (util/classnames [{:is-journals (or journal? fmt-journal?)}])})
 
+       
        (if (and whiteboard-page? (not sidebar?))
+         
+         ;; whiteboard page
          [:div ((state/get-component :whiteboard/tldraw-preview) page-name)] ;; FIXME: this is not reactive
+
+         ;; normal page
          [:div.relative
           {:style {:min-height (when-not (or whiteboard? whiteboard-page?) "70vh")}}
           (when (and (not sidebar?) (not block?)) 
@@ -575,14 +578,13 @@
                [:div.mb-4
                 (component-block/breadcrumb config repo block-id {:level-limit 6})]))
 
-           ;; blocks
-           (let [page (if block?
+           (let [entity (if block?
                         (db/entity repo [:block/uuid block-id])
-                        page)
-                 _ (and block? page (reset! *current-block-page (:block/name (:block/page page))))
-                 _ (when (and block? (not page))
+                        page-entity)
+                 _ (and block? entity (reset! *current-block-page (:block/name (:block/page entity))))
+                 _ (when (and block? (not entity))
                      (route-handler/redirect-to-page! @*current-block-page))]
-             (page-blocks-cp repo page {:sidebar? sidebar? :whiteboard? whiteboard?}))]])
+             (page-blocks-cp repo entity {:sidebar? sidebar? :whiteboard? whiteboard?}))]])
 
       ;; 今日のジャーナルのみ サイドバーに移設したためコメントアウト
       ;;  (when-not whiteboard?

@@ -46,12 +46,7 @@
      ;;TODO: 日付ナビゲーション設置
 
      (ui/foldable 
-      (let [journal-day (:block/journal-day page-entity)
-            ts (date/journalDay->ts journal-day)
-            date (js/Date. ts)
-            language (or (state/sub :preferred-language) "default")
-            formatted-date (.toLocaleDateString date language
-                                                (clj->js {:year "numeric" :month "long" :day "numeric" :weekday "short"}))]
+      (let [ts (date/journalDay->ts (:block/journal-day page-entity))]
         [:div.page-title-bar.flex.flex-1.p-4
          {:style {:align-items "center"
                   :justify-content "space-between"}
