@@ -243,7 +243,7 @@
             (query/custom-query (component-block/wrap-query-components
                                   {:attr {:class "my-2 references-blocks-item"}
                                    :editor-box editor/box})
-                                 query))
+                                query))
            (str repo "-custom-query-" (:query query))))])))
 
 (defn tagged-pages

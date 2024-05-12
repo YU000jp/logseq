@@ -58,8 +58,7 @@
                         page-name
                         (state/get-current-page)
                         (state/get-current-whiteboard))]
-    (let [page-name (util/page-name-sanity-lc page-name)
-          current-repo (state/get-current-repo)
+    (let [current-repo (state/get-current-repo)
           page (db/entity current-repo [:block/name page-name])
           page-original-name (:block/original-name page)
           whiteboard? (= "whiteboard" (:block/type page))
