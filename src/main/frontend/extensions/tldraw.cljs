@@ -42,7 +42,7 @@
                     (state/get-current-repo)
                     (uuid (gobj/get props "blockId"))
                     {:end-separator? (gobj/get props "endSeparator")
-                     :level-limit (gobj/get props "levelLimit" 3)}))
+                     :level-limit (gobj/get props "levelLimit" 6)}))
 
 (rum/defc tweet
   [props]

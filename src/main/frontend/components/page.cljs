@@ -39,6 +39,7 @@
             [logseq.graph-parser.mldoc :as gp-mldoc]
             [logseq.graph-parser.util :as gp-util]
             [logseq.graph-parser.util.page-ref :as page-ref]
+            [logseq.graph-parser.text :as text]
             [medley.core :as medley]
             [promesa.core :as p]
             [reitit.frontend.easy :as rfe]
@@ -348,8 +349,7 @@
            (assoc state ::title-value (atom (nth (:rum/args state) 2))))}
   [state page-name icon title _format fmt-journal?]
   (when title
-    (let [
-          ;; page (when page-name (db/entity [:block/name page-name]))
+    (let [;; page (when page-name (db/entity [:block/name page-name]))
           *title-value (get state ::title-value)
           *edit? (get state ::edit?)
           *input-value (get state ::input-value)
@@ -362,47 +362,66 @@
                   (if fmt-journal?
                     (date/journal-title->custom-format title)
                     title))
-          old-name (or title page-name)]
-      [:h1.page-title.flex.cursor-pointer.gap-1.w-full
-       {:class (when-not whiteboard-page? "title")
-        :on-mouse-down (fn [e]
-                         (when (util/right-click? e)
-                           (state/set-state! :page-title/context {:page page-name})))
-        :on-click (fn [e]
-                    (when-not (= (.-nodeName (.-target e)) "INPUT")
-                      (.preventDefault e)
-                      (if (util/shift-key? e)
-                        (when-let [page (db/pull repo '[*] [:block/name page-name])]
-                          (state/sidebar-add-block!
-                           repo
-                           (:db/id page)
-                           :page))
-                        (when (and (not hls-page?) (not fmt-journal?) (not config/publishing?))
-                          (reset! *input-value (if untitled? "" old-name))
-                          (reset! *edit? true)))))}
-       (when (not= icon "") [:span.page-icon icon])
-       [:div.page-title-sizer-wrapper.relative
-        (when @*edit?
-          (page-title-editor {:*title-value *title-value
-                              :*edit? *edit?
-                              :*input-value *input-value
-                              :title title
-                              :page-name page-name
-                              :old-name old-name
-                              :untitled? untitled?
-                              :whiteboard-page? whiteboard-page?}))
+          old-name (or title page-name)
+          namespace-page? (text/namespace-page? title)]
 
-        [:span.title.block
-         {:data-value @*input-value
-          :data-ref   page-name
-          :style      {:opacity (when @*edit? 0)}}
-         (let [nested? (and (string/includes? title page-ref/left-brackets)
-                            (string/includes? title page-ref/right-brackets))]
-           (cond @*edit? [:span {:style {:white-space "pre"}} (rum/react *input-value)]
-                 untitled? [:span.opacity-50 (t :untitled)]
-                 nested? (component-block/map-inline {} (gp-mldoc/inline->edn title (gp-mldoc/default-config
-                                                                                     (:block/format page))))
-                 :else title))]]])))
+      [[:div.page-title-hierarchy.mb-2
+        {:class (when whiteboard-page? "text-sm")}
+        (when namespace-page?
+         (->>
+            (for [namespace-page (butlast (gp-util/split-namespace-pages title))]
+            (when (and (string? namespace-page) namespace-page)
+              (let [label (second (gp-util/split-last model/ns-char namespace-page))]
+                (component-block/page-reference false namespace-page {:preview? true} label)))) ;TODO: ツールチップが出ない
+          (interpose [:span.mx-2.opacity-30 model/ns-char])))]
+
+       
+       [:h1.page-title.flex.cursor-pointer.gap-1.w-full
+        {:class (when-not whiteboard-page? "title")
+         :on-mouse-down (fn [e]
+                          (when (util/right-click? e)
+                            (state/set-state! :page-title/context {:page page-name})))
+         :on-click (fn [e]
+                     (when-not (= (.-nodeName (.-target e)) "INPUT")
+                       (.preventDefault e)
+                       (if (util/shift-key? e)
+                         (when-let [page (db/pull repo '[*] [:block/name page-name])]
+                           (state/sidebar-add-block!
+                            repo
+                            (:db/id page)
+                            :page))
+                         (when (and (not hls-page?) (not fmt-journal?) (not config/publishing?))
+                           (reset! *input-value (if untitled? "" old-name))
+                           (reset! *edit? true)))))}
+
+        (when (not= icon "") [:span.page-icon icon])
+        [:div.page-title-sizer-wrapper.relative
+         (when @*edit?
+           (page-title-editor {:*title-value *title-value
+                               :*edit? *edit?
+                               :*input-value *input-value
+                               :title title
+                               :page-name page-name
+                               :old-name old-name
+                               :untitled? untitled?
+                               :whiteboard-page? whiteboard-page?}))
+         [:span.title.block
+          {:class (when namespace-page? "opacity-80")
+           :data-value @*input-value
+           :data-ref   page-name
+           :style      {:opacity (when @*edit? 0)}}
+          (let [nested? (and (string/includes? title page-ref/left-brackets)
+                             (string/includes? title page-ref/right-brackets))]
+            (cond @*edit? [:span {:style {:white-space "pre"}} (rum/react *input-value)]
+                  untitled? [:span.opacity-50 (t :untitled)]
+                  nested? (component-block/map-inline {} (gp-mldoc/inline->edn title (gp-mldoc/default-config
+                                                                                      (:block/format page))))
+                  :else 
+                  (if namespace-page? 
+                    (second (gp-util/split-last model/ns-char title)) 
+                    title)
+                  ))]]]])))
+                 
 
 (defn- page-mouse-over
   [e *control-show? *all-collapsed?]
