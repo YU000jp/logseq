@@ -46,43 +46,38 @@
      ;;TODO: 日付ナビゲーション設置
 
      (ui/foldable 
-      (let [journal-day (:block/journal-day page-entity)
-            ts (date/journalDay->ts journal-day)
-            date (js/Date. ts)
-            language (or (state/sub :preferred-language) "default")
-            formatted-date (.toLocaleDateString date language
-                                                (clj->js {:year "numeric" :month "long" :day "numeric" :weekday "short"}))]
+      (let [ts (date/journalDay->ts (:block/journal-day page-entity))]
         [:div.page-title-bar.flex.flex-1.p-4
          {:style {:align-items "center"
                   :justify-content "space-between"}
           :on-mouse-down (fn [e]
                            (when (util/right-click? e)
                              (state/set-state! :page-title/context {:page lower-case-page-name})))}
-
-         (let [day-of-week-number (date/ts->day-of-week-number ts)]
-         [:h1.journal-title.my-2.mb-3.cursor-pointer
-          {:style {:font-size "2.2em"
-         :border-bottom (str (case day-of-week-number
-                               0 "2px solid orange"
-                               1 "unset"
-                               2 "unset"
-                               3 "unset"
-                               4 "unset"
-                               5 "unset"
-                               6 "1px solid skyblue"))}
-           :title (t :journals/click-to)
-           :on-click (fn [e]
-                       (if (util/shift-key? e)
-                         [(when page-entity
-                            (state/sidebar-add-block!
-                             (state/get-current-repo)
-                             (:db/id page-entity)
-                             :page))
-                          (.preventDefault e)]
-                         (route-handler/redirect-to-page! lower-case-page-name)))}
-          formatted-date])
-
-
+      
+           [:h1.journal-title.my-2.mb-3.cursor-pointer
+            {:style {:font-size "2.2em"
+                     :border-bottom (str (case (date/ts->day-of-week-number ts)
+                                           0 "2px solid orange"
+                                           1 "unset"
+                                           2 "unset"
+                                           3 "unset"
+                                           4 "unset"
+                                           5 "unset"
+                                           6 "1px solid skyblue"))}
+             :title (t :journals/click-to)
+             :on-click (fn [e]
+                         (if (util/shift-key? e)
+                           [(when page-entity
+                              (state/sidebar-add-block!
+                               (state/get-current-repo)
+                               (:db/id page-entity)
+                               :page))
+                            (.preventDefault e)]
+                           (route-handler/redirect-to-page! lower-case-page-name)))}
+            (.toLocaleDateString (js/Date. ts) (or (state/sub :preferred-language) "default")
+                                 (clj->js {:year "numeric" :month "long" :day "numeric" :weekday "short"}))]
+      
+      
          [:span.journal-title-right-area.text-sm
           {:style {:cursor "copy"}
            :title (str (t :journals/user-date-format-desc-title) "\n" (t :journals/user-date-format-desc) " [[" (state/get-date-formatter) "]]")
