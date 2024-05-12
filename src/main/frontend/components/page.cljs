@@ -498,7 +498,7 @@
                               page-name)]
                    (db/get-page-format page))
           journal? (db/journal-page? page-name)
-          fmt-journal? (boolean (date/journal-title->int page-name))
+          
           sidebar? (:sidebar? option)
           whiteboard? (:whiteboard? option) ;; in a whiteboard portal shape?
           whiteboard-page? (model/whiteboard-page? page-name) ;; is this page a whiteboard?
@@ -514,7 +514,9 @@
           {:keys [icon]} (:block/properties page)
           page-name (:block/name page)
           page-original-name (:block/original-name page)
-          title (or page-original-name page-name)
+          ;;fmt-journal? (boolean (date/journal-title->int page-name))
+          fmt-journal? (:block/journal-day page)
+          title (or path-page-name page-name page-original-name)
           icon (or icon "")
           ;; today? (and
           ;;         journal?
@@ -532,10 +534,15 @@
               {:key path-page-name
                :class (util/classnames [{:is-journals (or journal? fmt-journal?)}])})
 
+       
        (if (and whiteboard-page? (not sidebar?))
+         
+         ;; whiteboard page
          [:div ((state/get-component :whiteboard/tldraw-preview) page-name)] ;; FIXME: this is not reactive
+
+         ;; normal page
          [:div.relative
-          {:style {:min-height (when-not (or whiteboard? whiteboard-page?) "70vh")}}
+          {:style {:min-height (when-not (or whiteboard? whiteboard-page?) "70vh")}} ;; ページ内の配置調整
           (when (and (not sidebar?) (not block?)) 
             [[:div.flex
               {:style {:justify-content "flex-end"}}
@@ -555,19 +562,18 @@
                   (plugins/hook-ui-items :pagebar)]]
                  ))]
              [:div.flex.flex-row.space-between
-             (when (or (mobile-util/native-platform?) (util/mobile?))
-               [:div.flex.flex-row.pr-2
-                {:style {:margin-left -15}
-                 :on-mouse-over (fn [e]
-                                  (page-mouse-over e *control-show? *all-collapsed?))
-                 :on-mouse-leave (fn [e]
-                                   (page-mouse-leave e *control-show?))}
-                (page-blocks-collapse-control title *control-show? *all-collapsed?)])
-             (when-not whiteboard?
-               [:div.ls-page-title.flex-1.flex-row.w-full
-                {:style {:justify-content "space-between"}}
-                (page-title page-name icon title format fmt-journal?)])
-             ]])
+              (when (or (mobile-util/native-platform?) (util/mobile?))
+                [:div.flex.flex-row.pr-2
+                 {:style {:margin-left -15}
+                  :on-mouse-over (fn [e]
+                                   (page-mouse-over e *control-show? *all-collapsed?))
+                  :on-mouse-leave (fn [e]
+                                    (page-mouse-leave e *control-show?))}
+                 (page-blocks-collapse-control title *control-show? *all-collapsed?)])
+              (when-not whiteboard?
+                [:div.ls-page-title.flex-1.flex-row.w-full
+                 {:style {:justify-content "space-between"}}
+                 (page-title page-name icon title format fmt-journal?)])]])
           [:div
            (when (and block? (not sidebar?) (not whiteboard?))
              (let [config {:id "block-parent"
