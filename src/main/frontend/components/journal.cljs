@@ -55,16 +55,7 @@
                              (state/set-state! :page-title/context {:page lower-case-page-name})))}
       
            [:h1.journal-title.my-2.mb-3.cursor-pointer
-            {:style {:font-size "2.2em"
-                     :border-bottom (str (case (date/ts->day-of-week-number ts)
-                                           0 "2px solid orange"
-                                           1 "unset"
-                                           2 "unset"
-                                           3 "unset"
-                                           4 "unset"
-                                           5 "unset"
-                                           6 "1px solid skyblue"))}
-             :title (t :journals/click-to)
+            {:title (t :journals/click-to)
              :on-click (fn [e]
                          (if (util/shift-key? e)
                            [(when page-entity
@@ -74,8 +65,21 @@
                                :page))
                             (.preventDefault e)]
                            (route-handler/redirect-to-page! lower-case-page-name)))}
-            (.toLocaleDateString (js/Date. ts) (or (state/sub :preferred-language) "default")
-                                 (clj->js {:year "numeric" :month "long" :day "numeric" :weekday "short"}))]
+            [(ui/icon "calendar-time" {:color "yellow"
+                                       :size 26
+                                       :style {:margin-right "10px"}})
+             [:span
+              {:style {:font-size "2.2em"
+                     :border-bottom (str (case (date/ts->day-of-week-number ts)
+                                           0 "2px solid orange"
+                                           1 "unset"
+                                           2 "unset"
+                                           3 "unset"
+                                           4 "unset"
+                                           5 "unset"
+                                           6 "1px solid skyblue"))}}
+              (.toLocaleDateString (js/Date. ts) (or (state/sub :preferred-language) "default")
+                                 (clj->js {:year "numeric" :month "long" :day "numeric" :weekday "short"}))]]]
       
       
          [:span.journal-title-right-area.text-sm
