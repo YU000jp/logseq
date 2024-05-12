@@ -367,7 +367,18 @@
           ts (when fmt-journal?
                (date/journalDay->ts (:block/journal-day (db/pull [:block/name page-name]))))]
 
-      [[:h1.page-title.flex.cursor-pointer.gap-1.w-full
+      [(when namespace-page?
+         [:div.page-title-hierarchy.mb-2.mr-3 
+          {:class (when whiteboard-page? "text-sm")
+           :style {:position (when fmt-journal? "absolute")
+                   :top "-0.5em"}}
+          (->>
+           (for [namespace-page (butlast (gp-util/split-namespace-pages title))]
+             (when (and (string? namespace-page) namespace-page)
+               (let [label (second (gp-util/split-last model/ns-char namespace-page))]
+                 (component-block/page-reference false namespace-page {:preview? true} label)))) ;TODO: ツールチップが出ない
+           (interpose [:span.mx-2.opacity-30 model/ns-char]))])
+       [:h1.page-title.flex.cursor-pointer.gap-1.w-full
         {:class (when-not whiteboard-page? "title")
          :on-mouse-down (fn [e]
                           (when (util/right-click? e)
@@ -386,10 +397,10 @@
                            (reset! *edit? true)))))}
 
         (if fmt-journal?
-          [:span.page-icon 
+          [:span.page-icon
            (ui/icon "calendar-time" {:color "yellow"
-                                    :size 26
-                                    :style {:margin-right "3px"}})]
+                                     :size 26
+                                     :style {:margin-right "3px"}})]
           (when (not= icon "") [:span.page-icon icon]))
         [:div.page-title-sizer-wrapper.relative
          (when @*edit?
@@ -427,25 +438,15 @@
                   :else
                   title))]]]
 
-       (when namespace-page?
-         [:div.page-title-hierarchy.mb-2.mr-3
-          {:class (when whiteboard-page? "text-sm")}
-          (->>
-           (for [namespace-page (butlast (gp-util/split-namespace-pages title))]
-             (when (and (string? namespace-page) namespace-page)
-               (let [label (second (gp-util/split-last model/ns-char namespace-page))]
-                 (component-block/page-reference false namespace-page {:preview? true} label)))) ;TODO: ツールチップが出ない
-           (interpose [:span.mx-2.opacity-30 model/ns-char]))])
-
        (when fmt-journal?
          [:span.journal-title-right-area.text-sm
-        {:style {:cursor "copy"}
-         :title (str (t :journals/user-date-format-desc-title) "\n" (t :journals/user-date-format-desc) " [[" (state/get-date-formatter) "]]")
-         :on-click (fn [e]
-                     (util/stop e)
-                     (util/copy-to-clipboard! (str "[[" title "]]"))
-                     (notification/show! (t :notification/copied-to-clipboard) :success))}
-        (str " [[" title "]]")])])))
+          {:style {:cursor "copy"}
+           :title (str (t :journals/user-date-format-desc-title) "\n" (t :journals/user-date-format-desc) " [[" (state/get-date-formatter) "]]")
+           :on-click (fn [e]
+                       (util/stop e)
+                       (util/copy-to-clipboard! (str "[[" title "]]"))
+                       (notification/show! (t :notification/copied-to-clipboard) :success))}
+          (str " [[" title "]]")])])))
                  
 
 (defn- page-mouse-over
