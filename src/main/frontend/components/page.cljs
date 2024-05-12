@@ -385,7 +385,12 @@
                            (reset! *input-value (if untitled? "" old-name))
                            (reset! *edit? true)))))}
 
-        (when (not= icon "") [:span.page-icon icon])
+        (if fmt-journal?
+          [:span.page-icon 
+           (ui/icon "calendar-time" {:color "yellow"
+                                    :size 26
+                                    :style {:margin-right "3px"}})]
+          (when (not= icon "") [:span.page-icon icon]))
         [:div.page-title-sizer-wrapper.relative
          (when @*edit?
            (page-title-editor {:*title-value *title-value
@@ -558,7 +563,8 @@
                                    (page-mouse-leave e *control-show?))}
                 (page-blocks-collapse-control title *control-show? *all-collapsed?)])
              (when-not whiteboard?
-               [:div.ls-page-title.flex-1.flex-row.w-full.space-between
+               [:div.ls-page-title.flex-1.flex-row.w-full
+                {:style {:justify-content "space-between"}}
                 (page-title page-name icon title format fmt-journal?)])
              ]])
           [:div
