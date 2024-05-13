@@ -2,7 +2,27 @@
 
 ---
 
-## v1.2.0 (2024-05-05)
+# v1.4.1 (2024-05-13)
+
+## Features
+1. Breadcrumb in page title (hierarchy)
+1. Added icon and shortcut notation to block context menu
+1. Organizing block context menu
+1. Improved tooltip behavior. Mouse over to show, click around to disappear.
+1. Added mouse cursor specification
+
+## Revert
+1. Open "Linked Refrences" in sidebar
+
+# v1.3.0 (2024-05-07)
+
+## Features
+1. Improved tooltip behavior
+1. Journal date notation. Make the date format sub.
+
+It is best to use  "Show weekday and week-number" plugin as an adjunct to journaling.
+
+# v1.2.0 (2024-05-05)
 
 <p align="center">
     <img src="https://github.com/YU000jp/fork-logseq/assets/111847207/ad79abe8-f35d-47cc-8ef7-89db3d3b5a97" height="400"/>
@@ -17,7 +37,7 @@
 
 ---
 
-## v1.1.0 (2024-05-04)
+# v1.1.0 (2024-05-04)
 
 ## Enhance
 1. Prevent journal from being displayed continuously
@@ -31,7 +51,7 @@
 
 ---
 
-## v1.0.1 (2024-04-21)
+# v1.0.1 (2024-04-21)
 
 ## Enhance
 1. Add user confirmation when creating journal https://discuss.logseq.com/t/auto-delete-empty-journal/1825
@@ -41,7 +61,7 @@
 
 ---
 
-## v1.0.0
+# v1.0.0
 
 ### Enhance
 1. https://github.com/YU000jp/fork-logseq/pull/2 Bullet and the UX for block control
