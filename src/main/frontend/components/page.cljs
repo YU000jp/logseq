@@ -490,7 +490,7 @@
                                 (get-page-name state)
                                 (state/get-current-page))]
     (let [repo (or repo (state/sub :git/current-repo))
-          page-name path-page-name
+          page-name (util/page-name-sanity-lc path-page-name)
           block-id (parse-uuid page-name)
           block? (boolean block-id)
           journal? (db/journal-page? page-name) 
