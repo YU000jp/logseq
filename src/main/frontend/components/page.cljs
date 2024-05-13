@@ -497,15 +497,13 @@
           sidebar? (:sidebar? option)
           whiteboard? (:whiteboard? option) ;; in a whiteboard portal shape?
           whiteboard-page? (model/whiteboard-page? page-name) ;; is this page a whiteboard?
-          route-page-name path-page-name
-          page-entity (if block?
-                 (->> (:db/id (:block/page (db/entity repo [:block/uuid block-id])))
-                      (db/entity repo))
-                 (do
-                   (when-not (db/entity repo [:block/name page-name])
-                     (let [m (block/page-name->map path-page-name true)]
-                       (db/transact! repo [m])))
-                   (db/pull [:block/name page-name])))
+          page-entity (if block? 
+                        (->> 
+                         (:db/id (:block/page (db/entity repo [:block/uuid block-id]))) (db/entity repo)) 
+                        (do
+                          (when-not (db/entity repo [:block/name page-name])
+                            (db/transact! repo [(block/page-name->map path-page-name true)]))
+                          (db/pull [:block/name page-name])))
           page-name (:block/name page-entity)
           page-original-name (:block/original-name page-entity)
           ;;fmt-journal? (boolean (date/journal-title->int page-name))
@@ -595,24 +593,24 @@
 
        (when whiteboard? ;; ホワイトボードのみページタグを表示
          (when-not (or block? sidebar? journal?)
-           (tagged-pages repo page-name)))
+           (tagged-pages repo title)))
        
        ;; referenced blocks
        (when-not block-or-whiteboard?
          [[:div.mt-6 {:key "page-unlinked-references"}
-            (reference/unlinked-references route-page-name)]
+            (reference/unlinked-references title)]
           [:div {:key "page-references"
                  :title (str "Shift-> " (t :content/open-in-sidebar))
                  :on-click (fn [e]
                              (util/stop e)
                              (when (util/shift-key? e)
-                               (state/sidebar-add-block! repo page-name :reference)))}
+                               (state/sidebar-add-block! repo title :reference)))}
            (rum/with-key
-             (reference/references route-page-name)
-             (str route-page-name "-refs"))]])])))
+             (reference/references title)
+             (str title "-refs"))]])])))
 
       ;;  (when-not (or block-or-whiteboard? sidebar? journal?)
-      ;;      (hierarchy/structures route-page-name))
+      ;;      (hierarchy/structures title))
        
 
 (defonce layout (atom [js/window.innerWidth js/window.innerHeight]))
