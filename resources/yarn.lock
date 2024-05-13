@@ -7,6 +7,11 @@
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-5.2.0.tgz#7a03314684dd6572b7dfa89e68ce31d60286854d"
   integrity sha512-ukTPVhqG4jNzMro2qA9HSCSSVJN3aN7tlb+hfqYCt3ER0yWroeA2VR38MNrOHLQ/cVj+DaIMad0kFCtWWowh/A==
 
+"@bitdisaster/exe-icon-extractor@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@bitdisaster/exe-icon-extractor/-/exe-icon-extractor-1.0.10.tgz#3f5107864254c351db1db5c5922452d9d4154e8f"
+  integrity sha512-iTZ8cVGZ5dglNRyFdSj8U60mHIrC8XNIuOHN/NkM5/dQP4nsmpyqeQTAADLLQgoFCNJD+DiwQCv8dR2cCeWP4g==
+
 "@develar/schema-utils@~2.6.5":
   version "2.6.5"
   resolved "https://registry.yarnpkg.com/@develar/schema-utils/-/schema-utils-2.6.5.tgz#3ece22c5838402419a6e0425f85742b961d9b6c6"
@@ -137,6 +142,18 @@
     fs-extra "^10.0.0"
   optionalDependencies:
     electron-winstaller "^5.3.0"
+
+"@electron-forge/maker-wix@^7.3.1":
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/@electron-forge/maker-wix/-/maker-wix-7.4.0.tgz#4c271a70506247f07d704634ef6cbe0fe6060bdc"
+  integrity sha512-+a5zNh/e8/aguDT7Ya+hEsKkkV7VSSaaB45RaA4ahI91bx/mRAWEhGQjnqakGkSAZkRzM6n37Tedx3wz0/2H4A==
+  dependencies:
+    "@electron-forge/maker-base" "7.4.0"
+    "@electron-forge/shared-types" "7.4.0"
+    chalk "^4.0.0"
+    electron-wix-msi "^5.1.3"
+    log-symbols "^4.0.0"
+    parse-author "^2.0.0"
 
 "@electron-forge/maker-zip@^7.4.0":
   version "7.4.0"
@@ -1835,10 +1852,26 @@ electron-winstaller@^5.3.0:
   optionalDependencies:
     "@electron/windows-sign" "^1.1.2"
 
-electron@*, electron@27.1.3:
-  version "27.1.3"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-27.1.3.tgz#3fd6decda95c1dd0a7e51a9ac77ee0ba37b7c5c6"
-  integrity sha512-7eD8VMhhlL5J531OOawn00eMthUkX1e3qN5Nqd7eMK8bg5HxQBrn8bdPlvUEnCano9KhrVwaDnGeuzWoDOGpjQ==
+electron-wix-msi@^5.1.3:
+  version "5.1.3"
+  resolved "https://registry.yarnpkg.com/electron-wix-msi/-/electron-wix-msi-5.1.3.tgz#ab85dc1145a7ce7ae7724ed3ca3f92c447988c9a"
+  integrity sha512-EYj1cm1nZoVHmIIx3o0aKt784lxdEpJnXbEnyypklUCnglqSb7ni+1xi1Vp/gtrGS/mzIxnWBT+x5fIfuDjhvA==
+  dependencies:
+    "@electron/windows-sign" "^1.1.2"
+    debug "^4.3.4"
+    fs-extra "^10.1.0"
+    klaw "^4.1.0"
+    lodash "^4.17.21"
+    rcedit "^4.0.1"
+    rcinfo "^0.1.3"
+    semver "^7.6.0"
+  optionalDependencies:
+    "@bitdisaster/exe-icon-extractor" "^1.0.10"
+
+electron@*, electron@28.3.1:
+  version "28.3.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-28.3.1.tgz#babb3ff8e246336e9cd1c1966f16a55ba723ea06"
+  integrity sha512-aF9fONuhVDJlctJS7YOw76ynxVAQdfIWmlhRMKits24tDcdSL0eMHUS0wWYiRfGWbQnUKB6V49Rf17o32f4/fg==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^18.11.18"
@@ -2922,6 +2955,11 @@ keyv@^4.0.0:
   dependencies:
     json-buffer "3.0.1"
 
+klaw@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/klaw/-/klaw-4.1.0.tgz#5df608067d8cb62bbfb24374f8e5d956323338f3"
+  integrity sha512-1zGZ9MF9H22UnkpVeuaGKOjfA2t6WrfdrJmGjy16ykcjnKQDmHVX+KI477rpbGevz/5FD4MC3xf1oxylBgcaQw==
+
 lazy-val@^1.0.4, lazy-val@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/lazy-val/-/lazy-val-1.0.5.tgz#6cf3b9f5bc31cee7ee3e369c0832b7583dcd923d"
@@ -3796,6 +3834,18 @@ rcedit@^3.0.1:
   dependencies:
     cross-spawn-windows-exe "^1.1.0"
 
+rcedit@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/rcedit/-/rcedit-4.0.1.tgz#892ac47a19204a380f49e00ea38ce070443343c2"
+  integrity sha512-bZdaQi34krFWhrDn+O53ccBDw0MkAT2Vhu75SqhtvhQu4OPyFM4RoVheyYiVQYdjhUi6EJMVWQ0tR6bCIYVkUg==
+  dependencies:
+    cross-spawn-windows-exe "^1.1.0"
+
+rcinfo@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/rcinfo/-/rcinfo-0.1.3.tgz#ac36832d1f1e5970c6379e571480ea5826511fc6"
+  integrity sha512-c2XV2aYgY7x3BscO+/B/nCTtMvnclZ8w5D7R6zgK4sGOQnE0MjlXhOPynno7yp6Iw1RPNSXBwXwB1svZVRfcSw==
+
 read-binary-file-arch@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/read-binary-file-arch/-/read-binary-file-arch-1.0.6.tgz#959c4637daa932280a9b911b1a6766a7e44288fc"
@@ -4065,6 +4115,11 @@ semver@^7.1.1, semver@^7.1.3, semver@^7.2.1, semver@^7.3.2, semver@^7.3.5, semve
   integrity sha512-EnwXhrlwXMk9gKu5/flx5sv/an57AkRplG3hTK68W7FRDN+k+OWBj65M7719OkA82XLBxrcX0KSHj+X5COhOVg==
   dependencies:
     lru-cache "^6.0.0"
+
+semver@^7.6.0:
+  version "7.6.2"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.2.tgz#1e3b34759f896e8f14d6134732ce798aeb0c6e13"
+  integrity sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==
 
 serialize-error@^7.0.1:
   version "7.0.1"
