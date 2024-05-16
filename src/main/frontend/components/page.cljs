@@ -509,7 +509,7 @@
           ;;fmt-journal? (boolean (date/journal-title->int page-name))
           fmt-journal? (:block/journal-day page-entity)
           format (db/get-page-format page-entity)
-          title (or path-page-name page-name page-original-name)
+          title (or page-original-name path-page-name page-name)
           {:keys [icon]} (:block/properties page-entity)
           icon (or icon "")
           ;; today? (and
