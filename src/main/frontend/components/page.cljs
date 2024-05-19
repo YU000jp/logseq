@@ -379,7 +379,8 @@
                  (component-block/page-reference false namespace-page {:preview? true} label)))) ;TODO: ツールチップが出ない
            (interpose [:span.mx-2.opacity-30 model/ns-char]))])
        [:h1.page-title.flex.cursor-pointer.gap-1.w-full
-        {:class (when-not whiteboard-page? "title")
+        {:data-ref page-name 
+         :class (when-not whiteboard-page? "title")
          :on-mouse-down (fn [e]
                           (when (util/right-click? e)
                             (state/set-state! :page-title/context {:page page-name})))
