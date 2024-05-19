@@ -362,6 +362,8 @@
  :help/title-development "開発"
  :help/title-terms "規約"
  :help/title-usage "使い方"
+ :help/shift-click-ref "リンクを、Shift同時クリック"
+ :help/right-click-bullet "箇条書き・を右クリック"
  :highlight "ハイライト"
  :home "ホーム"
  :host "ホスト"

@@ -32,10 +32,10 @@
      [:td.text-right [:code block-ref/left-and-right-parens]]]
     [:tr
      [:td.text-left (t :help/open-link-in-sidebar)]
-     [:td.text-right [:code "Shift click reference"]]]
+     [:td.text-right [:code (t :help/shift-click-ref)]]]
     [:tr
      [:td.text-left (t :help/context-menu)]
-     [:td.text-right [:code "Right click bullet"]]]]])
+     [:td.text-right [:code (t :help/right-click-bullet)]]]]])
 
 (defn markdown-and-orgmode-syntax []
   (let [list [:bold :italics :del :mark :latex :code :link :pre :img]
@@ -86,13 +86,13 @@
      [:thead
       [:tr
        [:th.text-left [:b title]]
-       [:th.text-right [:a {:href learn-more} "Learn more →"]]]]
+       [:th.text-right [:a {:href learn-more} (t :right-side-bar/pane-more)]]]]
      [:tbody
       (map (fn [name]
              [:tr
               [:td.text-left [(if (= :pre name) :pre :code) (get raw name)]]
               [:td.text-right (get rendered name)]])
-        list)]]))
+           list)]]))
 
 
 (rum/defc shortcut-page
@@ -100,6 +100,13 @@
     :or {show-title? true}}]
   [:div.cp__shortcut-page
    (when show-title? [:h1.title (t :help/shortcut-page-title)])
-   (trigger-table)
-   (markdown-and-orgmode-syntax)
    (shortcut/shortcut-keymap-x)])
+
+(rum/defc syntax-page
+  [{:keys [show-title?]
+    :or {show-title? true}}]
+  [:div.cp__shortcut-page
+   (when show-title? [:h1.title "Syntax"])
+   (trigger-table)
+   [:hr]
+   (markdown-and-orgmode-syntax)])

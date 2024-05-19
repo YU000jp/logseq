@@ -37,7 +37,7 @@
        {:style {:cursor "col-resize"}
         :title (t :right-side-bar/toggle-right-sidebar)
         :on-click ui-handler/toggle-right-sidebar!}
-       (ui/icon 
+       (ui/icon
         "layout-sidebar-right"
         {:size 26
          :color (if (:ui/sidebar-open? @state/state) "green" "gray")})])))
@@ -67,12 +67,17 @@
   [:div.contents.flex-col.flex.ml-3
    (shortcut-help/shortcut-page {:show-title? false})])
 
+(rum/defc syntax-help
+  []
+  [:div.contents.flex-col.flex.ml-3
+   (shortcut-help/syntax-page {:show-title? false})])
+
 (defn- block-with-breadcrumb
   [repo block idx sidebar-key ref?]
   (when-let [block-id (:block/uuid block)]
     [[:.flex.items-center
       [:span.text-sm.mr-4 (if ref? (t :right-side-bar/block-ref)
-                         (t :right-side-bar/opened-block))] 
+                              (t :right-side-bar/opened-block))]
       (block/breadcrumb {:id     "block-parent"
                          :block? true
                          :sidebar-key sidebar-key} repo block-id {:indent? false})]
@@ -117,13 +122,13 @@
   (let [state (undo-redo/get-state)
         page-only-mode? (state/sub :history/page-only-mode?)]
     [:div.ml-4
-     [:div.ml-3.font-bold (if page-only-mode? 
-                            (t :right-side-bar/history-pageonly) 
+     [:div.ml-3.font-bold (if page-only-mode?
+                            (t :right-side-bar/history-pageonly)
                             (t :right-side-bar/history-global))]
      [:div.p-4
       [:.ml-4.mb-2
-                (history-stack (t :right-side-bar/history-undos) (rum/react (:undo-stack state)))
-                (history-stack (t :right-side-bar/history-redos) (rum/react (:redo-stack state)))]]]))
+       (history-stack (t :right-side-bar/history-undos) (rum/react (:undo-stack state)))
+       (history-stack (t :right-side-bar/history-redos) (rum/react (:redo-stack state)))]]]))
 
 (defn build-sidebar-item
   [repo idx db-id block-type *db-id init-key]
@@ -160,7 +165,7 @@
                [[:div {:key "page-unlinked-references"}
                  (reference/unlinked-references page-name)]
                 [:div {:key "page-references"}
-                 (reference/references page-name)] 
+                 (reference/references page-name)]
                 [:div.text-sm.opacity-50.ml-4.mt-6#long-time-message (t :right-side-bar/long-time)]]
                (t :linked-references/sidebar-not-page))))]
 
@@ -228,6 +233,10 @@
     :shortcut-settings
     [[:.flex.items-center (ui/icon "command" {:class "text-md mr-2"}) (t :help/shortcuts)]
      (shortcut-settings)]
+
+    :syntax-help
+    [[:.flex.items-center (ui/icon "vector-bezier" {:class "text-md mr-2"}) "Syntax"]
+     (syntax-help)]
 
     ["" [:span]]))
 
@@ -344,30 +353,30 @@
                 title]]
               [:.item-actions.flex
                (shui/dropdown-menu
-                 (shui/dropdown-menu-trigger
-                   {:as-child true}
-                   (shui/button
-                     {:title   (t :right-side-bar/pane-more)
-                      :class   "px-3"
-                      :variant :text}
-                     (ui/icon "dots")))
-                 (x-menu-content db-id idx block-type collapsed? block-count #() true))
+                (shui/dropdown-menu-trigger
+                 {:as-child true}
+                 (shui/button
+                  {:title   (t :right-side-bar/pane-more)
+                   :class   "px-3"
+                   :variant :text}
+                  (ui/icon "dots")))
+                (x-menu-content db-id idx block-type collapsed? block-count #() true))
 
                (shui/button
-                 {:title    (t :right-side-bar/pane-close)
-                  :variant  :text
-                  :class "px-3"
-                  :on-click #(state/sidebar-remove-block! idx)}
-                 (ui/icon "x" {:color "red"}))]]
+                {:title    (t :right-side-bar/pane-close)
+                 :variant  :text
+                 :class "px-3"
+                 :on-click #(state/sidebar-remove-block! idx)}
+                (ui/icon "x" {:color "red"}))]]
 
              [:div {:role            "region"
                     :id              (str "sidebar-panel-content-" idx)
                     :aria-labelledby (str "sidebar-panel-header-" idx)
                     :class           (util/classnames [{:hidden  collapsed?
                                                         :initial (not collapsed?)
-                                                        :p-4     (not (contains? #{:page :block :contents :search :shortcut-settings} block-type))
-                                                        :pt-4    (not (contains? #{:search :shortcut-settings} block-type))
-                                                        :p-1     (not (contains? #{:search :shortcut-settings} block-type))}])}
+                                                        :p-4     (not (contains? #{:page :block :contents :search :shortcut-settings :syntax-help} block-type))
+                                                        :pt-4    (not (contains? #{:search :shortcut-settings :syntax-help} block-type))
+                                                        :p-1     (not (contains? #{:search :shortcut-settings :syntax-help} block-type))}])}
               (inner-component component (not drag-from))]
              (when drag-from (drop-area idx))])]
          (drop-indicator idx drag-to)]))))
@@ -461,11 +470,11 @@
      [])
 
     (rum/use-effect!
-      (fn []
+     (fn []
         ;; sidebar animation duration
-        (js/setTimeout
-          #(reset! ui-handler/*right-sidebar-resized-at (js/Date.now)) 300))
-      [sidebar-open?])
+       (js/setTimeout
+        #(reset! ui-handler/*right-sidebar-resized-at (js/Date.now)) 300))
+     [sidebar-open?])
 
     [:.resizer
      {:ref              el-ref
@@ -497,7 +506,7 @@
                                                                       ;; サイドバーで検索を開く
                                                                      (let [repo (state/get-current-repo)]
                                                                        [(state/close-modal!)
-                                                                       (state/sidebar-add-block! repo "" :search)]))
+                                                                        (state/sidebar-add-block! repo "" :search)]))
                                                          :title (t :header/search)}
           (ui/icon "search" {:class "icon" :size 23 :color "gray"})]]
 
@@ -520,7 +529,7 @@
                                                                      (state/sidebar-add-block! repo "default-queries" :default-queries))
                                                          :title (t :right-side-bar/default-queries "DEFAULT QUERIES")}
           (ui/icon "brand-4chan" {:class "icon" :size 23 :color "gray"})]]
-        
+
         ;; 今日のジャーナルを開く
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
@@ -534,7 +543,14 @@
                                                                      (state/sidebar-add-block! (state/get-current-repo) "shortcut-settings" :shortcut-settings))
                                                          :title (t :command.go/keyboard-shortcuts)}
           (ui/icon "keyboard" {:class "icon" :color "gray"})]]
-        
+
+        ;; Syntaxへ移動
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (state/sidebar-add-block! (state/get-current-repo) ":syntax-help" :syntax-help))
+                                                         :title "Syntax"}
+          (ui/icon "vector-bezier" {:class "icon" :color "gray"})]]
+
         ;; すべて折りたたむ
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
@@ -571,9 +587,9 @@
       [:.sidebar-item-list.flex-1.scrollbar-spacing.px-2
        (if @*anim-finished?
          (for [[idx [repo db-id block-type]] (medley/indexed blocks)]
-            (rum/with-key
-              (sidebar-item repo idx db-id block-type block-count)
-              (str "sidebar-block-" db-id)))
+           (rum/with-key
+             (sidebar-item repo idx db-id block-type block-count)
+             (str "sidebar-block-" db-id)))
          [:div.p-4
           [:span.font-medium.opacity-50 "Loading ..."]])]]]))
 
