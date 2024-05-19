@@ -618,6 +618,7 @@
  :remove-heading "Remove heading"
  :remove-orphaned-pages "Remove orphaned pages?"
  :right-side-bar/all-pages "All pages"
+ :right-side-bar/all-files "All files"
  :right-side-bar/block-ref "(Block reference) "
  :right-side-bar/contents "Contents"
  :right-side-bar/flashcards "Flashcards"

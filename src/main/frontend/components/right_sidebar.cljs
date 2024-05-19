@@ -14,6 +14,7 @@
             [frontend.db.model :as db-model]
             [frontend.extensions.slide :as slide]
             [frontend.handler.editor :as editor-handler]
+            [frontend.components.file :as file]
             ;; [frontend.handler.user :as user-handler]
             [frontend.handler.route :as route-handler]
             [frontend.components.reference :as reference]
@@ -188,6 +189,12 @@
       (ui/icon "book" {:class "mr-2"})
       (t :right-side-bar/all-pages)]
      (page/all-pages)]
+    
+    :all-files
+    [[:.flex.items-center
+      (ui/icon "files" {:class "mr-2"})
+      (t :right-side-bar/all-files)]
+     (file/files)]
 
     :block-ref
     #_:clj-kondo/ignore
@@ -548,6 +555,13 @@
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
                                                                      (state/sidebar-add-block! repo "all-pages" :all-pages))
                                                          :title (t :right-side-bar/all-pages)}
+          (ui/icon "book" {:class "icon" :size 23 :color "gray"})]]
+        
+        ;; すべてのファイル を開く
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (state/sidebar-add-block! repo "all-files" :all-files))
+                                                         :title (t :right-side-bar/all-files)}
           (ui/icon "files" {:class "icon" :size 23 :color "gray"})]]
 
         ;; キーボードショートカットへ移動

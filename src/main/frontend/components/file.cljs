@@ -14,7 +14,7 @@
             [frontend.state :as state]
             [frontend.ui :as ui]
             [frontend.util :as util]
-            [goog.object :as gobj]
+            ;; [goog.object :as gobj]
             [goog.string :as gstring]
             [logseq.graph-parser.config :as gp-config]
             [logseq.graph-parser.util :as gp-util]
@@ -67,7 +67,7 @@
 
 (rum/defc files
   []
-  [:div.flex-1.overflow-hidden
+  [:div.flex-1.overflow-hidden.cp__all_files
    [:h1.title
     (t :all-files)]
    (files-all)

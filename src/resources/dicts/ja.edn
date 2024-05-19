@@ -607,6 +607,7 @@
  :remove-heading "見出しを消去"
  :remove-orphaned-pages "孤立したノートを削除しますか？"
  :right-side-bar/all-pages "すべてのノート"
+ :right-side-bar/all-files "すべてのファイル"
  :right-side-bar/block-ref "(ブロック引用) "
  :right-side-bar/contents "自由スペース"
  :right-side-bar/flashcards "フラッシュカード"

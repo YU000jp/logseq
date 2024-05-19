@@ -13,7 +13,9 @@ html[data-theme=light] a.toggle:hover {
 }
 
 .cp__header {
-  > .r > div:not(.ui__dropdown-trigger) a, button {
+
+  >.r>div:not(.ui__dropdown-trigger) a,
+  button {
     color: var(--lx-gray-11, var(--ls-header-button-background, var(--rx-gray-11)));
 
     &:hover {
@@ -160,7 +162,8 @@ html[data-theme=light] a.toggle:hover {
     overflow-y: scroll;
 
     .sidebar-item-header {
-      font-size:1.2em;
+      font-size: 1.2em;
+
       .breadcrumb {
         margin-top: 0;
         margin-bottom: 0;
@@ -168,7 +171,7 @@ html[data-theme=light] a.toggle:hover {
       }
     }
 
-    .cp__all_pages h1.title {
+    :is(.cp__all_pages, .cp__all_files) h1.title {
       display: none;
     }
 
@@ -200,7 +203,7 @@ html[data-theme=light] a.toggle:hover {
         >button {
           height: 100%;
         }
-        
+
         .item-actions {
           align-items: flex-start;
         }
