@@ -33,7 +33,7 @@
   []
   (when-not (util/sm-breakpoint?)
     (ui/with-shortcut :ui/toggle-right-sidebar "left"
-      [:button.button.icon.toggle-right-sidebar
+      [:button.button.icon.toggle-right-sidebar.ml-4
        {:style {:cursor "col-resize"}
         :title (t :right-side-bar/toggle-right-sidebar)
         :on-click ui-handler/toggle-right-sidebar!}

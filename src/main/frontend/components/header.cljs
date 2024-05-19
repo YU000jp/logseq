@@ -36,14 +36,13 @@
     [:button.button.icon.inline.mx-1
      {:title (t :home)
       :on-click (fn [e]
-                   (when (mobile-util/native-iphone?)
-                     (state/set-left-sidebar-open! false))
-                   (cond
-                     (util/shift-key? e) (route-handler/sidebar-journals!)
-                     (util/alt-key? e) (route-handler/redirect-to-page! (date/today))
-                     :else
-                     (route-handler/redirect-to-home!))
-                  )}
+                  (when (mobile-util/native-iphone?)
+                    (state/set-left-sidebar-open! false))
+                  (cond
+                    (util/shift-key? e) (route-handler/sidebar-journals!)
+                    (util/alt-key? e) (route-handler/redirect-to-page! (date/today))
+                    :else
+                    (route-handler/redirect-to-home!)))}
      (ui/icon "home" {:size ui/icon-size})]))
 
 (rum/defc login < rum/reactive
@@ -119,15 +118,15 @@
           :options {:href (rfe/href :import)}
           :icon (ui/icon "file-upload")})
 
-        {:class "graph-view-nav"
-         :title (t :right-side-bar/graph-view)
-         :options {:href (rfe/href :graph)}
-         :icon (ui/icon "network")}
+       {:class "graph-view-nav"
+        :title (t :right-side-bar/graph-view)
+        :options {:href (rfe/href :graph)}
+        :icon (ui/icon "network")}
 
-        {:class "all-pages-nav"
-         :title (t :right-side-bar/all-pages)
-         :options {:href (rfe/href :all-pages)}
-         :icon (ui/icon "files")}
+       {:class "all-pages-nav"
+        :title (t :right-side-bar/all-pages)
+        :options {:href (rfe/href :all-pages)}
+        :icon (ui/icon "files")}
 
       ;;  {:title (t :help/shortcuts)
       ;;     :options {:on-click #(state/sidebar-add-block! (state/get-current-repo) "shortcut-settings" :shortcut-settings)} ;; :on-click #(state/pub-event! [:modal/keymap])
@@ -146,7 +145,7 @@
       ;;             [:span (t :help/bug)]]
       ;;     :options {:href (rfe/href :bug-report)}
       ;;     :icon (ui/icon "bug")})     
-      
+
       ;;  {:title (t :handbook/title)
       ;;   :options {:on-click #(state/toggle-help!)}
       ;;   :icon (ui/icon "bulb")}
@@ -160,20 +159,18 @@
                   {:class "right-1 top-3" :title (t :logout)}
                   (ui/icon "logout")]]
           :options {:on-click #(user-handler/logout)}})]
-       (concat page-menu-and-hr)
-       (remove nil?))
-      {})))
+      (concat page-menu-and-hr)
+      (remove nil?))
+     {})))
 
 (rum/defc back-and-forward
   < {:key-fn #(identity "nav-history-buttons")}
   []
-  [:div.flex.flex-row
-
+  [:div.flex.flex-row.mr-4.ml-4
    (ui/with-shortcut :go/backward "bottom"
      [:button.it.navigation.nav-left.button.icon
       {:title (t :header/go-back) :on-click #(js/window.history.back)}
       (ui/icon "arrow-left" {:size ui/icon-size})])
-
    (ui/with-shortcut :go/forward "bottom"
      [:button.it.navigation.nav-right.button.icon
       {:title (t :header/go-forward) :on-click #(js/window.history.forward)}
@@ -239,8 +236,8 @@
                              (util/scroll-to-top true))))}
      [:div.l.flex.drag-region
       [left-menu
-       [:div.text-md.ml-2 
-       (repo/repos-dropdown)]
+       [:div.text-md.ml-2
+        (repo/repos-dropdown)]
        (when (mobile-util/native-platform?)
          ;; back button for mobile
          (when-not (or (state/home?) custom-home-page? (state/whiteboard-dashboard?))
@@ -248,7 +245,7 @@
              [:button.it.navigation.nav-left.button.icon.opacity-70
               {:title (t :header/go-back) :on-click #(js/window.history.back)}
               (ui/icon "chevron-left" {:size 26})])))]]
-         
+
 
      [:div.r.flex.drag-region
       (when (and current-repo
@@ -257,48 +254,50 @@
         (fs-sync/indicator))
 
       (when current-page
-        [;; ブックマークボタン
-         [:div.text-sm
-          [:button.button.icon
-           {:on-click (fn []
-                        (if favorited?
-                          (page-handler/unfavorite-page! current-page)
-                          (page-handler/favorite-page! current-page)))
-            :title (if favorited?
-                     (t :page/unfavorite)
-                     (t :page/add-to-favorites))}
-           (if favorited?
-             (ui/icon "star-off" {:class "icon" :size 24})
-             (ui/icon "star" {:class "icon" :size 24}))]]
-
-                  ;; Linked Referencesを表示する
-         [:div.text-sm
-          [:button.button.icon
-           {:on-click (fn []
-                        (state/sidebar-add-block! current-repo current-page :reference))
-            :title (t :linked-references/sidebar-open)}
-           (ui/icon "layers-difference" {:class "icon" :size 24})]]
-
-         ;; ページのグラフを表示する
-        [:div.text-sm
-         [:button.button.icon
-          {:on-click (fn []
-                       (state/sidebar-add-block!
-                        current-repo
-                        "page-graph"
-                        :page-graph))
-           :title (t :right-side-bar/page-graph)}
-          (ui/icon "hierarchy" {:class "icon" :size 24})]]
-        
-        ;; 削除ボタン
-        (when-not (or (= current-page "contents")
-                      config/publishing?)
+        [:div.flex.items-center.space-x-2.mr-4.rounded-md
+         {:style {:background-color "var(--lx-gray-04, var(--color-level-3, var(--rx-gray-04)))"}}
+         [;; ブックマークボタン
           [:div.text-sm
            [:button.button.icon
             {:on-click (fn []
-                         (state/set-modal! (page-menu/delete-page-dialog current-page)))
-             :title (t :page/delete)}
-            (ui/icon "trash-x" {:class "icon" :size 20 :color "red"})]])])
+                         (if favorited?
+                           (page-handler/unfavorite-page! current-page)
+                           (page-handler/favorite-page! current-page)))
+             :title (if favorited?
+                      (t :page/unfavorite)
+                      (t :page/add-to-favorites))}
+            (if favorited?
+              (ui/icon "star-off" {:class "icon" :size 24})
+              (ui/icon "star" {:class "icon" :size 24}))]]
+
+                  ;; Linked Referencesを表示する
+          [:div.text-sm
+           [:button.button.icon
+            {:on-click (fn []
+                         (state/sidebar-add-block! current-repo current-page :reference))
+             :title (t :linked-references/sidebar-open)}
+            (ui/icon "layers-difference" {:class "icon" :size 24})]]
+
+         ;; ページのグラフを表示する
+          [:div.text-sm
+           [:button.button.icon
+            {:on-click (fn []
+                         (state/sidebar-add-block!
+                          current-repo
+                          "page-graph"
+                          :page-graph))
+             :title (t :right-side-bar/page-graph)}
+            (ui/icon "hierarchy" {:class "icon" :size 24})]]
+
+        ;; 削除ボタン
+          (when-not (or (= current-page "contents")
+                        config/publishing?)
+            [:div.text-sm
+             [:button.button.icon
+              {:on-click (fn []
+                           (state/set-modal! (page-menu/delete-page-dialog current-page)))
+               :title (t :page/delete)}
+              (ui/icon "trash-x" {:class "icon" :size 20 :color "red"})]])]])
 
       (when (and (not= (state/get-current-route) :home)
                  (not custom-home-page?))
