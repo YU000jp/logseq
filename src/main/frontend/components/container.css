@@ -654,7 +654,7 @@ html[data-theme='dark'] {
 
   .cp__right-sidebar {
     .sidebar-item {
-      background-color: var(--lx-gray-03, var(--ls-primary-background-color));
+      background-color: var(--lx-gray-01, var(--ls-primary-background-color));
     }
   }
 }
