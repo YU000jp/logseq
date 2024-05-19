@@ -168,6 +168,10 @@ html[data-theme=light] a.toggle:hover {
       }
     }
 
+    .cp__all_pages h1.title {
+      display: none;
+    }
+
     .sidebar-item-drop-area {
       @apply flex flex-col absolute h-full w-full;
     }

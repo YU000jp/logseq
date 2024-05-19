@@ -182,6 +182,12 @@
       (ui/icon "history" {:class "mr-2"})
       (t :right-side-bar/history)]
      (history)]
+    
+    :all-pages
+    [[:.flex.items-center
+      (ui/icon "book" {:class "mr-2"})
+      (t :right-side-bar/all-pages)]
+     (page/all-pages)]
 
     :block-ref
     #_:clj-kondo/ignore
@@ -536,6 +542,13 @@
                                                                      (page-handler/open-today-in-sidebar))
                                                          :title (t :command.go/today)}
           (ui/icon "clock" {:class "icon" :size 23 :color "gray"})]]
+        
+        ;; すべてのページ を開く
+        [:div.text-sm
+         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+                                                                     (state/sidebar-add-block! repo "all-pages" :all-pages))
+                                                         :title (t :right-side-bar/all-pages)}
+          (ui/icon "files" {:class "icon" :size 23 :color "gray"})]]
 
         ;; キーボードショートカットへ移動
         [:div.text-sm
