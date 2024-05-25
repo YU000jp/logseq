@@ -2,6 +2,13 @@
 
 ---
 
+# v1.4.3 (2024-05-19)
+
+1. Release: The mode to open as a file
+1. Style: Unify the background color of sidebar items to normal
+
+---
+
 # v1.4.1 (2024-05-13)
 
 ## Features
