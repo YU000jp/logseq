@@ -668,13 +668,13 @@
          (state/close-settings!)
          (route-handler/redirect! {:to :zotero-setting})))]]])
 
-(defn usage-diagnostics-row [instrument-disabled?]
-  (toggle "usage-diagnostics"
-          (t :settings-page/disable-sentry)
-          (not instrument-disabled?)
-          (fn [] (instrument/disable-instrument
-                   (not instrument-disabled?)))
-          [:span.text-sm.opacity-50 (t :settings-page/disable-sentry-desc)]))
+;; (defn usage-diagnostics-row [instrument-disabled?]
+;;   (toggle "usage-diagnostics"
+;;           (t :settings-page/disable-sentry)
+;;           (not instrument-disabled?)
+;;           (fn [] (instrument/disable-instrument
+;;                    (not instrument-disabled?)))
+;;           [:span.text-sm.opacity-50 (t :settings-page/disable-sentry-desc)]))
 
 (defn clear-cache-row []
   (row-with-button-action {:left-label   (t :settings-page/clear-cache)
@@ -878,7 +878,7 @@
 
 (rum/defc settings-advanced < rum/reactive
   [current-repo]
-  (let [instrument-disabled? (state/sub :instrument/disabled?)
+  (let [;; instrument-disabled? (state/sub :instrument/disabled?)
         developer-mode? (state/sub [:ui/developer-mode?])
         https-agent-opts (state/sub [:electron/user-cfgs :settings/agent])
         preferred-language (state/sub [:preferred-language])
@@ -900,7 +900,7 @@
      (auto-chmod-row)
      (enable-all-pages-public-row (state/all-pages-public?))
      (filename-format-row)
-     (usage-diagnostics-row instrument-disabled?)
+    ;;  (usage-diagnostics-row instrument-disabled?)
      (clear-cache-row)
      (when-not (mobile-util/native-platform?) 
        (developer-mode-row developer-mode?))
