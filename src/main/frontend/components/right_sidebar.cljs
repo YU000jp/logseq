@@ -531,63 +531,72 @@
 
         ;; SCHEDULED AND DEADLINEを表示する
         [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+         [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "alias"}
+                                                         :on-click (fn [_e]
                                                                      (state/sidebar-add-block! repo "scheduled-and-deadline" :scheduled-and-deadline))
                                                          :title (t :right-side-bar/scheduled-and-deadline)}
           (ui/icon "calendar-time" {:class "icon" :size 23 :color "gray"})]]
 
         ;; :dafault-queries
         [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+         [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "alias"}
+                                                         :on-click (fn [_e]
                                                                      (state/sidebar-add-block! repo "default-queries" :default-queries))
                                                          :title (t :right-side-bar/default-queries "DEFAULT QUERIES")}
           (ui/icon "brand-4chan" {:class "icon" :size 23 :color "gray"})]]
         
         ;; 今日のジャーナルを開く
         [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+         [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "alias"}
+                                                         :on-click (fn [_e]
                                                                      (page-handler/open-today-in-sidebar))
                                                          :title (t :command.go/today)}
           (ui/icon "clock" {:class "icon" :size 23 :color "gray"})]]
         
         ;; すべてのページ を開く
         [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+         [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "alias"}
+                                                         :on-click (fn [_e]
                                                                      (state/sidebar-add-block! repo "all-pages" :all-pages))
                                                          :title (t :right-side-bar/all-pages)}
           (ui/icon "book" {:class "icon" :size 23 :color "gray"})]]
         
         ;; すべてのファイル を開く
         [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+         [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "alias"}
+                                                         :on-click (fn [_e]
                                                                      (state/sidebar-add-block! repo "all-files" :all-files))
                                                          :title (t :right-side-bar/all-files)}
           (ui/icon "files" {:class "icon" :size 23 :color "gray"})]]
 
         ;; キーボードショートカットへ移動
         [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+         [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "help"}
+                                                         :on-click (fn [_e]
                                                                      (state/sidebar-add-block! (state/get-current-repo) "shortcut-settings" :shortcut-settings))
                                                          :title (t :command.go/keyboard-shortcuts)}
           (ui/icon "keyboard" {:class "icon" :color "gray"})]]
         
         ;; Syntaxへ移動
         [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+         [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "help"}
+                                                         :on-click (fn [_e]
                                                                      (state/sidebar-add-block! (state/get-current-repo) ":syntax-help" :syntax-help))
                                                          :title "Syntax"}
           (ui/icon "vector-bezier" {:class "icon" :color "gray"})]]
         
         ;; すべて折りたたむ
         [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+         [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "zoom-out"}
+                                                         :on-click (fn [_e]
                                                                      (state/sidebar-block-set-collapsed-all! true))
                                                          :title (t  :right-side-bar/pane-collapse-all)}
           (ui/icon "box-multiple-0" {:class "icon" :size 23 :color "gray"})]]
 
         ;; すべて展開する
-        [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+        [:div.text-sm 
+         [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "zoom-in"}
+                                                         :on-click (fn [_e]
                                                                      (state/sidebar-block-set-collapsed-all! false))
                                                          :title (t :right-side-bar/pane-expand-all)}
           (ui/icon "box-multiple" {:class "icon" :size 23 :color "gray"})]]
