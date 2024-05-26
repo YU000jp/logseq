@@ -1045,7 +1045,7 @@
 
       ;; items
       (concat
-       (when items
+       (when (seq items)
        [{:item [:span.text-sm.opacity-70
                 {:style {:cursor "default"}}
                 (str (t :plugin/toolbar-badge-toggle)" (" (t :plugins) ")")]
@@ -1140,29 +1140,35 @@
           items        (state/get-plugins-ui-items-with-type type)
           items        (sort-by #(:key (second %)) items)]
 
-      (when-let [items (and (seq items)
-                            (if toolbar?
-                              (map #(assoc-in % [1 :pinned?]
-                                              (let [[_ {:keys [key]} pid] %
-                                                    pkey (str (name pid) ":" key)]
-                                                (contains? pinned-items pkey)))
-                                   items)
-                              items))]
+      
+      (if-let [items (and (seq items)
+                       (if toolbar?
+                         (map #(assoc-in % [1 :pinned?]
+                                         (let [[_ {:keys [key]} pid] %
+                                               pkey (str (name pid) ":" key)]
+                                           (contains? pinned-items pkey)))
+                              items)
+                         items))]
 
-        [:div.ui-items-container
-         {:data-type (name type)}
+     [:div.ui-items-container
+      {:data-type (name type)}
 
-         [:<>
-          (header-ui-items-list-wrap
-            (for [[_ {:keys [key pinned?] :as opts} pid] items]
-              (when (or (not toolbar?)
-                        (not (set? pinned-items)) pinned?)
-                (rum/with-key (ui-item-renderer pid type opts) key))))
+      [:<>
+       (header-ui-items-list-wrap
+        (for [[_ {:keys [key pinned?] :as opts} pid] items]
+          (when (or (not toolbar?)
+                    (not (set? pinned-items)) pinned?)
+            (rum/with-key (ui-item-renderer pid type opts) key))))
 
           ;; manage plugin buttons
-          (when toolbar?
-            (let [updates-coming (state/sub :plugin/updates-coming)]
-              (toolbar-plugins-manager-list updates-coming items)))]]))))
+       (when toolbar?
+         (let [updates-coming (state/sub :plugin/updates-coming)]
+           (toolbar-plugins-manager-list updates-coming items)))]]
+        ;;else
+     [:div.ui-items-container
+      (when toolbar?
+        (let [updates-coming (state/sub :plugin/updates-coming)]
+          (toolbar-plugins-manager-list updates-coming items)))]))))
 
 (rum/defc hook-ui-fenced-code
   [block content {:keys [render edit] :as _opts}]
