@@ -313,7 +313,7 @@ jobs:
           mkdir -p builds
           # NOTE: save VERSION file to builds directory
           cp static/VERSION ./builds/VERSION
-          # mv static/out/make/*-*.AppImage ./builds/Logseq-Classic-Linux-arm64-${{ steps.ref.outputs.version }}.AppImage
+          mv static/out/make/*-*.AppImage ./builds/Logseq-Classic-Linux-arm64-${{ steps.ref.outputs.version }}.AppImage
           mv static/out/make/zip/linux/arm64/*-linux-arm64-*.zip ./builds/Logseq-Classic-Linux-arm64-${{ steps.ref.outputs.version }}.zip
 
       - name: Upload Artifact
@@ -362,13 +362,13 @@ jobs:
         #env:
         #  CODE_SIGN_CERTIFICATE_FILE: ../codesign.pfx
         #  CODE_SIGN_CERTIFICATE_PASSWORD: ${{ secrets.CODE_SIGN_CERTIFICATE_PASSWORD }}
-
+        
+        # mv static\out\make\wix\x64\Logseq.msi            builds\Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}.msi
       - name: Save Artifact
         run: |
           mkdir builds
           mv static\out\make\squirrel.windows\x64\*.exe    builds\Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}.exe
           mv static\out\make\zip\win32\x64\*.zip           builds\Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}.zip
-          mv static\out\make\wix\x64\Logseq.msi            builds\Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}.msi
           mv static\out\make\squirrel.windows\x64\RELEASES builds\RELEASES
         # mv static\out\make\squirrel.windows\x64\*.nupkg  builds\Logseq-Classic-Windows-x64-${{ steps.ref.outputs.version }}-full.nupkg
 
@@ -638,9 +638,9 @@ jobs:
           # ./*.apk
           # ./*.zip
           # ./SHA256SUMS.txt
+          # ./*.msi
           files: |
             ./*.exe
-            ./*.msi
             ./*.AppImage
 
   release:
@@ -728,8 +728,8 @@ jobs:
           # ./*.nupkg
           # ./VERSION
           # ./RELEASES
+          # ./*.msi
           files: |
             ./*.exe
-            ./*.msi
             ./*.AppImage
 
