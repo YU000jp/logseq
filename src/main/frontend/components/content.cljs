@@ -99,14 +99,18 @@
 
    (ui/menu-link
     {:key "Zoom in"
-     :on-click (fn [] (route-handler/redirect-to-page! uuid))
+     :on-click (fn [] (let [block-uuids (editor-handler/get-selected-toplevel-block-uuids)
+                            first-uuid (first block-uuids)]
+                        (route-handler/redirect-to-page! first-uuid)))
      :shortcut (ui/keyboard-shortcut-from-config :editor/zoom-in)}
     [(ui/icon "zoom-in" {:class "icon"})(t :command.editor/zoom-in)])
    
    (ui/menu-link
     {:key      "Open in sidebar"
      :on-click (fn [_e]
-                 (editor-handler/open-block-in-sidebar! uuid))
+                 (let [block-uuids (editor-handler/get-selected-toplevel-block-uuids)
+                       first-uuid (first block-uuids)]
+                   (editor-handler/open-block-in-sidebar! first-uuid)))
      :shortcut ["⇧+Click"]}
     [(ui/icon "layout-sidebar-right" {:class "icon"})(t :content/open-in-sidebar)])
   ;;  (ui/menu-link
