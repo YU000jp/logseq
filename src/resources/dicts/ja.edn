@@ -74,7 +74,7 @@
  :command.editor/beginning-of-block "カーソルをブロックのはじめへ移動"
  :command.editor/bold "マークダウン-> **太字**"
  :command.editor/clear-block "ブロックをクリア"
- :command.editor/collapse-block-children "子ブロックを折りたたむ"
+ :command.editor/collapse-block-children "子ブロックより下位項目を折りたたむ"
  :command.editor/copy "コピー"
  :command.editor/copy-current-file "現在のファイルをコピー"
  :command.editor/copy-ref "現在のブロックの引用をコピー"

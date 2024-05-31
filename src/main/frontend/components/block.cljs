@@ -1740,29 +1740,25 @@
 (defn- bullet-on-click
   [e block uuid collapsed?]
   (cond
-    (gp-whiteboard/shape-block? block)
-    (route-handler/redirect-to-whiteboard! (get-in block [:block/page :block/name]) {:block-id uuid})
+    (gp-whiteboard/shape-block? block) (route-handler/redirect-to-whiteboard! (get-in block [:block/page :block/name]) {:block-id uuid})
 
-    (util/shift-key? e)
-    (do
-      (state/sidebar-add-block!
-       (state/get-current-repo)
-       (:db/id block)
-       :block)
-      (util/stop e))
+    (util/shift-key? e) (do
+                          (state/sidebar-add-block!
+                           (state/get-current-repo)
+                           (:db/id block)
+                           :block)
+                          (util/stop e))
 
-    (and (util/meta-key? e) (whiteboard-handler/inside-portal? (.-target e)))
-    (do (whiteboard-handler/add-new-block-portal-shape!
-         uuid
-         (whiteboard-handler/closest-shape (.-target e)))
-        (util/stop e)) 
-    
-    (util/alt-key? e)
-    (do
-         (when uuid (route-handler/redirect-to-page! uuid))
-         (util/stop e))
+    (and (util/meta-key? e) (whiteboard-handler/inside-portal? (.-target e))) (do (whiteboard-handler/add-new-block-portal-shape!
+                                                                                   uuid
+                                                                                   (whiteboard-handler/closest-shape (.-target e)))
+                                                                                  (util/stop e))
 
-     :else
+    (util/alt-key? e) (do
+                        (when uuid (route-handler/redirect-to-page! uuid))
+                        (util/stop e))
+
+    :else
     (if collapsed?
       (editor-handler/expand-block! uuid)
       (editor-handler/collapse-block! uuid))
@@ -1780,17 +1776,17 @@
                (not collapsed?))
       [:div.block-children-container.flex
        [:div.block-children-left-border
-        {:style {:cursor "zoom-in"}
-         :title (str (t :command.editor/zoom-in) "\n Shift-> " (t :shortcut.category/block-selection))
+        {:style {:cursor "cell"}
+         :title (str (t :shortcut.category/block-selection))
          :on-click (fn [e]
                      (util/stop e)
                      (when-let [uuid (:block/uuid block)]
-                       (if (util/shift-key? e)
-                         [(editor-handler/clear-selection!)
-                       (editor-handler/select-block! uuid)
-                          ]
-                         (when uuid (route-handler/redirect-to-page! uuid))
-                         )))}]
+                       (cond
+                         (util/alt-key? e) (when uuid (route-handler/redirect-to-page! uuid)) ;; ズームイン
+                         (util/shift-key? e) (editor-handler/open-block-in-sidebar! uuid) ;; サイドバーで開く
+                         :else
+                         [(editor-handler/clear-selection!) ;; もとの選択を解除し、そのブロックを選択
+                          (editor-handler/select-block! uuid)])))}]
        [:div.block-children.w-full {:style {:display (if collapsed? "none" "")}}
         (for [child children]
           (when (map? child)
@@ -1832,17 +1828,18 @@
      (when (or (not fold-button-right?) collapsable?)
        [:a.block-control 
         {:id       (str "control-" uuid)
-         :title (if collapsed?
-                  (t :editor/expand-block-children)
-                  (t :editor/collapse-block-children))
+         :title (str "\n Shift-> "(t :command.editor/collapse-block-children))
          :on-click (fn [event]
                      (util/stop event)
                      (state/clear-edit!)
                      (if ref?
-                       (state/toggle-collapsed-block! uuid)
-                       (if collapsed?
-                         (editor-handler/expand-block! uuid)
-                         (editor-handler/collapse-block! uuid))))}
+                       (state/toggle-collapsed-block! uuid)  ;; リファレンスモードの場合、リファレンスブロックを開閉
+                       (if (util/shift-key? event)
+                         (editor-handler/toggle-open-block-children! uuid) ;; シフトキーを押しながらクリックすると、子ブロックを開閉
+                         (if collapsed?
+                           (editor-handler/expand-block! uuid) ;; 折りたたまれている場合、展開
+                           (editor-handler/collapse-block! uuid))) ;; 展開されている場合、折りたたむ
+                       ))}
         [:span {:class (if (or (and control-show?
                                     (or collapsed? collapsable?))
                                (and collapsed? order-list?))
