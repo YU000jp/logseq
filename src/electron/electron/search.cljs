@@ -162,9 +162,10 @@
              (fs/unlinkSync db-full-path)
              (catch :default e
                (logger/error "cannot unlink search db:" e)
-               (utils/send-to-renderer "notification"
-                                       {:type    "error"
-                                        :payload (str "Search index error, please manually delete “" db-full-path "”: \n" e)})))))))
+              ;;  (utils/send-to-renderer "notification"
+              ;;                          {:type    "error"
+              ;;                           :payload (str "Search index error, please manually delete “" db-full-path "”: \n" e)}) 
+               ))))))
 
 (defn open-dbs!
   []
