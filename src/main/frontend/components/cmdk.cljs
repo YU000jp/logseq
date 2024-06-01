@@ -637,7 +637,7 @@
                                                        (reset! (::highlighted-item state) item)
                                                        (handle-action :default state item)
                                                        (when-let [on-click (:on-click item)]
-                                                         (on-click e)))
+                                                         (on-click e))) ;; FIXME: サイドバーで、Shiftクリックが一度しか機能しない。2回目はShiftが効かない
                                       ;; :on-mouse-enter (fn [e]
                                       ;;                   (when (not highlighted?)
                                       ;;                     (reset! (::highlighted-item state) (assoc item :mouse-enter-triggered-highlight true))))
