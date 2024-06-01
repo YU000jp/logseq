@@ -606,7 +606,7 @@
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
                                                                      (state/clear-sidebar-blocks!))
                                                          :title (t :command.sidebar/clear)}
-          (ui/icon "trash-x" {:class "icon" :color "red"})]]
+          (ui/icon "circle-minus" {:class "icon" :color "red"})]]
 
         ;; [:div.text-sm
         ;;  [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
