@@ -950,54 +950,52 @@
 (rum/defcs tippy < rum/reactive
   (rum/local false ::mounted?)
   [state {:keys [fixed-position? open? in-editor? html] :as opts} child]
-  (let [*mounted? (::mounted? state)
-        manual (not= open? nil)
-        edit-id (ffirst (state/sub :editor/editing?))
-        editing-node (when edit-id (gdom/getElement edit-id))
-        editing? (some? editing-node)
-        scrolling? (state/sub :ui/scrolling?)
-        open? (if manual open? @*mounted?)
-        disabled? (boolean
-                   (or
-                    (and in-editor?
+    (let [*mounted? (::mounted? state)
+          manual (not= open? nil)
+          edit-id (ffirst (state/sub :editor/editing?))
+          editing-node (when edit-id (gdom/getElement edit-id))
+          editing? (some? editing-node)
+          scrolling? (state/sub :ui/scrolling?)
+          open? (if manual open? @*mounted?)
+          disabled? (boolean
+                      (and in-editor?
                          ;; editing in non-preview containers or scrolling
-                         (not (util/rec-get-tippy-container editing-node))
-                         (or editing? scrolling?))
-                    (not (state/enable-tooltip?))))]
-    (Tippy (->
-            (merge {:arrow true
-                    :sticky true
-                    :delay 600
-                    :theme "customized"
-                    :disabled disabled?
-                    :unmountHTMLWhenHide true
-                    :open (if disabled? false open?)
-                    :trigger (if manual "manual" "mouseenter focus")
+                           (not (util/rec-get-tippy-container editing-node))
+                           (or editing? scrolling?)))]
+      (Tippy (->
+              (merge {:arrow true
+                      :sticky true
+                      :delay 3200
+                      :theme "customized"
+                      :disabled disabled?
+                      :unmountHTMLWhenHide true
+                      :open (if disabled? false open?)
+                      :trigger (if manual "manual" "mouseenter focus")
                     ;; See https://github.com/tvkhoa/react-tippy/issues/13
-                    :popperOptions {:modifiers {:flip {:enabled (not fixed-position?)}
-                                                :hide {:enabled false}
-                                                :preventOverflow {:enabled false}}}
-                    :onShow #(reset! *mounted? true)
+                      :popperOptions {:modifiers {:flip {:enabled (not fixed-position?)}
+                                                  :hide {:enabled false}
+                                                  :preventOverflow {:enabled false}}}
+                      :onShow #(reset! *mounted? true)
                     ;;:onHide #(reset! *mounted? false)
-                    :onRequestClose #(reset! *mounted? false)
-                    :hideOnClick false
-                    :interactiveBorder 20
-                    :interactive true
-                    :touchHold true}
-                   opts)
-            (assoc :html (or
-                          (when open?
-                            (try
-                              (when html
-                                (if (fn? html)
-                                  (html)
-                                  [:div.px-2.py-1
-                                   html]))
-                              (catch :default e
-                                (log/error :exception e)
-                                [:div])))
-                          [:div {:key "tippy"} ""])))
-           (rum/fragment {:key "tippy-children"} child))))
+                      :onRequestClose #(reset! *mounted? false)
+                      :hideOnClick false
+                      :interactiveBorder 20
+                      :interactive true
+                      :touchHold true}
+                     opts)
+              (assoc :html (or
+                            (when open?
+                              (try
+                                (when html
+                                  (if (fn? html)
+                                    (html)
+                                    [:div.px-2.py-1
+                                     html]))
+                                (catch :default e
+                                  (log/error :exception e)
+                                  [:div])))
+                            [:div {:key "tippy"} ""])))
+             (rum/fragment {:key "tippy-children"} child))))
 
 (rum/defcs slider < rum/reactive
   {:init (fn [state]

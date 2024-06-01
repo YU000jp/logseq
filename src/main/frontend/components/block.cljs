@@ -681,7 +681,7 @@
                  :in-editor?      true
                  :html            html-template
                  :interactive     true
-                 :delay           [600, 1200]
+                 :delay           [1200, 1200]
                  :fixed-position? fixed-position?
                  :position        (or tippy-position "top")
                  :distance        (or tippy-distance 10)
