@@ -47,7 +47,7 @@
 
 ## 🚧 History
 
-- 🚧 *Active development is underway.* <a href="https://github.com/YU000jp/fork-logseq/blob/develop/CHANGELOG.md">CHANGELOG</a>
+- 🚧 ~~Active development is underway.~~ <a href="https://github.com/YU000jp/fork-logseq/blob/develop/CHANGELOG.md">CHANGELOG</a>
 1. 2024-05-05 Release v1.2.0 (Ithe latest version from upstream.): Improved sidebar.
 1. 2024-04-06 Building a release environment other than Mac and mobile
 1. 2024-04-04 Planning started
