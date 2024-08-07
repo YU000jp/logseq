@@ -35,7 +35,7 @@
 
 1. My resources are limited. This derivative version only works on local **desktop**.
 1. Compatible with **Windows** or **Linux only**. Not available on *Mac*.
-    > If it becomes popular and we get enough donations, we will make it compatible with *Mac*. This is because it costs $99 per year to perform "code signing" and "notarization" in order to be established as a *Mac* app. If we receive enough donations, we may be able to release a Mac version. (https://www.buymeacoffee.com/yu000japan)
+<!--    > If it becomes popular and we get enough donations, we will make it compatible with *Mac*. This is because it costs $99 per year to perform "code signing" and "notarization" in order to be established as a *Mac* app. If we receive enough donations, we may be able to release a Mac version. (https://www.buymeacoffee.com/yu000japan) -->
 1. Merge after a new version of Logseq is released. Incompatible features may be omitted in the future.
 
 
