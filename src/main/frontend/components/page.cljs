@@ -146,7 +146,7 @@
               ((ui/make-confirm-modal
                 {:title    (t :on-boarding/insert-a-journal)
                  :on-confirm (fn []
-                               (state/pub-event! [:journal/insert-template page-name true]) 
+                               (state/pub-event! [:journal/insert-template page-name true])
                                (when (:ui/sidebar-open? @state/state)
                                  [(ui-handler/toggle-right-sidebar!)
                                   (js/setTimeout #((ui-handler/toggle-right-sidebar!))
@@ -173,9 +173,9 @@
   [:div.flex-1.flex-col.rounded-sm.add-button-link-wrap
    {:on-click (fn [] (editor-handler/api-insert-new-block! "" args))
     :on-key-down (fn [e]
-                    (when (= "Enter" (util/ekey e))
-                      (editor-handler/api-insert-new-block! "" args))
-                    (util/stop e))
+                   (when (= "Enter" (util/ekey e))
+                     (editor-handler/api-insert-new-block! "" args))
+                   (util/stop e))
     :tab-index 0}
    [:div.flex.flex-row
     [:div.block {:style {:height      20
@@ -203,12 +203,12 @@
           page-blocks (get-blocks repo page-name block-id)]
       (if (empty? page-blocks)
         ;; Empty
-        (dummy-block page-name) 
+        (dummy-block page-name)
         ;; Not empty
         (let [document-mode? (state/sub :document/mode?)
               block-entity (db/entity (if block-id
-                                       [:block/uuid block-id]
-                                       [:block/name page-name]))
+                                        [:block/uuid block-id]
+                                        [:block/name page-name]))
               hiccup-config (merge
                              {:id (if block? (str block-id) page-name)
                               :db/id (:db/id block-entity)
@@ -241,8 +241,8 @@
            (ui/catch-error
             (ui/component-error "Failed default query:" {:content (pr-str query)})
             (query/custom-query (component-block/wrap-query-components
-                                  {:attr {:class "my-2 references-blocks-item"}
-                                   :editor-box editor/box})
+                                 {:attr {:class "my-2 references-blocks-item"}
+                                  :editor-box editor/box})
                                 query))
            (str repo "-custom-query-" (:query query))))])))
 
@@ -368,7 +368,7 @@
                (date/journalDay->ts (:block/journal-day (db/pull [:block/name page-name]))))]
 
       [(when namespace-page?
-         [:div.page-title-hierarchy.mb-2.mr-3 
+         [:div.page-title-hierarchy.mb-2.mr-3
           {:class (when whiteboard-page? "text-sm")
            :style {:position (when fmt-journal? "absolute")
                    :top "-1.3em"}}
@@ -379,7 +379,7 @@
                  (component-block/page-reference false namespace-page {:preview? false} label))))
            (interpose [:span.mx-2.opacity-30 model/ns-char]))])
        [:h1.page-title.flex.cursor-pointer.gap-1.w-full
-        {:data-ref page-name 
+        {:data-ref page-name
          :class (when-not whiteboard-page? "title")
          :on-mouse-down (fn [e]
                           (when (util/right-click? e)
@@ -448,7 +448,7 @@
                        (util/copy-to-clipboard! (str "[[" title "]]"))
                        (notification/show! (t :notification/copied-to-clipboard) :success))}
           (str " [[" title "]]")])])))
-                 
+
 
 (defn- page-mouse-over
   [e *control-show? *all-collapsed?]
@@ -494,13 +494,13 @@
           page-name (util/page-name-sanity-lc path-page-name)
           block-id (parse-uuid page-name)
           block? (boolean block-id)
-          journal? (db/journal-page? page-name) 
+          journal? (db/journal-page? page-name)
           sidebar? (:sidebar? option)
           whiteboard? (:whiteboard? option) ;; in a whiteboard portal shape?
           whiteboard-page? (model/whiteboard-page? page-name) ;; is this page a whiteboard?
-          page-entity (if block? 
-                        (->> 
-                         (:db/id (:block/page (db/entity repo [:block/uuid block-id]))) (db/entity repo)) 
+          page-entity (if block?
+                        (->>
+                         (:db/id (:block/page (db/entity repo [:block/uuid block-id]))) (db/entity repo))
                         (do
                           (when-not (db/entity repo [:block/name page-name])
                             (db/transact! repo [(block/page-name->map path-page-name true)]))
@@ -529,16 +529,16 @@
               {:key path-page-name
                :class (util/classnames [{:is-journals (or journal? fmt-journal?)}])})
 
-       
+
        (if (and whiteboard-page? (not sidebar?))
-         
+
          ;; whiteboard page
          [:div ((state/get-component :whiteboard/tldraw-preview) page-name)] ;; FIXME: this is not reactive
 
          ;; normal page
          [:div.relative
           {:style {:min-height (when-not (or whiteboard? whiteboard-page?) "70vh")}}
-          (when (and (not sidebar?) (not block?)) 
+          (when (and (not sidebar?) (not block?))
             [[:div.flex
               {:style {:justify-content "flex-end"}}
               ;; (let [updatedAt (:block/updated-at page)
@@ -551,25 +551,23 @@
               ;;     ]]]
               ;;  )
               (when (and (not config/publishing?) (not whiteboard?))
-               (when (and config/lsp-enabled? (not (config/demo-graph?))) 
-                 [:div.flex.flex-row
-                  [(plugins/hook-ui-slot :page-head-actions-slotted nil)
-                  (plugins/hook-ui-items :pagebar)]]
-                 ))]
+                (when (and config/lsp-enabled? (not (config/demo-graph?)))
+                  [:div.flex.flex-row
+                   [(plugins/hook-ui-slot :page-head-actions-slotted nil)
+                    (plugins/hook-ui-items :pagebar)]]))]
              [:div.flex.flex-row.space-between
-             (when (or (mobile-util/native-platform?) (util/mobile?))
-               [:div.flex.flex-row.pr-2
-                {:style {:margin-left -15}
-                 :on-mouse-over (fn [e]
-                                  (page-mouse-over e *control-show? *all-collapsed?))
-                 :on-mouse-leave (fn [e]
-                                   (page-mouse-leave e *control-show?))}
-                (page-blocks-collapse-control title *control-show? *all-collapsed?)])
-             (when-not whiteboard?
-               [:div.ls-page-title.flex-1.flex-row.w-full
-                {:style {:justify-content "space-between"}}
-                (page-title page-name icon title format fmt-journal?)])
-             ]])
+              (when (or (mobile-util/native-platform?) (util/mobile?))
+                [:div.flex.flex-row.pr-2
+                 {:style {:margin-left -15}
+                  :on-mouse-over (fn [e]
+                                   (page-mouse-over e *control-show? *all-collapsed?))
+                  :on-mouse-leave (fn [e]
+                                    (page-mouse-leave e *control-show?))}
+                 (page-blocks-collapse-control title *control-show? *all-collapsed?)])
+              (when-not whiteboard?
+                [:div.ls-page-title.flex-1.flex-row.w-full
+                 {:style {:justify-content "space-between"}}
+                 (page-title page-name icon title format fmt-journal?)])]])
           [:div
            (when (and block? (not sidebar?) (not whiteboard?))
              (let [config {:id "block-parent"
@@ -578,8 +576,8 @@
                 (component-block/breadcrumb config repo block-id {:level-limit 6})]))
 
            (let [entity (if block?
-                        (db/entity repo [:block/uuid block-id])
-                        page-entity)
+                          (db/entity repo [:block/uuid block-id])
+                          page-entity)
                  _ (and block? entity (reset! *current-block-page (:block/name (:block/page entity))))
                  _ (when (and block? (not entity))
                      (route-handler/redirect-to-page! @*current-block-page))]
@@ -595,11 +593,11 @@
        (when whiteboard? ;; ホワイトボードのみページタグを表示
          (when-not (or block? sidebar? journal?)
            (tagged-pages repo title)))
-       
+
        ;; referenced blocks
        (when-not block-or-whiteboard?
          [[:div.mt-6 {:key "page-unlinked-references"}
-            (reference/unlinked-references title)]
+           (reference/unlinked-references title)]
           [:div {:key "page-references"
                  :title (str "Shift-> " (t :content/open-in-sidebar))
                  :on-click (fn [e]
@@ -612,7 +610,7 @@
 
       ;;  (when-not (or block-or-whiteboard? sidebar? journal?)
       ;;      (hierarchy/structures title))
-       
+
 
 (defonce layout (atom [js/window.innerWidth js/window.innerHeight]))
 
@@ -706,7 +704,7 @@
                     s1 (if (> c1 1) "s" "")]
                     ;; c2 (count (:links graph))
                     ;; s2 (if (> c2 1) "s" "")
-                    
+
                 ;; (util/format "%d page%s, %d link%s" c1 s1 c2 s2)
                 (util/format "%d page%s" c1 s1))]
              [:div.p-6
@@ -942,27 +940,27 @@
 
 (rum/defc page-graph-inner < rum/reactive
   [_page graph dark?]
-  (let [ show-journals-in-page-graph? (rum/react *show-journals-in-page-graph?)]
-   [:div.sidebar-item.flex-col
-              [:div.flex.items-center.justify-between.mb-0
-               [:span (t :right-side-bar/show-journals)]
-               [:div.mt-1
-                (ui/toggle show-journals-in-page-graph? ;my-val;
-                            (fn []
-                              (let [value (not show-journals-in-page-graph?)]
-                                (reset! *show-journals-in-page-graph? value)))
-                               
-                           true)]]
-              
+  (let [show-journals-in-page-graph? (rum/react *show-journals-in-page-graph?)]
+    [:div.sidebar-item.flex-col
+     [:div.flex.items-center.justify-between.mb-0
+      [:span (t :right-side-bar/show-journals)]
+      [:div.mt-1
+       (ui/toggle show-journals-in-page-graph? ;my-val;
+                  (fn []
+                    (let [value (not show-journals-in-page-graph?)]
+                      (reset! *show-journals-in-page-graph? value)))
 
-    (graph/graph-2d {:nodes (:nodes graph)
-                     :links (:links graph)
-                     :width 600
-                     :height 600
-                     :dark? dark?
-                     :register-handlers-fn
-                     (fn [graph]
-                       (graph-register-handlers graph (atom nil) (atom nil) dark?))})]))
+                  true)]]
+
+
+     (graph/graph-2d {:nodes (:nodes graph)
+                      :links (:links graph)
+                      :width 600
+                      :height 600
+                      :dark? dark?
+                      :register-handlers-fn
+                      (fn [graph]
+                        (graph-register-handlers graph (atom nil) (atom nil) dark?))})]))
 
 (rum/defc page-graph < db-mixins/query rum/reactive
   []
@@ -1009,8 +1007,8 @@
   [:th
    {:class [(name key)]}
    [:a.fade-link {:on-click (fn []
-                             (reset! by-item key)
-                             (swap! desc? not))}
+                              (reset! by-item key)
+                              (swap! desc? not))}
     [:span.flex.items-center
      [:span.mr-1 title]
      (when (= @by-item key)
@@ -1205,20 +1203,20 @@
          [:div.l.flex.items-center
           [:div.actions-wrap
            (ui/button
-             (t :delete)
-             {:on-click
-              (fn []
-                (let [selected (filter (fn [[_ v]] v) @*checks)
-                      selected (and (seq selected)
-                                 (into #{} (for [[k _] selected] k)))]
-                  (when-let [pages (and selected (filter #(contains? selected (:block/idx %)) @*results))]
-                    (state/set-modal! (batch-delete-dialog pages false #(do
-                                                                          (reset! *checks nil)
-                                                                          (refresh-pages)))))))
-              :icon "trash"
-              :variant :destructive
-              :icon-props {:size 14}
-              :size :sm})]
+            (t :delete)
+            {:on-click
+             (fn []
+               (let [selected (filter (fn [[_ v]] v) @*checks)
+                     selected (and (seq selected)
+                                   (into #{} (for [[k _] selected] k)))]
+                 (when-let [pages (and selected (filter #(contains? selected (:block/idx %)) @*results))]
+                   (state/set-modal! (batch-delete-dialog pages false #(do
+                                                                         (reset! *checks nil)
+                                                                         (refresh-pages)))))))
+             :icon "trash"
+             :variant :destructive
+             :icon-props {:size 14}
+             :size :sm})]
 
           [:div.search-wrap.flex.items-center.pl-2
            (let [search-fn (fn []
@@ -1329,9 +1327,9 @@
                                  (let [repo (state/get-current-repo)]
                                    (when (util/shift-key? e)
                                      (state/sidebar-add-block!
-                                       repo
-                                       (:db/id page)
-                                       :page))))
+                                      repo
+                                      (:db/id page)
+                                      :page))))
                      :href     (rfe/href :page {:name (:block/name page)})}
                  (when-let [icon (get-in page [:block/properties :icon])]
                    [:span.pr-1 icon])
