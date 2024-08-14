@@ -553,21 +553,21 @@
                                                          :title (t :command.go/today)}
           (ui/icon "clock" {:class "icon" :size 23 :color "gray"})]]
         
-        ;; すべてのページ を開く
-        [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "alias"}
-                                                         :on-click (fn [_e]
-                                                                     (state/sidebar-add-block! repo "all-pages" :all-pages))
-                                                         :title (t :right-side-bar/all-pages)}
-          (ui/icon "book" {:class "icon" :size 23 :color "gray"})]]
+        ;; ;; すべてのページ を開く
+        ;; [:div.text-sm
+        ;;  [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "alias"}
+        ;;                                                  :on-click (fn [_e]
+        ;;                                                              (state/sidebar-add-block! repo "all-pages" :all-pages))
+        ;;                                                  :title (t :right-side-bar/all-pages)}
+        ;;   (ui/icon "book" {:class "icon" :size 23 :color "gray"})]]
         
-        ;; すべてのファイル を開く
-        [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "alias"}
-                                                         :on-click (fn [_e]
-                                                                     (state/sidebar-add-block! repo "all-files" :all-files))
-                                                         :title (t :right-side-bar/all-files)}
-          (ui/icon "files" {:class "icon" :size 23 :color "gray"})]]
+        ;; ;; すべてのファイル を開く
+        ;; [:div.text-sm
+        ;;  [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "alias"}
+        ;;                                                  :on-click (fn [_e]
+        ;;                                                              (state/sidebar-add-block! repo "all-files" :all-files))
+        ;;                                                  :title (t :right-side-bar/all-files)}
+        ;;   (ui/icon "files" {:class "icon" :size 23 :color "gray"})]]
 
         ;; キーボードショートカットへ移動
         [:div.text-sm
