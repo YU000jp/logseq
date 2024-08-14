@@ -976,9 +976,9 @@
                                                   :hide {:enabled false}
                                                   :preventOverflow {:enabled false}}}
                       :onShow #(reset! *mounted? true)
-                    ;;:onHide #(reset! *mounted? false)
+                      :onHide #(reset! *mounted? false)
                       :onRequestClose #(reset! *mounted? false)
-                      :hideOnClick false
+                      :hideOnClick true
                       :interactiveBorder 20
                       :interactive true
                       :touchHold true}
