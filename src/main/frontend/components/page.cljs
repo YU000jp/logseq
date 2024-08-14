@@ -441,7 +441,7 @@
 
        (when fmt-journal?
          [:span.journal-title-right-area.text-sm
-          {:style {:cursor "copy"}
+          {:style {:cursor "copy" :float "right"}
            :title (str (t :journals/user-date-format-desc-title) "\n" (t :journals/user-date-format-desc) " [[" (state/get-date-formatter) "]]")
            :on-click (fn [e]
                        (util/stop e)
