@@ -1497,11 +1497,16 @@
      [:li {:key (str "namespace-" namespace "-" (:db/id child))}
       (let [shorten-name (some-> (or (:block/original-name child) (:block/name child))
                                  (string/split "/")
-                                 last)]
-        (page-cp {:label shorten-name} child))
-      (let [children (:namespace/children child)]
-        (when (seq children) 
-          (namespace-hierarchy-aux config (:block/name child) children)))])])
+                                 last)
+            children (:namespace/children child)]
+        (if (seq children) 
+        [:details
+         [[:summary
+           (page-cp {:label shorten-name} child)]
+         (namespace-hierarchy-aux config (:block/name child) children)]]
+          (page-cp {:label shorten-name} child)
+          ))
+      ])])
 
 (rum/defc namespace-hierarchy
   [config namespace children as-query?]
