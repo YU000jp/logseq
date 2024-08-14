@@ -371,7 +371,7 @@
          [:div.page-title-hierarchy.mb-2.mr-3 
           {:class (when whiteboard-page? "text-sm")
            :style {:position (when fmt-journal? "absolute")
-                   :top "-0.5em"}}
+                   :top "-1.3em"}}
           (->>
            (for [namespace-page (butlast (gp-util/split-namespace-pages title))]
              (when (and (string? namespace-page) namespace-page)
