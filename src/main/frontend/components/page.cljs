@@ -376,7 +376,7 @@
            (for [namespace-page (butlast (gp-util/split-namespace-pages title))]
              (when (and (string? namespace-page) namespace-page)
                (let [label (second (gp-util/split-last model/ns-char namespace-page))]
-                 (component-block/page-reference false namespace-page {:preview? true} label)))) ;TODO: ツールチップが出ない
+                 (component-block/page-reference false namespace-page {:preview? false} label))))
            (interpose [:span.mx-2.opacity-30 model/ns-char]))])
        [:h1.page-title.flex.cursor-pointer.gap-1.w-full
         {:data-ref page-name 
