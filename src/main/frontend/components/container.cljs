@@ -9,6 +9,7 @@
             [frontend.components.plugins :as plugins]
             ;; [frontend.components.repo :as repo]
             ;; [frontend.components.hierarchy :as hierarchy]
+            [frontend.components.scheduled-deadlines :as scheduled]
             [frontend.components.cmdk :as cmdk]
             [frontend.date :as date]
             [frontend.components.right-sidebar :as right-sidebar]
@@ -214,16 +215,17 @@
 
      [:ul.favorites.text-sm
       [[(when current-page
-          ;; FIXME: バグ ホームを開いているときに「ブックマークへ追加」が出てしまう default-homeで=にしてもなぜか一致しないため、うまくいかない
-          (when-not favorited?
-            [:li.favorite-item.flex.items-center.cursor
-             {:on-click (fn []
-                          (page-handler/favorite-page! current-page))}
-             [[:button.button.icon
-               (ui/icon "star" {:class "icon" :size 12})]
-              [:span
-               {:style {:font-size "0.8em"}}
-               (t :page/add-to-favorites)]]]))
+          (when-not (or (state/home?) (and (state/custom-home-page?)
+                                           (= (state/sub-default-home-page) (state/get-current-page))) (state/whiteboard-dashboard?))
+            (when-not favorited?
+              [:li.favorite-item.flex.items-center.cursor
+               {:on-click (fn []
+                            (page-handler/favorite-page! current-page))}
+               [[:button.button.icon
+                 (ui/icon "star" {:class "icon" :size 12})]
+                [:span
+                 {:style {:font-size "0.8em"}}
+                 (t :page/add-to-favorites)]]])))
         (when (seq favorite-entities)
           (for [entity favorite-entities]
             (let [icon (get-page-icon entity)]
@@ -239,7 +241,8 @@
                                     :page page}))
                    (util/distinct-by :lowercase)
                    (map :page))
-        page-name (or (state/get-current-page) (state/get-current-whiteboard))]
+        page-name (or (state/get-current-page) (state/get-current-whiteboard))
+        countNumber (count pages)]
     (nav-content-item
      [:a.flex.items-center.rounded-md.wrap-th
       {:style {:cursor "row-resize" :margin-left "1em"}}
@@ -248,7 +251,7 @@
        (t :left-side-bar/nav-recent-pages)]]
 
      {:class "recent"
-      :count (count pages)}
+      :count countNumber}
 
      [:ul.text-sm
       (for [name pages]
@@ -295,12 +298,13 @@
 (defn sidebar-item
   [{:keys [on-click-handler class title icon icon-extension? active href shortcut]}]
   [:div
-   {:class class}
+   {:class class
+    :title title}
    [:a.item.group.flex.items-center.rounded-md.cursor
     {:on-click on-click-handler
      :class (when active "active")
      :href href}
-    (ui/icon (str icon) {:extension? icon-extension? :size "24"})
+    (ui/icon (str icon) {:extension? icon-extension?})
     [:span.flex-1 title]
     (when shortcut
       [:span.ml-1 (ui/render-keyboard-shortcut (ui/keyboard-shortcut-from-config shortcut))])]])
@@ -516,8 +520,7 @@
 
        [:div.nav-contents-container.gap-1.pt-1
         {:on-scroll on-contents-scroll}
-        (when (not config/publishing?)
-          (recent-pages t))]
+        (recent-pages t)]
 
        (when page-name
           ;; hierarchy

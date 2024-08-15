@@ -111,9 +111,17 @@
   .nav-header {
     @apply gap-0.5;
     font-size: 0.9em;
+    overflow: hidden;
 
-    & a.item.group:not(:hover):not(.active) :is(span.flex-1, .ml-1) {
-      display: none;
+    & a.item.group {
+      &:hover {
+        width: 180px;
+      }
+
+      &:not(:hover) :is(span.flex-1, .ml-1) {
+        display: none;
+        text-overflow: ellipsis;
+      }
     }
   }
 
@@ -172,11 +180,11 @@
       border-top: 1px solid var(--ls-tertiary-border-color);
     }
 
-    :is(:hover, :focus-within) {
+    &:is(:hover, :focus-within) {
       opacity: 1;
     }
 
-    :not(:is(:hover, :focus-within)) {
+    &:not(:is(:hover, :focus-within)) {
       opacity: 0.96;
     }
   }

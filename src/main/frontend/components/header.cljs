@@ -294,9 +294,9 @@
                :title (t :page/delete)}
               (ui/icon "trash-x" {:class "icon" :size 20 :color "red"})]])]])
 
-      (when (and (not= (state/get-current-route) :home)
-                 (not custom-home-page?))
-        (home-button))
+      ;; (when (and (not= (state/get-current-route) :home)
+      ;;            (not custom-home-page?))
+      ;;   (home-button))
 
       ;; (when sync-enabled?
       ;;   (login))
