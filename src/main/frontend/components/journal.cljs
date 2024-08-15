@@ -65,8 +65,7 @@
                                :page))
                             (.preventDefault e)]
                            (route-handler/redirect-to-page! lower-case-page-name)))}
-            [(ui/icon "calendar-time" {:color "yellow"
-                                       :size 26
+            [(ui/icon "calendar-time" {:size 26
                                        :style {:margin-right "10px"}})
              [:span
               {:style {:font-size "2.2em"

@@ -401,8 +401,7 @@
 
         (if fmt-journal?
           [:span.page-icon
-           (ui/icon "calendar-time" {:color "yellow"
-                                     :size 26
+           (ui/icon "calendar-time" {:size 26
                                      :style {:margin-right "3px"}})]
           (when (not= icon "") [:span.page-icon icon]))
         [:div.page-title-sizer-wrapper.relative

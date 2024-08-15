@@ -844,8 +844,7 @@
                  :z-index  3}}
         (if fmt-journal? ;; ジャーナルからの引用の場合、アイコンをつける
           (ui/icon "calendar-time"
-                   {:size 16
-                    :color "yellow"
+                   {:size 16 
                     :title (t :on-boarding/ref-journal)})
           (when page-name
             (ui/icon "page" {:size 16})))]])))
@@ -963,8 +962,7 @@
                                      :else (route-handler/redirect-to-page! id))))))}
            (when fmt-journal? ;; ジャーナルからの引用の場合、アイコンをつける
              [(ui/icon "calendar-time"
-                       {:size 16
-                        :color "yellow"
+                       {:size 16 
                         :title (t :on-boarding/ref-journal)
                         :style {:position "absolute"
                                 :top      "0.4em"
@@ -2709,8 +2707,7 @@
 
                (when journal?
                  (ui/icon "calendar-time"
-                          {:color "yellow"
-                           :class "text-lg"}))
+                          {:class "text-lg"}))
                (when (and (false? (:top-level? config))
                           (seq parents))
                  (breadcrumb-separator))
