@@ -59,8 +59,7 @@
 }
 
 .tippy-tooltip {
-  @apply shadow border border-gray-07 dark:border-gray-05 px-2 py-1;
-
+  @apply shadow border border-gray-07 dark:border-gray-05 px-2 py-1 text-sm;
   will-change: auto;
   color: var(--ls-primary-text-color, hsl(var(--foreground)));
   background-color: var(--ls-primary-background-color);
