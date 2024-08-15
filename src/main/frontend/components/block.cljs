@@ -1492,7 +1492,7 @@
 
 (rum/defc namespace-hierarchy-aux
   [config namespace children]
-  [:ul.text-sm.pt-1
+  [:ul.mt-2.text-sm.namespace-list
    (for [child children]
      [:li {:key (str "namespace-" namespace "-" (:db/id child))}
       (let [shorten-name (some-> (or (:block/original-name child) (:block/name child))
@@ -1511,14 +1511,17 @@
 (rum/defc namespace-hierarchy
   [config namespace children as-query?]
   (when (seq children)
-    [:div.namespace
+    [:details.namespace
+     {:open "true"}
      (if as-query?
-       [:div.font-medium.flex.flex-row.items-center
-        [:span.mr-1 "Namespace "]
+       [:summary.font-medium.flex.flex-row.items-center.header
+        [:span.mr-1
+         {:title (t :left-side-bar/hierarchy)}
+         "Namespace "]
         (page-cp config {:block/name namespace})]
-       [:span.mr-1.font-bold.opacity-50.pb-1.ml-1
+       [:summary.mr-1.font-bold.opacity-50.pb-1.ml-1
         (ui/icon "hierarchy" {:size 16})
-        [:span.flex-1.ml-2
+        [:span
          (t :left-side-bar/hierarchy)]])
 
      (namespace-hierarchy-aux config namespace children)]))
