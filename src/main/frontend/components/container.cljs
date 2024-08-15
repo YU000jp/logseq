@@ -532,8 +532,14 @@
            ;; tagged pages
           (com-page/tagged-pages repo page-name)])
 
-
-
+       [:div.nav-contents-container.gap-1.pt-1
+        {:on-scroll on-contents-scroll}
+        [:details
+         {:open "true"}
+         [:summary
+          [(ui/icon "calendar-time" {:class "text-sm mr-1"})
+           [:span.overflow-hidden.text-ellipsis (t :right-side-bar/scheduled-and-deadline)]]]
+         (scheduled/scheduled-and-deadlines (date/today))]]
 
        [:footer.px-2.mt-1.create
         (when-not config/publishing?
