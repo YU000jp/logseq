@@ -19,7 +19,7 @@
             [frontend.handler.route :as route-handler]
             [frontend.components.reference :as reference]
             [frontend.handler.ui :as ui-handler]
-            [frontend.handler.page :as page-handler]
+            ;; [frontend.handler.page :as page-handler]
             [frontend.state :as state]
             [frontend.ui :as ui]
             [logseq.shui.ui :as shui]
@@ -153,30 +153,37 @@
     [[:.flex.items-center#open-sidebar-default-queries
       (ui/icon "brand-4chan" {:class "mr-2"})
       [:span.overflow-hidden.text-ellipsis (t :right-side-bar/default-queries)]]
-     (ui/lazy-visible
-      (fn [] (page/today-queries repo)))]
+     (page/today-queries repo)]
 
     :reference
     [[:.flex.items-center#open-sidebar-reference
       (ui/icon "layers-difference" {:class "mr-2"})
       [:span.overflow-hidden.text-ellipsis
-       (t :linked-references/sidebar-open) db-id]]
-     (ui/lazy-visible
-      (fn [] (if-let [page-name db-id]
-               [[:div {:key "page-unlinked-references"}
-                 (reference/unlinked-references page-name)]
-                [:div {:key "page-references"}
-                 (reference/references page-name)]
-                [:div.text-sm.opacity-50.ml-4.mt-6#long-time-message (t :right-side-bar/long-time)]]
-               (t :linked-references/sidebar-not-page))))]
+       [(t :linked-references/sidebar-open) " >> " db-id]]]
+
+     (if-let [page-name db-id]
+       [[:div {:key "page-references"}
+         (reference/references page-name)]
+        [:div.text-sm.opacity-50.ml-4.mt-6#long-time-message (t :right-side-bar/long-time)]]
+       (t :linked-references/sidebar-not-page))]
+
+    :unlinked-reference
+    [[:.flex.items-center#open-sidebar-reference
+      (ui/icon "list" {:class "mr-2"})
+      [:span.overflow-hidden.text-ellipsis
+       (t :unlinked-references/sidebar-open) " >> " db-id]]
+     (if-let [page-name db-id]
+       [[:div {:key "page-unlinked-references"}
+         (reference/unlinked-references page-name)]
+        [:div.text-sm.opacity-50.ml-4.mt-6#long-time-message (t :right-side-bar/long-time)]]
+       (t :unlinked-references/sidebar-not-page))]
 
     :page-graph
     [[:.flex.items-center
       [(ui/icon "hierarchy" {:class "mr-2"})
        (t :right-side-bar/page-graph)]
       [:span.text-sm.opacity-50.ml-4 (t :right-side-bar/long-time)]]
-     (ui/lazy-visible
-      (fn [] (page/page-graph)))]
+     (page/page-graph)]
 
     :history
     [[:.flex.items-center

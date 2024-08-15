@@ -34,8 +34,10 @@
 
 (rum/defc scheduled-and-deadlines
   [page-name]
-  (ui/lazy-visible
-   (fn [] (scheduled-and-deadlines-inner page-name))
-   {:debug-id "scheduled-and-deadlines"}))
+  ;; (ui/lazy-visible
+  ;;  (fn [] 
+     (scheduled-and-deadlines-inner page-name)
+    ;;  ) {:debug-id "scheduled-and-deadlines"})
+  )
 
 ;;TODO: Logseqアプリを開いたときに、SCHEDULEDとDEADLINEがあったら、ユーザーに通知する

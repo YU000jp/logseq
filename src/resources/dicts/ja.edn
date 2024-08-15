@@ -403,7 +403,8 @@
  :linked-references/filter-heading "フィルター：" ;"Filter: " 
  :linked-references/filter-includes "含む：" ;"Includes: "
  :linked-references/filter-search "引用リンクを検索"
- :linked-references/sidebar-open "ページのバックリンク-> " 
+ :linked-references/sidebar-open "ページのバックリンク" 
+  :unlinked-references/sidebar-open "ページ名にマッチするブロック" 
  :linked-references/sidebar-not-page "ページ以外を開いています。バックリンクは表示されません。"
  :linked-references/reference-count (fn [filtered-count total]
                                        ;; 1 Linked Reference

@@ -288,5 +288,5 @@
           (ui/foldable
            [:h2.font-medium (t :unlinked-references/reference-count @n-ref)]
            (fn [] (unlinked-references-aux page-name n-ref))
-           {:default-collapsed? true
+           {:default-collapsed? false
             :title-trigger? true})]]))))

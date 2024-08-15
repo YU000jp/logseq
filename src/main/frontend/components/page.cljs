@@ -598,9 +598,7 @@
 
        ;; referenced blocks
        (when-not block-or-whiteboard?
-         [[:div.mt-6 {:key "page-unlinked-references"}
-           (reference/unlinked-references title)]
-          [:div {:key "page-references"
+         [[:div {:key "page-references"
                  :title (str "Shift-> " (t :content/open-in-sidebar))
                  :on-click (fn [e]
                              (util/stop e)

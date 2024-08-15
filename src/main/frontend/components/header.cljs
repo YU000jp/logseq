@@ -265,13 +265,24 @@
       (when current-page
         [:div.flex.items-center.space-x-2.mr-4.rounded-md
          {:style {:background-color "var(--lx-gray-04, var(--color-level-3, var(--rx-gray-04)))"}}
-         [;; Linked Referencesを表示する
+         [;; ページ用メニュー
+
+          ;; Linked Referencesを表示する
           [:div.text-sm
            [:button.button.icon
             {:on-click (fn []
                          (state/sidebar-add-block! current-repo current-page :reference))
              :title (t :linked-references/sidebar-open)}
             (ui/icon "layers-difference" {:class "icon" :size 24})]]
+
+                    ;; Unlinked Referencesを表示する
+          [:div.text-sm
+           [:button.button.icon
+            {:on-click (fn []
+                         (state/sidebar-add-block! current-repo current-page :unlinked-reference))
+             :title (t :unlinked-references/sidebar-open)}
+            (ui/icon "list" {:class "icon" :size 24})]]
+
 
          ;; ページのグラフを表示する
           [:div.text-sm
