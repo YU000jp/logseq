@@ -1759,17 +1759,13 @@
                                                                                    uuid
                                                                                    (whiteboard-handler/closest-shape (.-target e)))
                                                                                   (util/stop e))
-
-    (util/alt-key? e) (do
-                        (when uuid (route-handler/redirect-to-page! uuid))
-                        (util/stop e))
-
+    ;; (util/alt-key? e) (do
+    ;;                     (if collapsed?
+    ;;                       (editor-handler/expand-block! uuid)
+    ;;                       (editor-handler/collapse-block! uuid))
+    ;;                     (util/stop e))
     :else
-    (if collapsed?
-      (editor-handler/expand-block! uuid)
-      (editor-handler/collapse-block! uuid))
-    ;; (when uuid (route-handler/redirect-to-page! uuid))
-    ))
+    (when uuid (route-handler/redirect-to-page! uuid))))
 
 (rum/defc block-children < rum/reactive
   [config block children collapsed?]
@@ -1858,7 +1854,7 @@
      (let [bullet [:a.bullet-link-wrap {:on-click #(bullet-on-click % block uuid collapsed?)}
                    [:span.bullet-container
                     {:id (str "dot-" uuid)
-                     :title (str "Alt-> " (t :command.editor/zoom-in))
+                     :title (str "Click-> " (t :command.editor/zoom-in))
                      :draggable true
                      :on-drag-start (fn [event]
                                       (bullet-drag-start event block uuid block-id))
