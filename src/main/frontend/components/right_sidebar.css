@@ -1,5 +1,9 @@
 .cp__right-sidebar-settings-btn {
   background-color: var(--ls-secondary-background-color);
+
+  &:not(:hover)>span.ml-1.mr-2 {
+    display: none;
+  }
 }
 
 .sidebar-item-list {
