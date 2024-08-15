@@ -110,20 +110,10 @@
 
   .nav-header {
     @apply gap-0.5;
+    font-size: 0.9em;
 
-    a {
-      .keyboard-shortcut {
-        @apply opacity-0 invisible;
-      }
-
-      &:hover {
-        .keyboard-shortcut {
-          visibility: visible;
-          transition: opacity 1s;
-          transition-delay: 2s;
-          opacity: 1;
-        }
-      }
+    & a.item.group:not(:hover):not(.active) :is(span.flex-1, .ml-1) {
+      display: none;
     }
   }
 
@@ -174,8 +164,8 @@
   }
 
   .nav-contents-container {
-    @apply relative h-full flex-grow-0 overflow-x-hidden overflow-y-auto;
-
+    @apply relative flex-grow-0 overflow-x-hidden overflow-y-auto;
+    max-height: 30vh;
     margin-bottom: 1em;
 
     &.is-scrolled {

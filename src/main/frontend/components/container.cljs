@@ -21,7 +21,7 @@
             [frontend.config :as config]
             [frontend.context.i18n :refer [t]]
             [frontend.db :as db]
-            [electron.ipc :as ipc]
+            ;; [electron.ipc :as ipc]
             [frontend.db-mixins :as db-mixins]
             [frontend.db.model :as db-model]
             [frontend.extensions.pdf.utils :as pdf-utils]
@@ -30,7 +30,7 @@
             [frontend.handler.common :as common-handler]
             [frontend.handler.editor :as editor-handler]
             [frontend.handler.page :as page-handler]
-            [frontend.util.page :as page-util]
+            ;; [frontend.util.page :as page-util]
             [frontend.handler.route :as route-handler]
             [frontend.handler.user :as user-handler]
             [frontend.handler.whiteboard :as whiteboard-handler]
@@ -40,7 +40,7 @@
             [frontend.mobile.mobile-bar :refer [mobile-bar]]
             [frontend.mobile.util :as mobile-util]
             [frontend.modules.shortcut.data-helper :as shortcut-dh]
-            [frontend.modules.shortcut.utils :as shortcut-utils]
+            ;; [frontend.modules.shortcut.utils :as shortcut-utils]
             [frontend.state :as state]
             [frontend.ui :as ui]
             [logseq.shui.ui :as shui]
@@ -214,6 +214,7 @@
 
      [:ul.favorites.text-sm
       [[(when current-page
+          ;; FIXME: バグ ホームを開いているときに「ブックマークへ追加」が出てしまう default-homeで=にしてもなぜか一致しないため、うまくいかない
           (when-not favorited?
             [:li.favorite-item.flex.items-center.cursor
              {:on-click (fn []
@@ -299,7 +300,7 @@
     {:on-click on-click-handler
      :class (when active "active")
      :href href}
-    (ui/icon (str icon) {:extension? icon-extension?})
+    (ui/icon (str icon) {:extension? icon-extension? :size "24"})
     [:span.flex-1 title]
     (when shortcut
       [:span.ml-1 (ui/render-keyboard-shortcut (ui/keyboard-shortcut-from-config shortcut))])]])
@@ -451,9 +452,9 @@
        [:nav.px-4.flex.flex-col.gap-1.cp__menubar-repos
         {:aria-label "Navigation menu"}
 
-        [:div.nav-header.flex.flex-col.mt-2.mb-4
+        [:div.nav-header.flex.mt-2.mb-4
          (let [page (:page default-home)]
-           (when (and page (not (state/enable-journals? repo)))
+           (when page ;;(and page (not (state/enable-journals? repo)))
              (sidebar-item
               {:class "home-nav"
                :title page
@@ -474,7 +475,7 @@
                                  (util/shift-key? e) (route-handler/sidebar-journals!)
                                  (util/alt-key? e) (route-handler/redirect-to-page! (date/today))
                                  :else
-                                 (route-handler/redirect-to-home!)))
+                                 (route-handler/go-to-journals!)))
            :icon "calendar-time"
            :shortcut :go/journals})
 
@@ -506,31 +507,33 @@
            :title (t :right-side-bar/all-pages)
            :href (rfe/href :all-pages)
            :active (and (not srs-open?) (= route-name :all-pages))
-           :icon "files"})
-         ]]
+           :icon "files"})]]
 
-       [:div.nav-contents-container.flex.flex-col.gap-1.pt-1
+
+       [:div.nav-contents-container.gap-1.pt-1
         {:on-scroll on-contents-scroll}
         (favorites t)]
-       [:div.nav-contents-container.flex.flex-col.gap-1.pt-1
+
+       [:div.nav-contents-container.gap-1.pt-1
         {:on-scroll on-contents-scroll}
         (when (not config/publishing?)
           (recent-pages t))]
 
-
        (when page-name
-         [[:div.nav-contents-container.flex.flex-col.gap-1.pt-1.text-sm
-           {:on-scroll on-contents-scroll}
-            ;; (hierarchy/structures page-name) 
-            ;; hierarchy
-           (let [namespace page-name]
-             (when-not (string/blank? namespace)
+          ;; hierarchy
+         [(let [namespace page-name]
+            (when-not (string/blank? namespace)
+              [:div.nav-contents-container.pt-1.text-sm
+               {:on-scroll on-contents-scroll
+                :style {:margin-left "1em"}}
                (let [namespace (string/lower-case (page-ref/get-page-name! namespace))
                      children (db-model/get-namespace-hierarchy (state/get-current-repo) namespace)]
-                 (com-block/namespace-hierarchy {} namespace children false))))]
-          [:div.nav-contents-container.flex.flex-col.gap-1.pt-1.text-sm
-            ;; tagged pages
-           (com-page/tagged-pages repo page-name)]])
+                 (com-block/namespace-hierarchy {} namespace children false))]))
+           ;; tagged pages
+          (com-page/tagged-pages repo page-name)])
+
+
+
 
        [:footer.px-2.mt-1.create
         (when-not config/publishing?

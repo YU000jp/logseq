@@ -252,16 +252,18 @@
   [repo tag]
   (let [pages (db/get-tag-pages repo tag)]
     (when (seq pages)
-      [:details.mt-6.flex-1.flex-row
-       {:open "true"}
-       [:summary.mr-1.font-bold.opacity-50.pb-1.ml-1.header
-        [(ui/icon "tag" {:size 16}) (t :left-side-bar/tagged-pages) " '" tag "'"]]
-       [:ul.mt-2.text-sm.page-tags-list
-        (for [[original-name name] (sort-by last pages)]
-          [:li.mt-1
-           {:key (str "tagged-page-" name)
-            :style {:margin-left "1em"}}
-           (component-block/page-cp {} {:block/name name :block/original-name original-name})])]])))
+      [:div.nav-contents-container.pt-1.text-sm
+       {:style {:margin-left "1em"}}
+       [:details.mt-6.flex-1.flex-row
+        {:open "true"}
+        [:summary.mr-1.font-bold.opacity-50.pb-1.ml-1
+         {:title [(t :left-side-bar/tagged-pages) " '" tag "'"]}
+         [(ui/icon "tag" {:size 16}) (t :left-side-bar/tagged-pages)]]
+        [:ul.page-tags-list
+         (for [[original-name name] (sort-by last pages)]
+           [:li.mt-1
+            {:key (str "tagged-page-" name)}
+            (component-block/page-cp {} {:block/name name :block/original-name original-name})])]]])))
 
 
 (rum/defc page-title-editor < rum/reactive
