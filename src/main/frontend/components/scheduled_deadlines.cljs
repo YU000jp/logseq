@@ -17,10 +17,14 @@
        (not (true? (state/scheduled-deadlines-disabled?)))
        (= (string/lower-case page-name) (string/lower-case (date/journal-name)))))
 
-(rum/defc scheduled-and-deadlines-inner < rum/reactive db-mixins/query
+(defn- get-refs
   [page-name]
-  (let [scheduled-or-deadlines (when (scheduled-or-deadlines? page-name)
-                                 (db/get-date-scheduled-or-deadlines (string/capitalize page-name)))]
+  (when (scheduled-or-deadlines? page-name)
+    (db/get-date-scheduled-or-deadlines (string/capitalize page-name))))
+
+(rum/defc scheduled-and-deadlines-inner
+  [page-name refs]
+  (let [scheduled-or-deadlines (get-refs page-name)]
     (if (seq scheduled-or-deadlines)
       [:div.scheduled-deadlines.references-blocks.mb-2.text-sm
        (let [ref-hiccup (block/->hiccup scheduled-or-deadlines
@@ -34,10 +38,23 @@
 
 (rum/defc scheduled-and-deadlines
   [page-name]
-  ;; (ui/lazy-visible
-  ;;  (fn [] 
-     (scheduled-and-deadlines-inner page-name)
-    ;;  ) {:debug-id "scheduled-and-deadlines"})
-  )
+  (let [refs (get-refs page-name)]
+    (scheduled-and-deadlines-inner page-name refs)))
+
+(rum/defc scheduled-and-deadlines-for-left-menu < rum/reactive db-mixins/query
+  [page-name on-contents-scroll]
+  (let [refs (get-refs page-name)]
+    (when (seq refs)
+      [:div.nav-contents-container.gap-1.pt-1
+       {:on-scroll on-contents-scroll}
+       [:details
+        {:open "true"}
+        [:summary
+         [(ui/icon "calendar-time" {:class "text-sm mr-1"})
+
+          (let [countNumber (count refs)]
+            [:span.overflow-hidden.text-ellipsis
+             [(t :right-side-bar/scheduled-and-deadline) " (" countNumber ")"]])]]
+        (scheduled-and-deadlines-inner page-name refs)]])))
 
 ;;TODO: Logseqアプリを開いたときに、SCHEDULEDとDEADLINEがあったら、ユーザーに通知する

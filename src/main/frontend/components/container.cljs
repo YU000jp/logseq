@@ -305,7 +305,7 @@
      :class (when active "active")
      :href href}
     (ui/icon (str icon) {:extension? icon-extension?})
-    [:span.flex-1 title]
+    [:span.flex-1.overflow-hidden.text-ellipsis title]
     (when shortcut
       [:span.ml-1 (ui/render-keyboard-shortcut (ui/keyboard-shortcut-from-config shortcut))])]])
 
@@ -535,14 +535,9 @@
            ;; tagged pages
           (com-page/tagged-pages repo page-name)])
 
-       [:div.nav-contents-container.gap-1.pt-1
-        {:on-scroll on-contents-scroll}
-        [:details
-         {:open "true"}
-         [:summary
-          [(ui/icon "calendar-time" {:class "text-sm mr-1"})
-           [:span.overflow-hidden.text-ellipsis (t :right-side-bar/scheduled-and-deadline)]]]
-         (scheduled/scheduled-and-deadlines (date/today))]]
+
+       (scheduled/scheduled-and-deadlines-for-left-menu (date/today) on-contents-scroll)
+
 
        [:footer.px-2.mt-1.create
         (when-not config/publishing?
