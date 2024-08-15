@@ -2697,10 +2697,11 @@
 
             ;; 戻るボタン
             [:div.flex
-             [(ui/with-shortcut :go/backward "bottom"
-                [:button.it.navigation.nav-left.button.icon
-                 {:title (t :header/go-back) :on-click #(js/window.history.back)}
-                 (ui/icon "arrow-left" {:size ui/icon-size})])
+             [(when show-page?
+                (ui/with-shortcut :go/backward "bottom"
+                  [:button.it.navigation.nav-left.button.icon
+                   {:title (t :header/go-back) :on-click #(js/window.history.back)}
+                   (ui/icon "arrow-left" {:size ui/icon-size})]))
 
               [:div.breadcrumb.block-parents
                {:class (when (seq breadcrumb)
