@@ -568,7 +568,7 @@
                 #js {:listeners
                      #js {:move (fn [^js/MouseEvent e]
                                   (when-let [offset (.-left (.-rect e))]
-                                    (let [width (.toFixed (max (min offset 460) 240) 2)]
+                                    (let [width (.toFixed (max (min offset 600) 240) 2)]
                                       (adjust-size! (str width "px")))))}})
                (.styleCursor false)
                (.on "dragstart" (fn []
