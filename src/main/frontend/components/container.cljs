@@ -207,11 +207,27 @@
       (fn [e]
         (rfe/push-state :page {:name "Favorites"})
         (util/stop e))}
-     (when (seq favorite-entities)
-       [:ul.favorites.text-sm
-        (for [entity favorite-entities]
-          (let [icon (get-page-icon entity)]
-            (favorite-item t (:block/name entity) icon)))]))))
+
+  ;; [:a.flex.items-center.justify-between.relative.group
+  ;;  [:span.page-icon.ml-3.justify-center (if whiteboard-page? (ui/icon "whiteboard" {:extension? true}) icon)]
+  ;;  [:span.page-title {:class (when untitled? "opacity-50")}
+
+     [:ul.favorites.text-sm
+      [[(when current-page
+          (when-not favorited?
+            [:li.favorite-item.flex.items-center.cursor
+             {:on-click (fn []
+                          (page-handler/favorite-page! current-page))}
+             [[:button.button.icon
+               (ui/icon "star" {:class "icon" :size 12})]
+              [:span
+               {:style {:font-size "0.8em"}}
+               (t :page/add-to-favorites)]]]))
+        (when (seq favorite-entities)
+          (for [entity favorite-entities]
+            (let [icon (get-page-icon entity)]
+              (favorite-item t (:block/name entity) icon))))]]])))
+
 
 (rum/defc recent-pages < rum/reactive db-mixins/query
   [t]

@@ -229,10 +229,7 @@
         custom-home-page? (and (state/custom-home-page?)
                                (= (state/sub-default-home-page) (state/get-current-page)))
         ;; sync-enabled? (file-sync-handler/enable-sync?)
-        current-page (or (state/get-current-page) (state/get-current-whiteboard))
-        favorited? (contains?
-                    (set (map util/page-name-sanity-lc (:favorites (state/sub-config))))
-                    current-page)]
+        current-page (or (state/get-current-page) (state/get-current-whiteboard))]
     [:div.cp__header.drag-region#head
      {:class           (util/classnames [{:electron-mac   electron-mac?
                                           :native-ios     (mobile-util/native-ios?)
@@ -268,21 +265,7 @@
       (when current-page
         [:div.flex.items-center.space-x-2.mr-4.rounded-md
          {:style {:background-color "var(--lx-gray-04, var(--color-level-3, var(--rx-gray-04)))"}}
-         [;; ブックマークボタン
-          [:div.text-sm
-           [:button.button.icon
-            {:on-click (fn []
-                         (if favorited?
-                           (page-handler/unfavorite-page! current-page)
-                           (page-handler/favorite-page! current-page)))
-             :title (if favorited?
-                      (t :page/unfavorite)
-                      (t :page/add-to-favorites))}
-            (if favorited?
-              (ui/icon "star-off" {:class "icon" :size 24})
-              (ui/icon "star" {:class "icon" :size 24}))]]
-
-                  ;; Linked Referencesを表示する
+         [;; Linked Referencesを表示する
           [:div.text-sm
            [:button.button.icon
             {:on-click (fn []
