@@ -175,6 +175,7 @@
     @apply relative flex-grow-0 overflow-x-hidden overflow-y-auto;
     max-height: 30vh;
     margin-bottom: 1em;
+    margin-top: auto;
 
     &.is-scrolled {
       border-top: 1px solid var(--ls-tertiary-border-color);
@@ -310,6 +311,7 @@
     padding: 4px 14px 14px;
     background-image: linear-gradient(transparent, var(--ls-primary-background-color));
     user-select: none;
+    margin-top: auto;
 
     @screen sm {
       background-image: linear-gradient(transparent, or(--ls-left-sidebar-bottom-gradient, --lx-gray-02, --ls-secondary-background-color));
