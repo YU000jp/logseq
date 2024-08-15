@@ -231,6 +231,7 @@
   (when-let [repo (state/get-current-repo)]
     (page-blocks-cp repo page {:sidebar? true})))
 
+
 (rum/defc today-queries < rum/reactive
   [repo]
   (let [queries (seq (get-in (state/sub-config repo) [:default-queries :journals]))]
@@ -245,6 +246,7 @@
                                   :editor-box editor/box})
                                 query))
            (str repo "-custom-query-" (:query query))))])))
+
 
 (defn tagged-pages
   [repo tag]

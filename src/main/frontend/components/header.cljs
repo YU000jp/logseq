@@ -127,18 +127,18 @@
         :title (t :right-side-bar/all-pages)
         :options {:href (rfe/href :all-pages)}
         :icon (ui/icon "book")}
-       
+
        (when current-repo
          {:class "all--files"
-        :title (t :right-side-bar/all-files)
-        :options {:href (rfe/href :all-files)}
-        :icon (ui/icon "files")})
-       
+          :title (t :right-side-bar/all-files)
+          :options {:href (rfe/href :all-files)}
+          :icon (ui/icon "files")})
+
        (when (and config/dev? (state/sub [:ui/developer-mode?]))
-       {:class "ui"
-        :title "Dev: UI"
-        :options {:href (rfe/href :ui)}
-        :icon (ui/icon "plug")})
+         {:class "ui"
+          :title "Dev: UI"
+          :options {:href (rfe/href :ui)}
+          :icon (ui/icon "plug")})
 
       ;;  {:title (t :help/shortcuts)
       ;;     :options {:on-click #(state/sidebar-add-block! (state/get-current-repo) "shortcut-settings" :shortcut-settings)} ;; :on-click #(state/pub-event! [:modal/keymap])

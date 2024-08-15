@@ -691,7 +691,7 @@
                 children)
       children)))
 
-(rum/defc page-cp ;TODO: ツールチップ
+(rum/defc page-cp
   "Component for a page. `page` argument contains :block/name which can be (un)sanitized page name.
    Keys for `config`:
    - `:preview?`: Is this component under preview mode? (If true, `page-preview-trigger` won't be registered to this `page-cp`)"

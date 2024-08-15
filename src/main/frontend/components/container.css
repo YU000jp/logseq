@@ -81,13 +81,13 @@
 
   -webkit-font-smoothing: antialiased;
 
-  > .wrap {
+  >.wrap {
     height: calc(100vh - var(--ls-headbar-inner-top-padding) - 50px);
     margin-top: 30px;
     width: 100%;
     padding-top: var(--ls-win32-title-bar-height);
 
-    > .fake-bar {
+    >.fake-bar {
       @apply w-full px-5 pt-1 sm:hidden;
 
       top: -45px;
@@ -162,7 +162,8 @@
       margin-right: 11px;
     }
 
-    &:hover, &.active {
+    &:hover,
+    &.active {
       background-color: var(--lx-gray-04, var(--color-level-3, var(--rx-gray-04)));
       color: var(--lx-gray-12, var(--rx-gray-12));
 
@@ -175,13 +176,24 @@
   .nav-contents-container {
     @apply relative h-full flex-grow-0 overflow-x-hidden overflow-y-auto;
 
+    margin-bottom: 1em;
+
     &.is-scrolled {
       border-top: 1px solid var(--ls-tertiary-border-color);
+    }
+
+    :is(:hover, :focus-within) {
+      opacity: 1;
+    }
+
+    :not(:is(:hover, :focus-within)) {
+      opacity: 0.96;
     }
   }
 
   .nav-content-item {
     &:not(:hover) {
+
       ::-webkit-scrollbar-thumb,
       ::-webkit-scrollbar,
       ::-webkit-scrollbar-thumb:active {
@@ -223,11 +235,11 @@
       .wrap-th {
         @apply opacity-50;
 
-        > .ui__icon {
+        >.ui__icon {
           @apply relative top-[-1px];
         }
 
-        > strong {
+        >strong {
           @apply text-[11px] font-semibold;
         }
       }
@@ -357,7 +369,7 @@
     padding-top: 0;
     width: var(--ls-left-sidebar-width);
 
-    > .wrap {
+    >.wrap {
       margin-top: 52px;
     }
 
@@ -381,11 +393,11 @@
     color: var(--ls-left-sidebar-text-color, var(--ls-header-button-background));
   }
 
-  > .left-sidebar-inner {
+  >.left-sidebar-inner {
     padding-top: var(--ls-headbar-inner-top-padding);
   }
 
-  > .shade-mask {
+  >.shade-mask {
     background-color: rgba(0, 0, 0, .7);
     position: absolute;
     top: 0;
@@ -406,7 +418,7 @@
       transition: none !important;
     }
 
-    > .shade-mask {
+    >.shade-mask {
       transition: none !important;
       z-index: 1;
     }
@@ -420,7 +432,7 @@
       overflow: hidden;
     }
 
-    > .shade-mask {
+    >.shade-mask {
       opacity: 1;
       z-index: 1;
     }
@@ -432,7 +444,7 @@
       transform: translate3d(-100%, 0, 0) !important;
     }
 
-    > .shade-mask {
+    >.shade-mask {
       opacity: 0;
       z-index: 1;
     }
@@ -464,8 +476,10 @@
     transition: background-color 300ms;
     transition-delay: 300ms;
 
-    &.is-active, &:hover,
-    &:focus, &:active {
+    &.is-active,
+    &:hover,
+    &:focus,
+    &:active {
       @apply bg-primary/90;
     }
   }
@@ -489,7 +503,7 @@
       }
     }
 
-    > .shade-mask {
+    >.shade-mask {
       display: none;
     }
   }
@@ -498,7 +512,7 @@
 .ls-left-sidebar-open {
 
   @screen sm {
-    .cp__header > .r {
+    .cp__header>.r {
       display: flex;
     }
   }
@@ -516,7 +530,7 @@
   }
 
   &:not(.ls-right-sidebar-open) {
-    .cp__header > .r {
+    .cp__header>.r {
       margin-right: 160px;
 
       .is-fullscreen & {
@@ -559,9 +573,8 @@
   &-btn {
     @apply fixed bottom-4 right-4 sm:right-8 opacity-70 hover:opacity-100;
 
-    > .inner {
-      @apply rounded-full h-8 w-8 flex items-center justify-center
-      font-bold select-none cursor-pointer;
+    >.inner {
+      @apply rounded-full h-8 w-8 flex items-center justify-center font-bold select-none cursor-pointer;
 
       background-color: var(--lx-gray-02, var(--ls-secondary-background-color, var(--rx-gray-02)));
     }
@@ -572,13 +585,14 @@
 
     background-color: var(--ls-secondary-background-color, var(--rx-gray-03));
 
-    > .list-wrap {
+    >.list-wrap {
       @apply flex flex-col pt-3;
 
       .it {
         color: var(--ls-primary-text-color);
 
-        &:active, &:hover {
+        &:active,
+        &:hover {
           background-color: var(--ls-tertiary-background-color, var(--rx-gray-05));
         }
       }
@@ -607,7 +621,9 @@
 
 /* Workaround for Linux Intel GPU text rendering issue GH#7233 */
 .is-electron.is-linux .cp__menubar-repos {
-  #repo-switch, .nav-header .flex-1 {
+
+  #repo-switch,
+  .nav-header .flex-1 {
     position: relative;
   }
 }
@@ -632,22 +648,26 @@
   height: calc(100vh - var(--ls-headbar-height) - 4rem);
 }
 
-a.ui__modal-close svg, a.close svg, span.rotating-arrow svg {
+a.ui__modal-close svg,
+a.close svg,
+span.rotating-arrow svg {
   color: var(--ls-primary-text-color);
 }
 
-a.ui__modal-close, a.close {
+a.ui__modal-close,
+a.close {
   color: var(--ls-primary-text-color);
   opacity: 0.6;
 }
 
-a.ui__modal-close:hover, a.close:hover {
+a.ui__modal-close:hover,
+a.close:hover {
   opacity: 1;
 }
 
 html[data-theme='dark'] {
   #left-sidebar {
-    > .shade-mask {
+    >.shade-mask {
       background-color: rgba(0, 0, 0, .15);
     }
   }

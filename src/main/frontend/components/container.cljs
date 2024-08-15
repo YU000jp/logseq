@@ -47,7 +47,7 @@
             [logseq.shui.toaster.core :as shui-toaster]
             [logseq.shui.dialog.core :as shui-dialog]
             [logseq.graph-parser.util.page-ref :as page-ref]
-            
+
             [frontend.util :as util]
             [frontend.util.cursor :as cursor]
             [frontend.components.window-controls :as window-controls]
@@ -62,11 +62,11 @@
 (rum/defc nav-content-item < rum/reactive
   [name {:keys [class count]} child]
   (let [collapsed? (state/sub [:ui/navigation-item-collapsed? class])]
-    [:div.nav-content-item 
+    [:div.nav-content-item
      {:class (util/classnames [class {:is-expand (not collapsed?)
                                       :has-children (and (number? count) (> count 0))}])}
      [:div.nav-content-item-inner
-      [:div.header.items-center 
+      [:div.header.items-center
        {:style {:cursor "row-resize"}
         :on-click (fn [^js/MouseEvent _e]
                     (state/toggle-navigation-item-collapsed! class))}
@@ -92,82 +92,48 @@
         untitled? (db-model/untitled-page? name)
         name (util/safe-page-name-sanity-lc name)
         repo (state/get-current-repo)
-        file-rpath (when (util/electron?) (page-util/get-page-file-rpath name))
+        ;; file-rpath (when (util/electron?) (page-util/get-page-file-rpath name))
         source-page (db-model/get-alias-source-page repo name)
-        ctx-icon #(shui/tabler-icon %1 {:class "scale-90 pr-1 opacity-80"})
+        ctx-icon #(shui/tabler-icon %1 {:class "pr-1 opacity-80"})
         open-in-sidebar #(when-let [page-entity (and (not whiteboard-page?)
-                                                  (if (empty? source-page)
-                                                    (db/entity [:block/name name]) source-page))]
+                                                     (if (empty? source-page)
+                                                       (db/entity [:block/name name]) source-page))]
                            (state/sidebar-add-block!
                             repo
                             (:db/id page-entity)
-                            :page))
-        x-menu-content (fn [type opts]
-                         (let [dropdown? (= type :dropdown)
-                               x-menu-content (if dropdown? shui/dropdown-menu-content shui/context-menu-content)
-                               x-menu-item (if dropdown? shui/dropdown-menu-item shui/context-menu-item)
-                               x-menu-shortcut (if dropdown? shui/dropdown-menu-shortcut shui/context-menu-shortcut)]
-                           (x-menu-content
-                             (merge {:class "w-60"} opts)
-                             (when-not recent?
-                               (x-menu-item
-                                 {:on-click #(page-handler/unfavorite-page! original-name)}
-                                 (ctx-icon "star-off")
-                                 (t :page/unfavorite)
-                                 (x-menu-shortcut (when-let [binding (shortcut-dh/shortcut-binding :command/toggle-favorite)]
-                                                    (some-> binding
-                                                            (first)
-                                                            (shortcut-utils/decorate-binding))))))
-                             (when-let [page-fpath (and (util/electron?) file-rpath
-                                                     (config/get-repo-fpath repo file-rpath))]
-                               [:<>
-                                (x-menu-item
-                                  {:on-click #(ipc/ipc :openFileInFolder page-fpath)}
-                                  (ctx-icon "folder")
-                                  (t :page/open-in-finder))
-
-                                (x-menu-item
-                                  {:on-click #(js/window.apis.openPath page-fpath)}
-                                  (ctx-icon "file")
-                                  (t :page/open-with-default-app))])
-
-                             (x-menu-item
-                               {:on-click open-in-sidebar}
-                               (ctx-icon "layout-sidebar-right")
-                               (t :content/open-in-sidebar)
-                               (x-menu-shortcut (shortcut-utils/decorate-binding "shift+click"))))))]
+                            :page))]
 
     ;; TODO: move to standalone component
     (shui/context-menu
-      (shui/context-menu-trigger
-        [:a.flex.items-center.justify-between.relative.group
-         {:on-click
-          (fn [e]
-            (let [name (if (empty? source-page) name (:block/name source-page))]
-              (if (util/shift-key? e)
-                (open-in-sidebar)
-                (if whiteboard-page?
-                  (route-handler/redirect-to-whiteboard! name {:click-from-recent? recent?})
-                  (route-handler/redirect-to-page! name {:click-from-recent? recent?})))))}
-         [:span.page-icon.ml-3.justify-center (if whiteboard-page? (ui/icon "whiteboard" {:extension? true}) icon)]
-         [:span.page-title {:class (when untitled? "opacity-50")}
-          (if untitled? (t :untitled)
-                        (pdf-utils/fix-local-asset-pagename original-name))]
+     (shui/context-menu-trigger
+      [:a.flex.items-center.justify-between.relative.group
+       {:on-click
+        (fn [e]
+          (let [name (if (empty? source-page) name (:block/name source-page))]
+            (if (util/shift-key? e)
+              (open-in-sidebar)
+              (if whiteboard-page?
+                (route-handler/redirect-to-whiteboard! name {:click-from-recent? recent?})
+                (route-handler/redirect-to-page! name {:click-from-recent? recent?})))))}
+       [:span.page-icon.ml-3.justify-center (if whiteboard-page? (ui/icon "whiteboard" {:extension? true}) icon)]
+       [:span.page-title {:class (when untitled? "opacity-50")}
+        (if untitled? (t :untitled)
+            (pdf-utils/fix-local-asset-pagename original-name))]
 
          ;; dots trigger
+       (when-not recent?
          (shui/dropdown-menu
-           (shui/dropdown-menu-trigger
-             (shui/button
-               {:size     :sm
-                :variant  :ghost
-                :class    "absolute right-2 top-0 px-1.5 scale-75 opacity-30 hidden group-hover:block hover:opacity-80 active:opacity-100"
-                :on-click #(util/stop %)}
-               [:i.relative {:style {:top "1px"}} (shui/tabler-icon "dots")]))
-           ;; menu content
-           (x-menu-content :dropdown {:align "start"}))]
-
-        ;; menu content
-        (x-menu-content :context nil)))))
+          (shui/dropdown-menu-trigger
+           (shui/button
+            {:size     :sm
+             :variant  :ghost
+             :class    "absolute right-2 top-0 px-1.5 scale-75 opacity-30 hidden group-hover:block hover:opacity-80 active:opacity-100"
+             :title    (t :page/unfavorite)
+             :on-click (fn [e]
+                         (page-handler/unfavorite-page! original-name)
+                         (util/stop e))}
+            [:i.relative {:style {:top "1px"}} (ctx-icon "star-off")])) ;; (shui/tabler-icon "dots") 
+          ))]))))
 
 (defn get-page-icon [page-entity]
   (let [default-icon (ui/icon "page" {:extension? true})
@@ -176,6 +142,7 @@
      (when (not= from-properties "") from-properties)
      default-icon))) ;; Fall back to default if icon is undefined or empty
 
+
 (rum/defcs favorite-item <
   (rum/local nil ::up?)
   (rum/local nil ::dragging-over)
@@ -183,6 +150,7 @@
   (let [up? (get state ::up?)
         dragging-over (get state ::dragging-over)
         target (state/sub :favorites/dragging)]
+
     [:li.favorite-item
      {:style {:cursor "grab"}
       :key name
@@ -203,7 +171,7 @@
       :on-drag-leave (fn [_e]
                        (reset! dragging-over nil))
 
-;; TODO: ツールチップ実装
+      ;; ドラッグ操作もあるのでツールチップ実装は噛み合わない
 
       :on-drop (fn [e]
                  (page-handler/reorder-favorites! {:to name
@@ -221,10 +189,14 @@
                        (distinct))
         favorite-entities (->> favorites
                                (mapv #(db/entity [:block/name %]))
-                               (remove nil?))]
+                               (remove nil?))
+        current-page (or (state/get-current-page) (state/get-current-whiteboard))
+        favorited? (contains?
+                    (set (map util/page-name-sanity-lc (:favorites (state/sub-config))))
+                    current-page)]
     (nav-content-item
      [:a.flex.items-center.rounded-md.wrap-th
-      {:style {:cursor "row-resize"}}
+      {:style {:cursor "row-resize" :margin-left "1em"}}
       (ui/icon "star" {:size 26})
       [:span.flex-1.ml-2.text-l
        (t :left-side-bar/nav-favorites)]]
@@ -249,10 +221,11 @@
                    (map (fn [page] {:lowercase (util/safe-page-name-sanity-lc page)
                                     :page page}))
                    (util/distinct-by :lowercase)
-                   (map :page))]
+                   (map :page))
+        page-name (or (state/get-current-page) (state/get-current-whiteboard))]
     (nav-content-item
      [:a.flex.items-center.rounded-md.wrap-th
-      {:style {:cursor "row-resize"}}
+      {:style {:cursor "row-resize" :margin-left "1em"}}
       (ui/icon "history" {:size 26})
       [:span.flex-1.ml-2.text-l
        (t :left-side-bar/nav-recent-pages)]]
@@ -262,14 +235,15 @@
 
      [:ul.text-sm
       (for [name pages]
-        (when-let [entity (db/entity [:block/name (util/safe-page-name-sanity-lc name)])]
-          [:li.recent-item.select-none.cursor
-           {:key name
-            :title name
-            :draggable true
-            :on-drag-start (fn [event] (editor-handler/block->data-transfer! name event))
-            :data-ref name}
-           (page-name-dot name (get-page-icon entity) true)]))])))
+        (when-not (= name page-name)
+          (when-let [entity (db/entity [:block/name (util/safe-page-name-sanity-lc name)])]
+            [:li.recent-item.select-none.cursor
+             {:key name
+              :title name
+              :draggable true
+              :on-drag-start (fn [event] (editor-handler/block->data-transfer! name event))
+              :data-ref name}
+             (page-name-dot name (get-page-icon entity) true)])))])))
 
 (rum/defcs flashcards < db-mixins/query rum/reactive
   {:did-mount (fn [state]
@@ -339,7 +313,7 @@
                                                    :close-btn?  false
                                                    :panel?      false
                                                    :label "ls-modal-search"})])
-                               (state/set-search-mode! :pages)])
+                             (state/set-search-mode! :pages)])
                 :shortcut (ui/keyboard-shortcut-from-config :go/search)}
       :icon (ui/type-icon {:name "new-page"
                            :class "highlight"
@@ -511,12 +485,12 @@
         ;;    :icon "network"
         ;;    :shortcut :go/graph-view})
 
-        ;;  (sidebar-item
-        ;;   {:class "all-pages-nav"
-        ;;    :title (t :right-side-bar/all-pages)
-        ;;    :href (rfe/href :all-pages)
-        ;;    :active (and (not srs-open?) (= route-name :all-pages))
-        ;;    :icon "files"})
+         (sidebar-item
+          {:class "all-pages-nav"
+           :title (t :right-side-bar/all-pages)
+           :href (rfe/href :all-pages)
+           :active (and (not srs-open?) (= route-name :all-pages))
+           :icon "files"})
          ]]
 
        [:div.nav-contents-container.flex.flex-col.gap-1.pt-1
@@ -528,30 +502,24 @@
           (recent-pages t))]
 
 
-       (if page-name
-         [:div.nav-contents-container.flex.flex-col.gap-1.pt-1
-          {:on-scroll on-contents-scroll}
+       (when page-name
+         [[:div.nav-contents-container.flex.flex-col.gap-1.pt-1.text-sm
+           {:on-scroll on-contents-scroll}
             ;; (hierarchy/structures page-name) 
             ;; hierarchy
-          (let [namespace page-name]
-            (when-not (string/blank? namespace)
-              (let [namespace (string/lower-case (page-ref/get-page-name! namespace))
-                    children (db-model/get-namespace-hierarchy (state/get-current-repo) namespace)]
-                (com-block/namespace-hierarchy {} namespace children false))))]
-         [:div.nav-contents-container.flex.flex-col.gap-1.pt-1
-          ""])
-
-
-       (when page-name
-         [:div.nav-contents-container.flex.flex-col.gap-1.pt-1
-          {:on-scroll on-contents-scroll}
+           (let [namespace page-name]
+             (when-not (string/blank? namespace)
+               (let [namespace (string/lower-case (page-ref/get-page-name! namespace))
+                     children (db-model/get-namespace-hierarchy (state/get-current-repo) namespace)]
+                 (com-block/namespace-hierarchy {} namespace children false))))]
+          [:div.nav-contents-container.flex.flex-col.gap-1.pt-1.text-sm
             ;; tagged pages
-          (com-page/tagged-pages repo page-name)])
+           (com-page/tagged-pages repo page-name)]])
 
        [:footer.px-2.mt-1.create
         (when-not config/publishing?
           (create-dropdown enable-whiteboards? page-name))]]]
-     
+
      [:span.shade-mask
       (cond-> {:on-click close-fn}
         (number? offset-ratio)
@@ -569,32 +537,32 @@
 
     ;; restore size
     (rum/use-layout-effect!
-      (fn []
-        (when-let [width (storage/get :ls-left-sidebar-width)]
-          (.setProperty (.-style el-doc) "--ls-left-sidebar-width" width)))
-      [])
+     (fn []
+       (when-let [width (storage/get :ls-left-sidebar-width)]
+         (.setProperty (.-style el-doc) "--ls-left-sidebar-width" width)))
+     [])
 
     ;; draggable handler
     (rum/use-effect!
-      (fn []
-        (when-let [el (and (fn? js/window.interact) (rum/deref *el-ref))]
-          (let [^js sidebar-el (.querySelector el-doc "#left-sidebar")]
-            (-> (js/interact el)
-              (.draggable
+     (fn []
+       (when-let [el (and (fn? js/window.interact) (rum/deref *el-ref))]
+         (let [^js sidebar-el (.querySelector el-doc "#left-sidebar")]
+           (-> (js/interact el)
+               (.draggable
                 #js {:listeners
                      #js {:move (fn [^js/MouseEvent e]
                                   (when-let [offset (.-left (.-rect e))]
                                     (let [width (.toFixed (max (min offset 460) 240) 2)]
                                       (adjust-size! (str width "px")))))}})
-              (.styleCursor false)
-              (.on "dragstart" (fn []
-                                 (.. sidebar-el -classList (add "is-resizing"))
-                                 (.. el-doc -classList (add "is-resizing-buf"))))
-              (.on "dragend" (fn []
-                               (.. sidebar-el -classList (remove "is-resizing"))
-                               (.. el-doc -classList (remove "is-resizing-buf"))))))
-          #()))
-      [])
+               (.styleCursor false)
+               (.on "dragstart" (fn []
+                                  (.. sidebar-el -classList (add "is-resizing"))
+                                  (.. el-doc -classList (add "is-resizing-buf"))))
+               (.on "dragend" (fn []
+                                (.. sidebar-el -classList (remove "is-resizing"))
+                                (.. el-doc -classList (remove "is-resizing-buf"))))))
+         #()))
+     [])
     [:span.left-sidebar-resizer {:ref *el-ref}]))
 
 (rum/defcs left-sidebar < rum/reactive
@@ -639,7 +607,7 @@
 
      ;; sidebar contents
      (sidebar-nav route-match close-fn left-sidebar-open? enable-whiteboards? srs-open? *closing?
-       @*close-signal (and touch-pending? touching-x-offset))
+                  @*close-signal (and touch-pending? touching-x-offset))
      ;; resizer
      (sidebar-resizer)]))
 
@@ -881,16 +849,16 @@
   []
 
   (rum/use-effect!
-    (fn []
-      (state/set-state! :ui/handbooks-open? false))
-    [])
+   (fn []
+     (state/set-state! :ui/handbooks-open? false))
+   [])
 
   (rum/use-effect!
-    (fn []
-      (let [h #(state/set-state! :ui/help-open? false)]
-        (.addEventListener js/document.body "click" h)
-        #(.removeEventListener js/document.body "click" h)))
-    [])
+   (fn []
+     (let [h #(state/set-state! :ui/help-open? false)]
+       (.addEventListener js/document.body "click" h)
+       #(.removeEventListener js/document.body "click" h)))
+   [])
 
   [:div.cp__sidebar-help-menu-popup
    [:div.list-wrap
