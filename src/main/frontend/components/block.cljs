@@ -2694,21 +2694,31 @@
                                              [:span.opacity-70 "⋯"])))
                               (interpose (breadcrumb-separator)))]
           (when (seq breadcrumb)
-            [:div.breadcrumb.block-parents
-             {:class (when (seq breadcrumb)
-                       (str (when-not (:search? config)
-                              " my-2")
-                            (when indent?
-                              " ml-4")))}
-             (when journal?
-               (ui/icon "calendar-time" 
-                        {:color "yellow"
-                         :class "text-lg"}))
-             (when (and (false? (:top-level? config))
-                        (seq parents))
-               (breadcrumb-separator))
-             breadcrumb
-             (when end-separator? (breadcrumb-separator))]))))))
+
+            ;; 戻るボタン
+            [:div.flex
+             [(ui/with-shortcut :go/backward "bottom"
+                [:button.it.navigation.nav-left.button.icon
+                 {:title (t :header/go-back) :on-click #(js/window.history.back)}
+                 (ui/icon "arrow-left" {:size ui/icon-size})])
+
+              [:div.breadcrumb.block-parents
+               {:class (when (seq breadcrumb)
+                         (str (when-not (:search? config)
+                                " my-2")
+                              (when indent?
+                                " ml-4")))}
+
+
+               (when journal?
+                 (ui/icon "calendar-time"
+                          {:color "yellow"
+                           :class "text-lg"}))
+               (when (and (false? (:top-level? config))
+                          (seq parents))
+                 (breadcrumb-separator))
+               breadcrumb
+               (when end-separator? (breadcrumb-separator))]]]))))))
 
 (defn- block-drag-over
   [event uuid top? block-id *move-to]
