@@ -388,7 +388,7 @@
  :left-side-bar/create "新規作成"
  :left-side-bar/journals "ジャーナル"
  :left-side-bar/nav-favorites "ブックマーク"
- :left-side-bar/nav-recent-pages "開いたページ"
+ :left-side-bar/nav-recent-pages "ページ履歴"
  :left-side-bar/new-page "新しいノート"
  :left-side-bar/new-sub-page "新しいサブノート"
  :left-side-bar/new-whiteboard "新しいホワイトボード"
@@ -410,7 +410,7 @@
                                        ;; 1 of 1 Linked Reference
                                        ;; 2 of 5 Linked References
                                       (str
-                                       "バックリンク "
+                                       "Linked References (バックリンク) "
                                        (when filtered-count
                                          (str filtered-count " of "))
                                        total
@@ -421,7 +421,7 @@
                                          ;; 1 Unlinked Reference
                                          ;; 5 Unlinked References
                                         (str 
-                                         "リンクされていない関連ログ "
+                                         "Unlinked Refereces (ページ名にマッチ) "
                                          total
                                           ;;    (if (= total 1) " Unlinked Reference" " Unlinked References")
                                          (when total "件")))
@@ -500,7 +500,7 @@
  :open "開く"
  :open-a-directory "ローカル フォルダ(ディレクトリ)を選択する"
  :open-new-window "新規でLogseqアプリを開く"
- :page/add-to-favorites "ブックマークへ追加する"
+ :page/add-to-favorites "ブックマークへ追加"
  :page/backlinks "バックリンク"
  :page/copy-page-url "ノートの URL をコピーする"
  :page/created-at "作成日時 "
