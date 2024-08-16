@@ -44,17 +44,17 @@
 
 (def search-actions
   [{:text (t :search/only-pages)        :info (t :search/info-filter-to-search) :icon-theme :gray :icon "page" :filter {:mode "search"
-                                                                                                          :group :pages}}
+                                                                                                                        :group :pages}}
    {:text (t :search/only-current-page) :info (t :search/info-filter-to-search) :icon-theme :gray :icon "page" :filter {:mode "search"
-                                                                                                          :group :current-page}}
+                                                                                                                        :group :current-page}}
    {:text (t :search/only-blocks)       :info (t :search/info-filter-to-search) :icon-theme :gray :icon "block" :filter {:mode "search"
-                                                                                                           :group :blocks}}
+                                                                                                                         :group :blocks}}
    {:text (t :search/only-commands)     :info (t :search/info-filter-to-search) :icon-theme :gray :icon "command" :filter {:mode "search"
-                                                                                                             :group :commands}}
+                                                                                                                           :group :commands}}
    {:text (t :search/only-whiteboards)  :info (t :search/info-filter-to-search) :icon-theme :gray :icon "whiteboard" :filter {:mode "search"
-                                                                                                                :group :whiteboards}}
+                                                                                                                              :group :whiteboards}}
    {:text (t :search/only-files)        :info (t :search/info-filter-to-search) :icon-theme :gray :icon "file" :filter {:mode "search"
-                                                                                                          :group :files}}])
+                                                                                                                        :group :files}}])
 
 (def filters search-actions)
 
@@ -239,8 +239,8 @@
                                       :icon-theme :gray
                                       :text page
                                       :source-page (if source-page
-                                              (:block/original-name source-page)
-                                              page))))))]
+                                                     (:block/original-name source-page)
+                                                     page))))))]
       (swap! !results update group        merge {:status :success :items items}))))
 
 (defmethod load-results :whiteboards [group state]
@@ -519,10 +519,10 @@
         create-page? (= :page (:source-create item))
         !input (::input state)]
     (when-not (db/page-exists? @!input)
-    (cond
-      create-whiteboard? (whiteboard-handler/create-new-whiteboard-and-redirect! @!input)
-      create-page? (page-handler/create! @!input {:redirect? true}))
-    (state/close-modal!))))
+      (cond
+        create-whiteboard? (whiteboard-handler/create-new-whiteboard-and-redirect! @!input)
+        create-page? (page-handler/create! @!input {:redirect? true}))
+      (state/close-modal!))))
 
 (defn- get-filter-user-input
   [input]
@@ -795,10 +795,10 @@
   []
   ;; (rand-nth
   ;;  [
-    [:div.flex.flex-row.gap-1.items-center.opacity-50.hover:opacity-100
-     [:span (t :search/tip-slash-type)]
-     (shui/shortcut "/")
-     [:span (t :search/tip-slash)]]
+  [:div.flex.flex-row.gap-1.items-center.opacity-50.hover:opacity-100
+   [:span (t :search/tip-slash-type)]
+   (shui/shortcut "/")
+   [:span (t :search/tip-slash)]]
     ;; [:div.flex.flex-row.gap-1.items-center.opacity-50.hover:opacity-100
     ;;  (shui/shortcut ["mod" "enter"])
     ;;  [:div "to open search in the sidebar"]]
@@ -823,31 +823,31 @@
 (rum/defc hint-button
   [text shortcut opts]
   (shui-ui/button
-    (merge {:class "hint-button [&>span:first-child]:hover:opacity-100 opacity-40 hover:opacity-80"
-            :variant :ghost
-            :size  :sm}
-      opts)
-    [[:span.opacity-60 text]
+   (merge {:class "hint-button [&>span:first-child]:hover:opacity-100 opacity-40 hover:opacity-80"
+           :variant :ghost
+           :size  :sm}
+          opts)
+   [[:span.opacity-60 text]
      ;; shortcut
-     (when (not-empty shortcut)
-       (for [key shortcut]
-         [:div.ui__button-shortcut-key
-          (case key
-            "cmd" [:div (if goog.userAgent/MAC "⌘" "Ctrl")]
-            "shift" [:div "⇧"]
-            "return" [:div "⏎"]
-            "esc" [:div.tracking-tightest {:style {:transform   "scaleX(0.8) scaleY(1.2) "
-                                                   :font-size   "0.5rem"
-                                                   :font-weight "500"}} "ESC"]
-            (cond-> key (string? key) .toUpperCase))]))]))
+    (when (not-empty shortcut)
+      (for [key shortcut]
+        [:div.ui__button-shortcut-key
+         (case key
+           "cmd" [:div (if goog.userAgent/MAC "⌘" "Ctrl")]
+           "shift" [:div "⇧"]
+           "return" [:div "⏎"]
+           "esc" [:div.tracking-tightest {:style {:transform   "scaleX(0.8) scaleY(1.2) "
+                                                  :font-size   "0.5rem"
+                                                  :font-weight "500"}} "ESC"]
+           (cond-> key (string? key) .toUpperCase))]))]))
 
 (rum/defc hints
   [state]
   (let [action (state->action state)
         button-fn (fn [text shortcut & {:as opts}]
                     (hint-button text shortcut
-                      {:on-click #(handle-action action (assoc state :opts opts) %)
-                       :muted    true}))]
+                                 {:on-click #(handle-action action (assoc state :opts opts) %)
+                                  :muted    true}))]
     (when action
       [:div.hints
        [:div.text-sm.leading-6
@@ -886,24 +886,23 @@
   [:div.flex.flex-row.gap-1.items-center
    [:div (str (t :search/filters) ":")]
    [:div (case action
-            "Pages"  (t :search/pages)
-            "Blocks" (t :search/blocks)
-            "Files"  (t :search/files)
-            "Recents" (t :search/recents)
-            "Whiteboards" (t :search/whiteboards)
-            "Commands" (t :search/commands)
-            "Filters" (t :search/filters)
-            "Current-page" (t :search/current-page)
-            "Graph" (t :search/graph)
-            "Create" (t :search/create)
-           )]
+           "Pages"  (t :search/pages)
+           "Blocks" (t :search/blocks)
+           "Files"  (t :search/files)
+           "Recents" (t :search/recents)
+           "Whiteboards" (t :search/whiteboards)
+           "Commands" (t :search/commands)
+           "Filters" (t :search/filters)
+           "Current-page" (t :search/current-page)
+           "Graph" (t :search/graph)
+           "Create" (t :search/create))]
    (shui-ui/button
-     {:variant  :ghost
-      :size     :icon
-      :class    "p-1 scale-75"
-      :on-click (fn []
-                  (reset! (::filter state) nil))}
-     (shui-ui/tabler-icon "x"))])
+    {:variant  :ghost
+     :size     :icon
+     :class    "p-1 scale-75"
+     :on-click (fn []
+                 (reset! (::filter state) nil))}
+    (shui-ui/tabler-icon "x"))])
 
 (rum/defcs cmdk < rum/static
   rum/reactive
@@ -989,8 +988,7 @@
           [:div.flex.flex-col.p-4.opacity-50
            (when-not (string/blank? (rum/react *input))
              "No matched results")]))]
-     (hints state)
-     ]))
+     (hints state)]))
 
 (rum/defc cmdk-modal [props]
   [:div {:class "cp__cmdk__modal rounded-lg w-[90dvw] max-w-4xl relative"}
