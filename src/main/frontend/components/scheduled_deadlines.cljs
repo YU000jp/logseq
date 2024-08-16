@@ -54,6 +54,7 @@
 
           (let [countNumber (count refs)]
             [:span.overflow-hidden.text-ellipsis
+             {:title (t :right-side-bar/scheduled-and-deadline-desc)}
              [(t :right-side-bar/scheduled-and-deadline) " (" countNumber ")"]])]]
         (scheduled-and-deadlines-inner page-name refs)]])))
 
