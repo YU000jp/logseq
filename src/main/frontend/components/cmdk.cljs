@@ -634,13 +634,18 @@
                                       ;; boolean value change so manually pass in the dep
                                            :on-highlight-dep highlighted-item
                                            :on-click (fn [e]
-                                                       (reset! (::highlighted-item state) item)
-                                                       (handle-action :default state item)
-                                                       (when-let [on-click (:on-click item)]
-                                                         (on-click e))) ;; FIXME: サイドバーで、Shiftクリックが一度しか機能しない。2回目はShiftが効かない
-                                      ;; :on-mouse-enter (fn [e]
-                                      ;;                   (when (not highlighted?)
-                                      ;;                     (reset! (::highlighted-item state) (assoc item :mouse-enter-triggered-highlight true))))
+                                                       (reset! (::highlighted-item state) item) 
+                                                       (when (util/shift-key? e) ;; 追加
+                                                         (reset! (::shift? state) true))
+                                                         (handle-action :default state item)
+                                                      ;;  (when-let [on-click (:on-click item)]
+                                                      ;;    (on-click e))
+                                                       )
+                                                         ;; FIX: サイドバーで、Shiftクリックが一度しか機能しない。2回目はShiftが効かない バグFIX
+                                           :on-mouse-enter (fn [e]
+                                                             (when (not highlighted?)
+                                                               (reset! (::highlighted-item state)
+                                                                       (assoc item :mouse-enter-triggered-highlight true))))
                                            :on-highlight (fn [ref]
                                                            (reset! (::highlighted-group state) group)
                                                            (when (and ref (.-current ref)
