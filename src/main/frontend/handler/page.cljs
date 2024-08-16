@@ -842,10 +842,10 @@
             (p/let [file-exists? (fs/file-exists? repo-dir file-rpath)
                     file-content (when file-exists?
                                    (fs/read-file repo-dir file-rpath))]
-              (when (or (not file-exists?)
-                        (and file-exists? (string/blank? file-content)))
+              (when (not file-exists?)
+                (when (string/blank? file-content)
                   ;; ページを作成するかどうか尋ねる   
-                (state/pub-event! [:journal/insert-template today-page]))
+                  (state/pub-event! [:journal/insert-template today-page])))
                 ;;(ui-handler/re-render-root!)
               (plugin-handler/hook-plugin-app :today-journal-created {:title today-page}))))))))
 
