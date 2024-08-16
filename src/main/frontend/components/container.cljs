@@ -9,7 +9,7 @@
             [frontend.components.plugins :as plugins]
             ;; [frontend.components.repo :as repo]
             ;; [frontend.components.hierarchy :as hierarchy]
-            [frontend.components.scheduled-deadlines :as scheduled]
+            ;; [frontend.components.scheduled-deadlines :as scheduled]
             [frontend.components.cmdk :as cmdk]
             [frontend.date :as date]
             [frontend.components.right-sidebar :as right-sidebar]
@@ -538,6 +538,9 @@
 
        (scheduled/scheduled-and-deadlines-for-left-menu (date/today) on-contents-scroll)
 
+      ;;  (ui/lazy-visible FIXME:
+      ;;   (fn [] (scheduled/scheduled-and-deadlines-for-left-menu (date/today) on-contents-scroll))
+      ;;   {:debug-id "scheduled-and-deadlines"})
 
        [:footer.px-2.mt-1.create
         (when-not config/publishing?
