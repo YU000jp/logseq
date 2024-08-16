@@ -88,6 +88,7 @@
          (conn/get-db repo)
          (util/page-name-sanity-lc tag-name))))
 
+
 ;; New search-by-page-name
 (defn get-search-by-page-name
   [repo tag-name page-name]
@@ -122,7 +123,7 @@
          [?page :block/name ?page-name]
          [?page :block/namespace ?e]
          [?e :block/name ?parent]]
-    (conn/get-db repo)))
+       (conn/get-db repo)))
 
 (defn get-all-namespace-parents
   [repo]
@@ -145,7 +146,7 @@
    '[:find [(pull ?page [*]) ...]
      :where
      [?page :block/name]]
-    (conn/get-db repo)))
+   (conn/get-db repo)))
 
 (defn get-all-page-original-names
   [repo]
@@ -1255,13 +1256,13 @@ independent of format as format specific heading characters are stripped"
              aliases (set/difference pages #{page-id})]
          (->>
           (d/q
-            '[:find [(pull ?block ?block-attrs) ...]
-              :in $ [?ref-page ...] ?block-attrs
-              :where
-              [?block :block/path-refs ?ref-page]]
-            db
-            pages
-            (butlast block-attrs))
+           '[:find [(pull ?block ?block-attrs) ...]
+             :in $ [?ref-page ...] ?block-attrs
+             :where
+             [?block :block/path-refs ?ref-page]]
+           db
+           pages
+           (butlast block-attrs))
           (remove (fn [block] (= page-id (:db/id (:block/page block)))))
           db-utils/group-by-page
           (map (fn [[k blocks]]
@@ -1283,19 +1284,19 @@ independent of format as format specific heading characters are stripped"
              aliases (set/difference pages #{page-id})]
          (->>
           (react/q repo
-            [:frontend.db.react/refs page-id]
-            {:use-cache? false
-             :query-fn (fn []
-                         (let [entities (mapcat (fn [id]
-                                                  (:block/_path-refs (db-utils/entity id))) pages)
-                               blocks (map (fn [e]
-                                             {:block/parent (:block/parent e)
-                                              :block/left (:block/left e)
-                                              :block/page (:block/page e)
-                                              :block/collapsed? (:block/collapsed? e)}) entities)]
-                           {:entities entities
-                            :blocks blocks}))}
-            nil)
+                   [:frontend.db.react/refs page-id]
+                   {:use-cache? false
+                    :query-fn (fn []
+                                (let [entities (mapcat (fn [id]
+                                                         (:block/_path-refs (db-utils/entity id))) pages)
+                                      blocks (map (fn [e]
+                                                    {:block/parent (:block/parent e)
+                                                     :block/left (:block/left e)
+                                                     :block/page (:block/page e)
+                                                     :block/collapsed? (:block/collapsed? e)}) entities)]
+                                  {:entities entities
+                                   :blocks blocks}))}
+                   nil)
           react
           :entities
           (remove (fn [block] (= page-id (:db/id (:block/page block)))))))))))
@@ -1312,25 +1313,25 @@ independent of format as format specific heading characters are stripped"
       (when future-day
         (when-let [repo (state/get-current-repo)]
           (->> (react/q repo [:custom :scheduled-deadline journal-title]
-                 {:use-cache? false}
-                 '[:find [(pull ?block ?block-attrs) ...]
-                   :in $ ?day ?future ?block-attrs
-                   :where
-                   (or
-                    [?block :block/scheduled ?d]
-                    [?block :block/deadline ?d])
-                   [(get-else $ ?block :block/repeated? false) ?repeated]
-                   [(get-else $ ?block :block/marker "NIL") ?marker]
-                   [(not= ?marker "DONE")]
-                   [(not= ?marker "CANCELED")]
-                   [(not= ?marker "CANCELLED")]
-                   [(<= ?d ?future)]
-                   (or-join [?repeated ?d ?day]
-                            [(true? ?repeated)]
-                            [(>= ?d ?day)])]
-                 date
-                 future-day
-                 block-attrs)
+                        {:use-cache? false}
+                        '[:find [(pull ?block ?block-attrs) ...]
+                          :in $ ?day ?future ?block-attrs
+                          :where
+                          (or
+                           [?block :block/scheduled ?d]
+                           [?block :block/deadline ?d])
+                          [(get-else $ ?block :block/repeated? false) ?repeated]
+                          [(get-else $ ?block :block/marker "NIL") ?marker]
+                          [(not= ?marker "DONE")]
+                          [(not= ?marker "CANCELED")]
+                          [(not= ?marker "CANCELLED")]
+                          [(<= ?d ?future)]
+                          (or-join [?repeated ?d ?day]
+                                   [(true? ?repeated)]
+                                   [(>= ?d ?day)])]
+                        date
+                        future-day
+                        block-attrs)
                react
                (sort-by-left-recursive)
                db-utils/group-by-page))))))
@@ -1376,14 +1377,14 @@ independent of format as format specific heading characters are stripped"
        (let [block (db-utils/entity [:block/uuid block-uuid])
              query-result (->> (react/q repo [:frontend.db.react/refs
                                               (:db/id block)]
-                                 {}
-                                 '[:find [(pull ?ref-block ?block-attrs) ...]
-                                   :in $ ?block-uuid ?block-attrs
-                                   :where
-                                   [?block :block/uuid ?block-uuid]
-                                   [?ref-block :block/refs ?block]]
-                                 block-uuid
-                                 block-attrs)
+                                        {}
+                                        '[:find [(pull ?ref-block ?block-attrs) ...]
+                                          :in $ ?block-uuid ?block-attrs
+                                          :where
+                                          [?block :block/uuid ?block-uuid]
+                                          [?ref-block :block/refs ?block]]
+                                        block-uuid
+                                        block-attrs)
                                react
                                (sort-by-left-recursive))]
          (db-utils/group-by-page query-result))))))
@@ -1700,14 +1701,14 @@ independent of format as format specific heading characters are stripped"
 (defn get-all-whiteboards
   [repo]
   (d/q
-    '[:find [(pull ?page [:block/name
-                          :block/original-name
-                          :block/created-at
-                          :block/updated-at]) ...]
-      :where
-      [?page :block/name]
-      [?page :block/type "whiteboard"]]
-    (conn/get-db repo)))
+   '[:find [(pull ?page [:block/name
+                         :block/original-name
+                         :block/created-at
+                         :block/updated-at]) ...]
+     :where
+     [?page :block/name]
+     [?page :block/type "whiteboard"]]
+   (conn/get-db repo)))
 
 (defn get-whiteboard-id-nonces
   [repo page-name]

@@ -160,7 +160,6 @@
       (ui/icon "layers-difference" {:class "mr-2"})
       [:span.overflow-hidden.text-ellipsis
        [(t :linked-references/sidebar-open) " >> " db-id]]]
-
      (if-let [page-name db-id]
        [[:div {:key "page-references"}
          (reference/references page-name)]
@@ -586,7 +585,7 @@
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "help"}
                                                          :on-click (fn [_e]
-                                                                     (state/sidebar-add-block! (state/get-current-repo) "shortcut-settings" :shortcut-settings))
+                                                                     (state/sidebar-add-block! repo "shortcut-settings" :shortcut-settings))
                                                          :title (t :command.go/keyboard-shortcuts)}
           [(ui/icon "keyboard" {:class "icon" :color "gray"})
            [:span.ml-1.mr-2
@@ -596,7 +595,7 @@
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "help"}
                                                          :on-click (fn [_e]
-                                                                     (state/sidebar-add-block! (state/get-current-repo) ":syntax-help" :syntax-help))
+                                                                     (state/sidebar-add-block! repo ":syntax-help" :syntax-help))
                                                          :title "Syntax"}
           [(ui/icon "vector-bezier" {:class "icon" :color "gray"})
            [:span.ml-1.mr-2
