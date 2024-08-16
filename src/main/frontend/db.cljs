@@ -48,7 +48,7 @@
   get-latest-journals get-page get-page-alias get-page-alias-names get-paginated-blocks
   get-page-blocks-count get-page-blocks-no-cache get-page-file get-page-format get-page-properties
   get-page-referenced-blocks get-page-referenced-blocks-full get-page-referenced-pages get-page-unlinked-references
-  get-all-pages get-pages get-pages-relation get-pages-that-mentioned-page get-tag-pages
+  get-all-pages get-pages get-pages-relation get-pages-that-mentioned-page get-tag-pages get-search-by-page-name
   journal-page? page-alias-set sub-block
   set-file-last-modified-at! page-empty? page-exists? page-empty-or-dummy? get-alias-source-page
   set-file-content! has-children? get-namespace-pages get-all-namespace-relation get-pages-by-name-partition

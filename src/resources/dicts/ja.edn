@@ -397,7 +397,8 @@
  :left-side-bar/graph-unlink "このグラフのリンクを解除"
  :left-side-bar/hierarchy "階層ページ"
  :left-side-bar/tagged-pages "タグ付けされたページ"
-
+ :left-side-bar/search-by-page-name "名称によるページ検索"
+ :left-side-bar/search-by-page-name-desc "このページ名の文字列を含むページのリスト"
  :linked-references/filter-directions "クリックしてフィルターに含める、シフトクリックで除外。再クリックして削除。" ;"Click to include and shift-click to exclude. Click again to remove."
  :linked-references/filter-excludes  "除外：" ;"Excludes: "
  :linked-references/filter-heading "フィルター：" ;"Filter: " 

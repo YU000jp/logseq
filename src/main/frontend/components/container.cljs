@@ -522,21 +522,27 @@
         {:on-scroll on-contents-scroll}
         (recent-pages t)]
 
+
        (when page-name
-          ;; hierarchy
-         [(let [namespace page-name]
-            (when-not (string/blank? namespace)
-              [:div.nav-contents-container.pt-1.text-sm
-               {:on-scroll on-contents-scroll
-                :style {:margin-left "1em"}}
-               (let [namespace (string/lower-case (page-ref/get-page-name! namespace))
-                     children (db-model/get-namespace-hierarchy (state/get-current-repo) namespace)]
-                 (com-block/namespace-hierarchy {} namespace children false))]))
+
+         [(let [hierarchy-target page-name
+                ;; includeSlash (string/includes? hierarchy-target "/")
+                split (string/split page-name #"/")
+                ;; first-class (first split)
+                last-name (last split) 
+                
+                children (db-model/get-namespace-hierarchy (state/get-current-repo) hierarchy-target)]
+            [;; hierarchy
+             [:div.nav-contents-container.pt-1.text-sm
+              {:on-scroll on-contents-scroll
+               :style {:margin-left "1em"}}
+              (com-block/namespace-hierarchy {} hierarchy-target children false)]
+                 ;; search-by-page-name
+             (when last-name
+               (com-page/search-by-page-name repo last-name page-name))])
+
            ;; tagged pages
           (com-page/tagged-pages repo page-name)])
-
-
-       (scheduled/scheduled-and-deadlines-for-left-menu (date/today) on-contents-scroll)
 
       ;;  (ui/lazy-visible FIXME:
       ;;   (fn [] (scheduled/scheduled-and-deadlines-for-left-menu (date/today) on-contents-scroll))
@@ -552,6 +558,7 @@
         (assoc :style {:opacity (cond-> offset-ratio
                                   (neg? offset-ratio)
                                   (+ 1))}))]]))
+
 
 (rum/defc sidebar-resizer
   []

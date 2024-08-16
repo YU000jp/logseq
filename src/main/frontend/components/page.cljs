@@ -33,6 +33,7 @@
             [frontend.search :as search]
             [frontend.state :as state]
             [frontend.ui :as ui]
+            [logseq.shui.ui :as shui]
             [frontend.util :as util]
             [frontend.util.text :as text-util]
             [goog.object :as gobj]
@@ -257,12 +258,29 @@
        [:details.mt-6.flex-1.flex-row
         {:open "true"}
         [:summary.mr-1.font-bold.opacity-50.pb-1.ml-1
-         {:title [(t :left-side-bar/tagged-pages) " '" tag "'"]}
+         {:title [(t :left-side-bar/tagged-pages) " " tag]}
          [(ui/icon "tag" {:size 16}) (t :left-side-bar/tagged-pages)]]
         [:ul.page-tags-list
          (for [[original-name name] (sort-by last pages)]
            [:li.mt-1
             {:key (str "tagged-page-" name)}
+            (component-block/page-cp {} {:block/name name :block/original-name original-name})])]]])))
+
+
+(defn search-by-page-name
+  [repo tag page-name]
+  (let [pages (db/get-search-by-page-name repo tag page-name)]
+    (when (seq pages)
+      [:div.nav-contents-container.pt-1.text-sm
+       {:style {:margin-left "1em"}}
+       [:details.mt-6.flex-1.flex-row
+        {:open "true"}
+        [:summary.mr-1.font-bold.opacity-50.pb-1.ml-1
+         {:title (t :left-side-bar/search-by-page-name-desc)}
+         [(shui/tabler-icon "pencil" {:size 16}) (t :left-side-bar/search-by-page-name)]]
+        [:ul.search-by-page-name
+         (for [[original-name name] (sort-by last pages)]
+           [:li.mt-1
             (component-block/page-cp {} {:block/name name :block/original-name original-name})])]]])))
 
 
@@ -944,12 +962,12 @@
      [:div.flex.items-center.justify-between.mb-0
       [:span (t :right-side-bar/show-journals)]
       [:div.mt-1
-       (ui/toggle show-journals-in-page-graph? ;my-val;
-                  (fn []
-                    (let [value (not show-journals-in-page-graph?)]
-                      (reset! *show-journals-in-page-graph? value)))
-
-                  true)]]
+       (ui/lazy-visible
+        (fn [] (ui/toggle show-journals-in-page-graph? ;my-val;
+                          (fn []
+                            (let [value (not show-journals-in-page-graph?)]
+                              (reset! *show-journals-in-page-graph? value)))
+                          true)))]]
 
 
      (graph/graph-2d {:nodes (:nodes graph)

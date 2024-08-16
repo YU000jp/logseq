@@ -88,6 +88,24 @@
          (conn/get-db repo)
          (util/page-name-sanity-lc tag-name))))
 
+;; New search-by-page-name
+(defn get-search-by-page-name
+  [repo tag-name page-name]
+  (when (and tag-name page-name)
+    (d/q '[:find ?original-name ?name
+           :in $ ?tag ?page-name
+           :where
+           [?p :block/original-name ?original-name]
+           [?p :block/name ?name]
+           [(re-pattern ?tag) ?q]
+           [(re-find ?q ?name)]
+           (not [(= ?name ?page-name)])
+           (not [(= ?name ?tag)])
+           (not [(clojure.string/starts-with? ?name ?page-name)])]
+         (conn/get-db repo)
+         (util/page-name-sanity-lc tag-name)
+         page-name)))
+
 (defn get-all-tagged-pages
   [repo]
   (d/q '[:find ?page-name ?tag
