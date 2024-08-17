@@ -647,6 +647,7 @@
  :right-side-bar/pane-collapse-others "Collapse others"
  :right-side-bar/pane-expand "Expand"
  :right-side-bar/pane-expand-all "Expand all"
+ :right-side-bar/syntax "Syntax"
  :right-side-bar/pane-more "More"
  :right-side-bar/pane-open-as-page "Open as page"
  :right-side-bar/separator "Right sidebar resize handler"

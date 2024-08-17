@@ -294,7 +294,7 @@ opacity: 0.6;
        (shortcut-settings)]
 
       :syntax-help
-      [[:.flex.items-center (ui/icon "vector-bezier" {:class "text-md mr-2"}) "Syntax"]
+      [[:.flex.items-center (ui/icon "vector-bezier" {:class "text-md mr-2"}) (t :right-side-bar/syntax)]
        (syntax-help)]
 
       ["" [:span]])))
@@ -633,10 +633,10 @@ opacity: 0.6;
          [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "help"}
                                                          :on-click (fn [_e]
                                                                      (state/sidebar-add-block! repo ":syntax-help" :syntax-help))
-                                                         :title "Syntax"}
+                                                         :title (t :right-side-bar/syntax)}
           [(ui/icon "vector-bezier" {:class "icon" :color "gray"})
            [:span.ml-1.mr-2
-            "Syntax"]]]]
+            (t :right-side-bar/syntax)]]]]
 
         ;; すべて折りたたむ
         [:div.text-sm
