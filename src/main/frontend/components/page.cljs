@@ -403,7 +403,8 @@
                  (component-block/page-reference false namespace-page {:preview? false} label))))
            (interpose [:span.mx-2.opacity-30 model/ns-char]))])
        [:h1.page-title.flex.cursor-pointer.gap-1.w-full
-        {:data-ref page-name
+        {:title title
+         :data-ref page-name
          :class (when-not whiteboard-page? "title")
          :on-mouse-down (fn [e]
                           (when (util/right-click? e)
