@@ -107,6 +107,24 @@
          (util/page-name-sanity-lc tag-name)
          page-name)))
 
+
+;; ページの目次検出用
+(defn get-headers
+  [repo page-name]
+  (->> (d/q '[:find ?uuid
+              :in $ ?page-name
+              :where
+              [?page :block/name ?page-name]
+              [?b :block/page ?page]
+              [?b :block/content ?content] 
+              [(re-find #"^#+\s" ?content)] 
+              [?b :block/uuid ?uuid]
+              ]
+            (conn/get-db repo)
+            page-name
+            )))
+
+
 (defn get-all-tagged-pages
   [repo]
   (d/q '[:find ?page-name ?tag
@@ -297,6 +315,7 @@ independent of format as format specific heading characters are stripped"
            second
            string/lower-case))
 
+;; ページヘッダーへのアクセス用
 (defn get-block-by-page-name-and-block-route-name
   "Returns first block for given page name and block's route name. Block's route
   name must match the content of a page's block header"
@@ -1296,6 +1315,7 @@ independent of format as format specific heading characters are stripped"
                                                      :block/collapsed? (:block/collapsed? e)}) entities)]
                                   {:entities entities
                                    :blocks blocks}))}
+                  ;;  TODO: Linked Referencesの分割 (ページタグを取り除くなど)
                    nil)
           react
           :entities

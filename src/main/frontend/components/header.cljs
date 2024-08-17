@@ -275,7 +275,7 @@
              :title (t :linked-references/sidebar-open)}
             (ui/icon "layers-difference" {:class "icon" :size 24})]]
 
-                    ;; Unlinked Referencesを表示する
+          ;; Unlinked Referencesを表示する
           [:div.text-sm
            [:button.button.icon
             {:on-click (fn []
@@ -284,6 +284,15 @@
             (ui/icon "list" {:class "icon" :size 24})]]
 
 
+          ;; Page headers list
+                    [:div.text-sm
+           [:button.button.icon
+            {:on-click (fn []
+                         (state/sidebar-add-block! current-repo "headers-list" :headers-list))
+             :title (t :right-side-bar/page-headers-list)}
+            (ui/icon "pennant" {:class "icon" :size 24})]]
+
+          
          ;; ページのグラフを表示する
           [:div.text-sm
            [:button.button.icon

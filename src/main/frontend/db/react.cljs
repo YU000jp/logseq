@@ -151,7 +151,7 @@
   (when-let [result (get @query-state k)]
     (when (satisfies? IWithMeta @(:result result))
       (set! (.-state (:result result))
-           (with-meta @(:result result) {:query-time (:query-time result)})))
+            (with-meta @(:result result) {:query-time (:query-time result)})))
     (:result result)))
 
 (defn q
@@ -199,6 +199,10 @@
 ;; TODO: Extract several parts to handlers
 
 
+(defn get-block-by-uuid
+  [id]
+  (db-utils/entity [:block/uuid (if (uuid? id) id (uuid id))]))
+
 (defn get-current-page
   []
   (let [match (:route-match @state/state)
@@ -212,8 +216,10 @@
 
                (date/journal-name))]
     (when page
-      (let [page-name (util/page-name-sanity-lc page)]
-        (db-utils/entity [:block/name page-name])))))
+      (if (parse-uuid page)
+        (db-utils/entity [:block/uuid page]) ;; uuid
+        (let [page-name (util/page-name-sanity-lc page)]
+          (db-utils/entity [:block/name page-name]))))))
 
 (defn- get-block-parents
   [db id]
@@ -251,10 +257,10 @@
                           (map :e))
         blocks (-> (concat blocks other-blocks) distinct)
         block-entities (keep (fn [block-id]
-                              (let [block-id (if (and (string? block-id) (util/uuid-string? block-id))
-                                               [:block/uuid block-id]
-                                               block-id)]
-                                (db-utils/entity block-id))) blocks)
+                               (let [block-id (if (and (string? block-id) (util/uuid-string? block-id))
+                                                [:block/uuid block-id]
+                                                block-id)]
+                                 (db-utils/entity block-id))) blocks)
         affected-keys (concat
                        (mapcat
                         (fn [block]
@@ -320,8 +326,8 @@
                         :else
                         (d/q query db))
                       transform-fn)]
-     (when-not (= new-result result)
-       (set-new-result! k new-result tx)))))
+      (when-not (= new-result result)
+        (set-new-result! k new-result tx)))))
 
 (defn path-refs-need-recalculated?
   [tx-meta]

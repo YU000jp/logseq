@@ -624,6 +624,8 @@
  :right-side-bar/history-undos "元に戻す"
  :right-side-bar/new-page "新規ページ"
  :right-side-bar/page-graph "ページのグラフ表示" 
+ :right-side-bar/page-headers-list "ページの目次" 
+ :right-side-bar/page-headers-list-tip "Shiftクリックで編集\n(Cmd/Ctrl)クリックでズームイン"
  :right-side-bar/long-time "⚠️ 関連するページが多い場合、グラフの読み込みに時間がかかります。"
  :right-side-bar/pane-close "閉じる"
  :right-side-bar/pane-close-all "すべて閉じる"

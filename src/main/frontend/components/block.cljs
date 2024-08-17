@@ -844,7 +844,7 @@
                  :z-index  3}}
         (if fmt-journal? ;; ジャーナルからの引用の場合、アイコンをつける
           (ui/icon "calendar-time"
-                   {:size 16 
+                   {:size 16
                     :title (t :on-boarding/ref-journal)})
           (when page-name
             (ui/icon "page" {:size 16})))]])))
@@ -962,7 +962,7 @@
                                      :else (route-handler/redirect-to-page! id))))))}
            (when fmt-journal? ;; ジャーナルからの引用の場合、アイコンをつける
              [(ui/icon "calendar-time"
-                       {:size 16 
+                       {:size 16
                         :title (t :on-boarding/ref-journal)
                         :style {:position "absolute"
                                 :top      "0.4em"
@@ -2230,8 +2230,14 @@
    (dom/closest target "a")
    (dom/closest target ".query-table")))
 
+
+(defn scroll-to-block [block-id]
+  (let [element (.querySelector js/document (str "#main-content-container #block-content-" block-id))]
+    (when element
+      (.scrollIntoView element))))
+
 (defn- block-content-on-mouse-down
-  [e block block-id content edit-input-id]
+  [e block block-id content edit-input-id headerList? uuid]
   (when-not (> (count content) (state/block-content-max-length (state/get-current-repo)))
     (let [target (gobj/get e "target")
           button (gobj/get e "buttons")
@@ -2242,13 +2248,31 @@
         (util/stop-propagation e)
         (let [selection-blocks (state/get-selection-blocks)
               starting-block (state/get-selection-start-block-or-first)]
+
           (cond
-            (and meta? shift?)
+
+            ;; For Table of Contents (Headers List)
+            (and headerList? (not shift?))
+            (do
+              (util/stop e)
+              (state/clear-selection!)
+              (if meta?
+                (route-handler/redirect-to-page! uuid) ;; Zoom-in
+                [
+                 (let [block-dom-element (gdom/getElement block-id)]
+                  (if (some #(= block-dom-element %) selection-blocks)
+                    (state/drop-selection-block! block-dom-element)
+                    (state/conj-selection-block! block-dom-element :down))) 
+                  (scroll-to-block uuid)
+                 (editor-handler/expand-all-selection!) 
+                 ]))
+
+            (and meta? shift? (not headerList?))
             (when-not (empty? selection-blocks)
               (util/stop e)
               (editor-handler/highlight-selection-area! block-id true))
 
-            meta?
+            (and meta? (not headerList?))
             (do
               (util/stop e)
               (let [block-dom-element (gdom/getElement block-id)]
@@ -2259,13 +2283,13 @@
                 (state/clear-selection!)
                 (state/set-selection-start-block! block-id)))
 
-            (and shift? starting-block)
+            (and shift? starting-block (not headerList?))
             (do
               (util/stop e)
               (util/clear-selection!)
               (editor-handler/highlight-selection-area! block-id))
 
-            shift?
+            (and shift? (not headerList?))
             (do
               (util/clear-selection!)
               (state/set-selection-start-block! block-id))
@@ -2369,7 +2393,7 @@
                  (str uuid "-" idx)))))]))))
 
 (rum/defc block-content < rum/reactive
-  [config {:block/keys [uuid content children properties scheduled deadline format pre-block?] :as block} edit-input-id block-id slide? selected?]
+  [config {:block/keys [uuid content children properties scheduled deadline format pre-block?] :as block} edit-input-id block-id slide? selected? headerList?]
   (let [content (property/remove-built-in-properties format content)
         {:block/keys [title body] :as block} (if (:block/title block) block
                                                  (merge block (block/parse-title-and-body uuid format pre-block? content)))
@@ -2394,10 +2418,11 @@
 
                 (not block-ref?)
                 (assoc mouse-down-key (fn [e]
-                                        (block-content-on-mouse-down e block block-id content edit-input-id))))]
+                                        (block-content-on-mouse-down e block block-id content edit-input-id headerList? uuid))))]
     [:div.block-content.inline
      (cond-> {:id (str "block-content-" uuid)
               :class (when selected? "select-none")
+              :title (when headerList? (t :right-side-bar/page-headers-list-tip))
               :on-mouse-up (fn [e]
                              (when (and
                                     (state/in-selection-mode?)
@@ -2497,7 +2522,7 @@
                                   (= (:block/uuid block) (:block/uuid (:block config))))
                  default-hide? (if (and current-block-page? (not embed-self?) (state/auto-expand-block-refs?)) false true)]
              (assoc state ::hide-block-refs? (atom default-hide?))))}
-  [state config {:block/keys [uuid format] :as block} edit-input-id block-id edit? hide-block-refs-count? selected?]
+  [state config {:block/keys [uuid format] :as block} edit-input-id block-id edit? hide-block-refs-count? selected? headerList?]
   (let [*hide-block-refs? (get state ::hide-block-refs?)
         hide-block-refs? (rum/react *hide-block-refs?)
         editor-box (get config :editor-box)
@@ -2535,7 +2560,7 @@
                                            (editor-handler/clear-selection!)
                                            (editor-handler/unhighlight-blocks!)
                                            (state/set-editing! edit-input-id (:block/content block) block ""))}})
-            (block-content config block edit-input-id block-id slide? selected?))]
+            (block-content config block edit-input-id block-id slide? selected? headerList?))]
 
           (when-not hide-block-refs-count?
             [:div.flex.flex-row.items-center
@@ -2810,7 +2835,7 @@
   (block-drag-end event *move-to))
 
 (defn- block-mouse-over
-  [e *control-show? block-id doc-mode?]
+  [e *control-show? block-id doc-mode? headerList?]
   (when-not @*dragging?
     (util/stop e)
     (reset! *control-show? true)
@@ -2950,7 +2975,8 @@
         own-number-list? (:own-order-number-list? config)
         order-list? (boolean own-number-list?)
         selected? (when-not slide?
-                    (state/sub-block-selected? blocks-container-id uuid))]
+                    (state/sub-block-selected? blocks-container-id uuid))
+        headerList? (:headerList? config)]
     [:div.ls-block
      (cond->
       {:id block-id
@@ -3000,7 +3026,7 @@
        :on-touch-cancel (fn [_e]
                           (block-handler/on-touch-cancel *show-left-menu? *show-right-menu?))
        :on-mouse-over (fn [e]
-                        (block-mouse-over e *control-show? block-id doc-mode?))
+                        (block-mouse-over e *control-show? block-id doc-mode? headerList?))
        :on-mouse-leave (fn [e]
                          (block-mouse-leave e *control-show? block-id doc-mode?))}
       (when (not slide?)
@@ -3014,7 +3040,7 @@
         ;; Not embed self
         (let [hide-block-refs-count? (and (:embed? config)
                                           (= (:block/uuid block) (:embed-id config)))]
-          (block-content-or-editor config block edit-input-id block-id edit? hide-block-refs-count? selected?)))
+          (block-content-or-editor config block edit-input-id block-id edit? hide-block-refs-count? selected? headerList?)))
 
       (when @*show-right-menu?
         (block-right-menu config block edit?))]

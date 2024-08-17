@@ -152,6 +152,37 @@ html[data-theme=light] a.toggle:hover {
     flex-wrap: wrap;
   }
 
+  /* For Table of Content (Headers List) */
+  .item-type-headers-list .blocks-container>div>div div.ls-block {
+
+    .block-control,
+    .block-properties {
+      display: none
+    }
+
+    .bullet-container {
+      height: 32px;
+      width: 32px;
+    }
+
+    &:not(:has(h1, h2, h3, h4, h5, h6)) {
+      &:not(:has(.editor-wrapper)) {
+        display: none
+      }
+    }
+
+    &:has(h1),
+    &:has(h2),
+    &:has(h3),
+    &:has(h4),
+    &:has(h5),
+    &:has(h6) {
+      &.block-children-container {
+        display: none
+      }
+    }
+  }
+
   .sidebar-item {
     @apply relative flex-1 min-h-[100px];
     border: 3px solid var(--ls-tertiary-background-color);

@@ -103,12 +103,15 @@
                       (or (not= page-name old-page-name)
                           (not= hiccup old-hiccup)
                           (not= block-uuid old-block-uuid))))}
-  [page-name _blocks hiccup sidebar? whiteboard? _block-uuid]
-  [:div.page-blocks-inner {:style {:margin-left (if (or sidebar? whiteboard?) 0 -20)}}
+  [page-name _blocks hiccup sidebar? whiteboard? _block-uuid headerList?]
+  [:div.page-blocks-inner
+   {:style {:margin-left (if (or sidebar? whiteboard?) 0 -20)}}
    (rum/with-key
      (content/content page-name
-                      {:hiccup   hiccup
-                       :sidebar? sidebar?})
+                      {
+                       :hiccup   hiccup
+                       :sidebar? sidebar?
+                       :headerList? headerList?})
      (str page-name "-hiccup"))])
 
 (declare page)
@@ -195,7 +198,7 @@
                                     (date/journal-title->int (date/today))))
                        (state/pub-event! [:journal/insert-template page-name false]))))
                  state)}
-  [repo page-e {:keys [sidebar? whiteboard?] :as config}]
+  [repo page-e {:keys [sidebar? whiteboard? headerList?] :as config}]
   (when page-e
     (let [page-name (or (:block/name page-e)
                         (str (:block/uuid page-e)))
@@ -215,12 +218,13 @@
                               :db/id (:db/id block-entity)
                               :block? block?
                               :editor-box editor/box
-                              :document/mode? document-mode?}
+                              :document/mode? document-mode?
+                              :headerList? headerList?}
                              config)
               hiccup-config (common-handler/config-with-document-mode hiccup-config)
               hiccup (component-block/->hiccup page-blocks hiccup-config {})]
           [:div
-           (page-blocks-inner page-name page-blocks hiccup sidebar? whiteboard? block-id)
+           (page-blocks-inner page-name page-blocks hiccup sidebar? whiteboard? block-id headerList?)
            (when-not config/publishing?
              (let [args (if block-id
                           {:block-uuid block-id}
