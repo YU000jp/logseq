@@ -446,7 +446,7 @@
  :on-boarding/importing-opml-desc " OPMLファイルを読み込む"
  :on-boarding/importing-roam-desc "Roam Researchのグラフを書き出したJSON を読み込む"
  :on-boarding/importing-title "既存のページを読み込みますか？"
- :on-boarding/insert-a-journal "その日のジャーナルを作成しますか？"
+ :on-boarding/insert-a-journal "この日付のジャーナルを作成しますか？"
  :on-boarding/ref-journal "ジャーナルから引用"
  :on-boading/title-edit-message "このタイトルに変更しますか？"
  :on-boarding/main-desc "はじめに、ページを保存しておくためのフォルダを選択する必要があります。"
@@ -752,7 +752,7 @@
  :settings-page/git-switcher-label "Git 自動コミットを有効にする"
  :settings-page/git-tip "Logseq Syncが有効な場合、ページの編集履歴を直接見ることができます。この節は技術に精通している人のためのものになります。"
  :settings-page/home-default-page "起動時のページを設定 (ホームページ)"
- :settings-page/journal-create-user-submit "その日のジャーナルを作成する前のユーザー確認を有効にする"
+ :settings-page/journal-create-user-submit "ジャーナルを作成する前のユーザー確認を有効にする"
  :settings-page/login-prompt "新しい機能を早く使いたい場合は、LogseqのOpen Collective Sponsorか後援者になった上で、ログインしてください。"
 
  :settings-page/native-titlebar "ネイティブのタイトルバー"
