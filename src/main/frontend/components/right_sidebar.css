@@ -204,6 +204,10 @@ html[data-theme=light] a.toggle:hover {
         margin-bottom: 0;
         text-align: left;
       }
+
+      .nav-left {
+        display: none;
+      }
     }
 
     :is(.cp__all_pages, .cp__all_files) h1.title {

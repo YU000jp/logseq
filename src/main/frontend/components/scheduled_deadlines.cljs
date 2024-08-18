@@ -67,7 +67,6 @@
          [(ui/icon "calendar-time" {:class "text-sm mr-1"})
           (let [count-number (count blocks)]
             [:span.overflow-hidden.text-ellipsis
-             {:title (t :right-side-bar/scheduled-and-deadline)}
              [" (" count-number ")"]])]]))))
 
 
@@ -106,7 +105,6 @@
          [(ui/icon "repeat" {:class "text-sm mr-1"})
           (let [count-number (count blocks)]
             [:span.overflow-hidden.text-ellipsis
-             {:title (t :right-side-bar/repeat-tasks)}
              [" (" count-number ")"]])]]))))
 
 

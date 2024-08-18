@@ -570,24 +570,14 @@ opacity: 0.6;
            [:span.ml-1.mr-2
             (t :right-side-bar/contents)]]]]
 
-        ;; :dafault-queries
-        [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "alias"}
-                                                         :on-click (fn [_e]
-                                                                     (state/sidebar-add-block! repo "default-queries" :default-queries))
-                                                         :title (t :right-side-bar/default-queries)}
-          [(ui/icon "brand-4chan" {:class "icon" :size 23 :color "gray"})
-           [:span.ml-1.mr-2
-            (t :right-side-bar/default-queries)]]]]
-
         ;; Table of Contents (Headers List)
-        [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
-                                                                     (state/sidebar-add-block! repo "headers-list" :headers-list))
-                                                         :title (t :right-side-bar/page-headers-list)}
-          [(ui/icon "pennant" {:class "icon" :size 23 :color "gray"})
-           [:span.ml-1.mr-2
-            (t :right-side-bar/page-headers-list)]]]]
+        ;; [:div.text-sm
+        ;;  [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
+        ;;                                                              (state/sidebar-add-block! repo "headers-list" :headers-list))
+        ;;                                                  :title (t :right-side-bar/page-headers-list)}
+        ;;   [(ui/icon "pennant" {:class "icon" :size 23 :color "gray"})
+        ;;    [:span.ml-1.mr-2
+        ;;     (t :right-side-bar/page-headers-list)]]]]
 
 
         ;; 今日のジャーナルを開く
@@ -615,24 +605,24 @@ opacity: 0.6;
         ;;   (ui/icon "files" {:class "icon" :size 23 :color "gray"})]]
 
         ;; キーボードショートカットへ移動
-        [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "help"}
-                                                         :on-click (fn [_e]
-                                                                     (state/sidebar-add-block! repo "shortcut-settings" :shortcut-settings))
-                                                         :title (t :command.go/keyboard-shortcuts)}
-          [(ui/icon "keyboard" {:class "icon" :color "gray"})
-           [:span.ml-1.mr-2
-            (t :command.go/keyboard-shortcuts)]]]]
+        ;; [:div.text-sm
+        ;;  [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "help"}
+        ;;                                                  :on-click (fn [_e]
+        ;;                                                              (state/sidebar-add-block! repo "shortcut-settings" :shortcut-settings))
+        ;;                                                  :title (t :command.go/keyboard-shortcuts)}
+        ;;   [(ui/icon "keyboard" {:class "icon" :color "gray"})
+        ;;    [:span.ml-1.mr-2
+        ;;     (t :command.go/keyboard-shortcuts)]]]]
 
         ;; Syntaxへ移動
-        [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "help"}
-                                                         :on-click (fn [_e]
-                                                                     (state/sidebar-add-block! repo ":syntax-help" :syntax-help))
-                                                         :title (t :right-side-bar/syntax)}
-          [(ui/icon "vector-bezier" {:class "icon" :color "gray"})
-           [:span.ml-1.mr-2
-            (t :right-side-bar/syntax)]]]]
+        ;; [:div.text-sm
+        ;;  [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "help"}
+        ;;                                                  :on-click (fn [_e]
+        ;;                                                              (state/sidebar-add-block! repo ":syntax-help" :syntax-help))
+        ;;                                                  :title (t :right-side-bar/syntax)}
+        ;;   [(ui/icon "vector-bezier" {:class "icon" :color "gray"})
+        ;;    [:span.ml-1.mr-2
+        ;;     (t :right-side-bar/syntax)]]]]
 
         ;; すべて折りたたむ
         [:div.text-sm
@@ -668,7 +658,8 @@ opacity: 0.6;
         ;;                                                              (state/sidebar-add-block! repo "help" :help))}
         ;;   (t :right-side-bar/help)]]
 
-        (when (and config/dev? (state/sub [:ui/developer-mode?]))
+        (when (and config/dev? 
+                   (state/sub [:ui/developer-mode?]))
           [:div.text-sm
            [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
                                                                        (state/sidebar-add-block! repo "history" :history))

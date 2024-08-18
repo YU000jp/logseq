@@ -96,7 +96,8 @@
   (let [page-menu (page-menu/page-menu nil)
         page-menu-and-hr (when (seq page-menu)
                            (concat page-menu [{:hr true}]))
-        login? (and (state/sub :auth/id-token) (user-handler/logged-in?))]
+        login? (and (state/sub :auth/id-token)
+                    (user-handler/logged-in?))]
     (ui/dropdown-with-links
      (fn [{:keys [toggle-fn]}]
        [:button.button.icon.toolbar-dots-btn
@@ -114,7 +115,8 @@
           :options {:on-click #(state/set-modal! export/export)}
           :icon (ui/icon "database-export")})
 
-       (when (and current-repo (state/enable-editing?))
+       (when (and current-repo
+                  (state/enable-editing?))
          {:title (t :import)
           :options {:href (rfe/href :import)}
           :icon (ui/icon "file-upload")})
@@ -135,7 +137,22 @@
           :options {:href (rfe/href :all-files)}
           :icon (ui/icon "files")})
 
-       (when (and config/dev? (state/sub [:ui/developer-mode?]))
+       {:class "shortcut-settings"
+        :title (t :command.go/keyboard-shortcuts)
+        :style {:cursor "help"}
+        :options {:on-click (fn [_e]
+                              (state/sidebar-add-block! current-repo ":shortcut-settings" :shortcut-settings))}
+        :icon (ui/icon "keyboard")}
+
+       {:class "syntax-help"
+        :title (t :right-side-bar/syntax)
+        :style {:cursor "help"}
+        :options {:on-click (fn [_e]
+                              (state/sidebar-add-block! current-repo ":syntax-help" :syntax-help))}
+        :icon (ui/icon "vector-bezier")}
+
+       (when (and config/dev?
+                  (state/sub [:ui/developer-mode?]))
          {:class "ui"
           :title "Dev: UI"
           :options {:href (rfe/href :ui)}
@@ -259,8 +276,7 @@
 
      [:div.r.flex.drag-region
       (when (and current-repo
-                 (not (config/demo-graph? current-repo)) ;; デモグラフの場合を除く
-                 (user-handler/alpha-or-beta-user?))
+                 (not (config/demo-graph? current-repo))) ;; デモグラフの場合を除く
 
         (fs-sync/indicator)
 
@@ -268,7 +284,7 @@
           [(when-let [display (scheduled/scheduled-and-deadlines-for-toolbar-tip today)]
              [:div.text-sm.mr-4
               [:button.button.icon
-               {:title (t :right-side-bar/scheduled-and-deadline)
+               {:title (str (t :right-side-bar/scheduled-and-deadline) "\n" (t :content/open-in-sidebar))
                 :on-click (fn []
                             (state/sidebar-add-block! current-repo "scheduled-and-deadline" :scheduled-and-deadline))}
                display]])
@@ -276,13 +292,24 @@
            (when-let [display (scheduled/repeat-tasks-for-toolbar-tip today)]
              [:div.text-sm.mr-4
               [:button.button.icon
-               {:title (t :right-side-bar/repeat-tasks)
+               {:title (str (t :right-side-bar/repeat-tasks) "\n" (t :content/open-in-sidebar))
                 :on-click (fn []
                             (state/sidebar-add-block! current-repo "repeat-tasks" :repeat-tasks))}
                display]])]))
 
+      ;; :dafault-queries 
+      (when (and current-repo
+                 (not (config/demo-graph? current-repo)))
+        [:button.button.icon#search-button
+         {:title (str (t :right-side-bar/default-queries) "\n" (t :content/open-in-sidebar))
+          :style {:cursor "alias"}
+          :on-click (fn []
+                      (state/sidebar-add-block! current-repo "default-queries" :default-queries))}
+         (ui/icon "brand-4chan" {:size ui/icon-size})])
 
-      (when (and current-page current-repo)
+
+      (when (and current-page
+                 current-repo)
         [:div.flex.items-center.space-x-2.mr-4.rounded-md
          {:style {:background-color "var(--lx-gray-04, var(--color-level-3, var(--rx-gray-04)))"}}
          [;; ページ用メニュー
@@ -292,7 +319,7 @@
            [:button.button.icon
             {:on-click (fn []
                          (state/sidebar-add-block! current-repo current-page :reference))
-             :title (t :linked-references/sidebar-open)}
+             :title (str (t :linked-references/sidebar-open) "\n" (t :content/open-in-sidebar))}
             (ui/icon "layers-difference" {:class "icon" :size 24})]]
 
           ;; Unlinked Referencesを表示する
@@ -300,7 +327,7 @@
            [:button.button.icon
             {:on-click (fn []
                          (state/sidebar-add-block! current-repo current-page :unlinked-reference))
-             :title (t :unlinked-references/sidebar-open)}
+             :title (str (t :unlinked-references/sidebar-open) "\n" (t :content/open-in-sidebar))}
             (ui/icon "list" {:class "icon" :size 24})]]
 
 
@@ -309,7 +336,7 @@
            [:button.button.icon
             {:on-click (fn []
                          (state/sidebar-add-block! current-repo "headers-list" :headers-list))
-             :title (t :right-side-bar/page-headers-list)}
+             :title (str (t :right-side-bar/page-headers-list) "\n" (t :content/open-in-sidebar))}
             (ui/icon "pennant" {:class "icon" :size 24})]]
 
 
@@ -321,7 +348,7 @@
                           current-repo
                           "page-graph"
                           :page-graph))
-             :title (t :right-side-bar/page-graph)}
+             :title (str (t :right-side-bar/page-graph) "\n" (t :content/open-in-sidebar))}
             (ui/icon "hierarchy" {:class "icon" :size 24})]]
 
         ;; 削除ボタン
@@ -346,7 +373,7 @@
       (when current-repo
         (ui/with-shortcut :go/search "right"
           [:button.button.icon#search-button
-           {:title (t :header/search)
+           {:title (str (t :header/search) "\nShift: " (t :content/open-in-sidebar))
             :on-click (fn [e]
                         (when (or (mobile-util/native-android?)
                                   (mobile-util/native-iphone?))
