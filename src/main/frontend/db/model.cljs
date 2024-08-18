@@ -1295,31 +1295,30 @@ independent of format as format specific heading characters are stripped"
    (get-page-referenced-blocks (state/get-current-repo) page options))
   ([repo page options]
    (when repo
-     (when (conn/get-db repo)
-       (let [page-id (:db/id (db-utils/entity [:block/name (util/safe-page-name-sanity-lc page)]))
-             pages (page-alias-set repo page)
-             aliases (set/difference pages #{page-id})]
-         (->>
-          (react/q repo
-                   [:frontend.db.react/refs page-id]
-                   {:use-cache? false
-                    :query-fn (fn []
-                                (let [entities (mapcat (fn [id]
-                                                         (:block/_path-refs (db-utils/entity id))) pages)
-                                      blocks (map (fn [e]
-                                                    {:block/parent (:block/parent e)
-                                                     :block/left (:block/left e)
-                                                     :block/page (:block/page e)
-                                                     :block/collapsed? (:block/collapsed? e)}) entities)]
-                                  {:entities entities
-                                   :blocks blocks}))}
-                  ;;  TODO: Linked Referencesの分割 (ページタグを取り除くなど)
-                   nil)
-          react
-          :entities
-          (remove (fn [block] (= page-id (:db/id (:block/page block)))))))))))
+     (when-let [db (conn/get-db repo)]
+       (when-let [page-id (:db/id (db-utils/entity [:block/name (util/safe-page-name-sanity-lc page)]))]
+         (when-let [pages (page-alias-set repo page)]
+           (->> (react/q repo
+                         [:frontend.db.react/refs page-id]
+                         {;;:use-cache? false
+                          :query-fn (fn []
+                                      (let [entities (mapcat (fn [id]
+                                                               (when-let [entity (db-utils/entity id)]
+                                                                 (:block/_path-refs entity))) pages)
+                                            blocks (map (fn [e]
+                                                          {:block/parent (:block/parent e)
+                                                           :block/left (:block/left e)
+                                                           :block/page (:block/page e)
+                                                           :block/collapsed? (:block/collapsed? e)})
+                                                        (remove #(= page-id (:db/id (:block/page %))) entities))]
+                                        {:entities entities
+                                         :blocks blocks}))}
+                         nil)
+                react
+                :entities)))))))
 
-(defn get-scheduled-or-deadlines
+
+(defn get-scheduled-and-deadlines
   [journal-title]
   (when-let [date (date/journal-title->int journal-title)]
     (let [future-days (state/get-scheduled-future-days)
