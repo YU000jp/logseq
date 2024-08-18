@@ -655,7 +655,7 @@
  :search-item/whiteboard "ホワイトボード"
  :search/page-names "ページ名で検索"
  :search/blank-input "検索ワード / 新規ページ名"
- :search/what-are-you-looking-for "何かお探しですか？入力してください。"
+ :search/what-are-you-looking-for "何かお探しですか？"
  :search/commands "コマンド"
  :search/files "既存のファイル"
  :search/blocks "すべてのブロック"
