@@ -47,8 +47,7 @@
             [logseq.shui.ui :as shui]
             [logseq.shui.toaster.core :as shui-toaster]
             [logseq.shui.dialog.core :as shui-dialog]
-            [logseq.graph-parser.util.page-ref :as page-ref]
-
+            ;; [logseq.graph-parser.util.page-ref :as page-ref]
             [frontend.util :as util]
             [frontend.util.cursor :as cursor]
             [frontend.components.window-controls :as window-controls]

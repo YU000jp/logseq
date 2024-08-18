@@ -242,7 +242,7 @@
                              (js/window.apis.toggleMaxOrMinActiveWindow)
 
                              (mobile-util/native-platform?)
-                             (util/scroll-to-top true))))}
+                             (util/scroll-to-top true))))} 
      [:div.l.flex.drag-region
       [left-menu
        [:div.text-md.ml-2
@@ -261,12 +261,14 @@
                  (not (config/demo-graph? current-repo)) ;; デモグラフの場合を除く
                  (user-handler/alpha-or-beta-user?))
         (fs-sync/indicator))
+      
+      
 
       (when (and current-page current-repo)
         [:div.flex.items-center.space-x-2.mr-4.rounded-md
          {:style {:background-color "var(--lx-gray-04, var(--color-level-3, var(--rx-gray-04)))"}}
          [;; ページ用メニュー
-
+          
           ;; Linked Referencesを表示する
           [:div.text-sm
            [:button.button.icon
@@ -285,7 +287,7 @@
 
 
           ;; Page headers list
-                    [:div.text-sm
+          [:div.text-sm
            [:button.button.icon
             {:on-click (fn []
                          (state/sidebar-add-block! current-repo "headers-list" :headers-list))
@@ -317,10 +319,10 @@
       ;; (when (and (not= (state/get-current-route) :home)
       ;;            (not custom-home-page?))
       ;;   (home-button))
-
+      
       ;; (when sync-enabled?
       ;;   (login))
-
+      
 
       ;; search button for non-mobile
       (when current-repo
