@@ -116,13 +116,11 @@
               :where
               [?page :block/name ?page-name]
               [?b :block/page ?page]
-              [?b :block/content ?content] 
-              [(re-find #"^#+\s" ?content)] 
-              [?b :block/uuid ?uuid]
-              ]
+              [?b :block/content ?content]
+              [(re-find #"^#+\s" ?content)]
+              [?b :block/uuid ?uuid]]
             (conn/get-db repo)
-            page-name
-            )))
+            page-name)))
 
 
 (defn get-all-tagged-pages
@@ -1321,7 +1319,7 @@ independent of format as format specific heading characters are stripped"
           :entities
           (remove (fn [block] (= page-id (:db/id (:block/page block)))))))))))
 
-(defn get-date-scheduled-or-deadlines
+(defn get-scheduled-or-deadlines
   [journal-title]
   (when-let [date (date/journal-title->int journal-title)]
     (let [future-days (state/get-scheduled-future-days)
@@ -1356,6 +1354,34 @@ independent of format as format specific heading characters are stripped"
                (sort-by-left-recursive)
                db-utils/group-by-page))))))
 
+
+(defn get-scheduled-or-deadlines-for-date-history
+  [journal-title]
+  (when-let [date (date/journal-title->int journal-title)]
+    (let [future-days 5
+          date-format (tf/formatter "yyyyMMdd")
+          current-day (tf/parse date-format (str date))]
+      (when-let [repo (state/get-current-repo)]
+        (->> (react/q repo [:custom :scheduled-deadline journal-title]
+                      {:use-cache? false}
+                      '[:find [(pull ?block ?block-attrs) ...]
+                        :in $ ?day ?block-attrs
+                        :where
+                        (or
+                         [?block :block/scheduled ?d]
+                         [?block :block/deadline ?d])
+                        [(get-else $ ?block :block/repeated? false) ?repeated]
+                        [(get-else $ ?block :block/marker "NIL") ?marker]
+                        [(= ?d ?day)] ;; ここが当日分のみを取得する条件です
+                        (or-join [?repeated ?d ?day]
+                                 [(true? ?repeated)]
+                                 [(>= ?d ?day)])]
+                      date
+                      block-attrs)
+             react
+             (sort-by-left-recursive)
+             db-utils/group-by-page)))))
+
 (defn- pattern [name]
   (re-pattern (str "(?i)(^|[^\\[#0-9a-zA-Z]|((^|[^\\[])\\[))"
                    (util/regex-escape name)
@@ -1388,6 +1414,7 @@ independent of format as format specific heading characters are stripped"
              (sort-by-left-recursive)
              db-utils/group-by-page)))))
 
+;; TODO: tagsを取り除く
 (defn get-block-referenced-blocks
   ([block-uuid]
    (get-block-referenced-blocks block-uuid {}))

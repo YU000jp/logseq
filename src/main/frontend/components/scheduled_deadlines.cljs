@@ -11,6 +11,7 @@
             [frontend.db :as db]
             [frontend.db-mixins :as db-mixins]))
 
+
 (defn- scheduled-or-deadlines?
   [page-name]
   (and (date/valid-journal-title? (string/capitalize page-name))
@@ -21,6 +22,7 @@
   [page-name]
   (when (true? (scheduled-or-deadlines? page-name))
     (db/get-scheduled-or-deadlines (string/capitalize page-name))))
+
 
 (rum/defc scheduled-and-deadlines-inner
   [page-name refs]
@@ -40,6 +42,7 @@
   [page-name]
   (let [refs (get-refs page-name)]
     (scheduled-and-deadlines-inner page-name refs)))
+
 
 (rum/defc scheduled-and-deadlines-for-left-menu < rum/reactive db-mixins/query
   [page-name on-contents-scroll]
@@ -70,5 +73,25 @@
            {:title (t :right-side-bar/scheduled-and-deadline-desc)}
            [" (" countNumber ")"]])]])))
 
-;;TODO: Logseqアプリを開いたときに、SCHEDULEDとDEADLINEがあったら、ユーザーに通知する
 
+(defn- get-refs-for-date-history
+  [page-name]
+  (when (true? (scheduled-or-deadlines? page-name))
+    (db/get-scheduled-or-deadlines-for-date-history (string/capitalize page-name))))
+
+
+(rum/defc scheduled-and-deadlines-for-date-history < rum/reactive db-mixins/query
+  [page-name]
+  (let [refs (get-refs-for-date-history page-name)]
+    (when (seq refs)
+      [:div.gap-1.pt-1
+       [:details
+        {:open "true"}
+        [:summary
+         [(ui/icon "calendar-time" {:class "text-sm mr-1"})
+
+          (let [countNumber (count refs)]
+            [:span.overflow-hidden.text-ellipsis
+             {:title (t :right-side-bar/scheduled-and-deadline-desc)}
+             [(t :right-side-bar/scheduled-and-deadline) " (" countNumber ")"]])]]
+        (scheduled-and-deadlines-inner page-name refs)]])))

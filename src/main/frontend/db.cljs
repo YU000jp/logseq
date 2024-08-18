@@ -42,7 +42,7 @@
   get-all-templates get-block-and-children get-block-by-uuid get-block-children sort-by-left
   get-block-parent get-block-parents parents-collapsed? get-block-referenced-blocks get-all-referenced-blocks-uuid
   get-block-children-ids get-block-immediate-children get-block-page
-  get-custom-css get-date-scheduled-or-deadlines
+  get-custom-css get-scheduled-or-deadlines get-scheduled-or-deadlines-for-date-history
   get-file-last-modified-at get-file get-file-page get-file-page-id file-exists?
   get-files get-files-blocks get-files-full get-journals-length get-pages-with-file
   get-latest-journals get-page get-page-alias get-page-alias-names get-paginated-blocks

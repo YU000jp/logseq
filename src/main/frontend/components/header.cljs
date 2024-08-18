@@ -261,14 +261,13 @@
       (when (and current-repo
                  (not (config/demo-graph? current-repo)) ;; デモグラフの場合を除く
                  (user-handler/alpha-or-beta-user?))
-        [(fs-sync/indicator)
-         [:div.text-sm.mr-4
-          [:button.button.icon
-           {:title (t :right-side-bar/scheduled-and-deadline)
-            :on-click (fn[]
-                        (state/sidebar-add-block! current-repo "scheduled-and-deadline" :scheduled-and-deadline)
-                        )}
-           (scheduled/scheduled-and-deadlines-for-toolbar-tip (date/today))]]])
+        (fs-sync/indicator)
+        [:div.text-sm.mr-4
+         [:button.button.icon
+          {:title (t :right-side-bar/scheduled-and-deadline)
+           :on-click (fn []
+                       (state/sidebar-add-block! current-repo "scheduled-and-deadline" :scheduled-and-deadline))}
+          (scheduled/scheduled-and-deadlines-for-toolbar-tip (date/today))]])
 
 
       (when (and current-page current-repo)

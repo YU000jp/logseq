@@ -8,7 +8,7 @@
             [frontend.components.reference :as reference]
             [frontend.components.plugins :as plugins]
             [frontend.components.query :as query]
-            ;;[frontend.components.scheduled-deadlines :as scheduled]
+            [frontend.components.scheduled-deadlines :as scheduled]
             [frontend.components.svg :as svg]
             [frontend.config :as config]
             [frontend.context.i18n :refer [t]]
@@ -108,8 +108,7 @@
    {:style {:margin-left (if (or sidebar? whiteboard?) 0 -20)}}
    (rum/with-key
      (content/content page-name
-                      {
-                       :hiccup   hiccup
+                      {:hiccup   hiccup
                        :sidebar? sidebar?
                        :headerList? headerList?})
      (str page-name "-hiccup"))])
@@ -554,7 +553,8 @@
                :class (util/classnames [{:is-journals (or journal? fmt-journal?)}])})
 
 
-       (if (and whiteboard-page? (not sidebar?))
+       (if (and whiteboard-page?
+                (not sidebar?))
 
          ;; whiteboard page
          [:div ((state/get-component :whiteboard/tldraw-preview) page-name)] ;; FIXME: this is not reactive
@@ -562,7 +562,8 @@
          ;; normal page
          [:div.relative
           {:style {:min-height (when-not (or whiteboard? whiteboard-page?) "70vh")}}
-          (when (and (not sidebar?) (not block?))
+          (when (and (not sidebar?)
+                     (not block?))
             [[:div.flex
               {:style {:justify-content "flex-end"}}
               ;; (let [updatedAt (:block/updated-at page)
@@ -574,11 +575,14 @@
               ;;     (str (t :page/created-at) " " (date/int->local-time-2 createdAt))
               ;;     ]]]
               ;;  )
-              (when (and (not config/publishing?) (not whiteboard?))
-                (when (and config/lsp-enabled? (not (config/demo-graph?)))
-                  [:div.flex.flex-row
-                   [(plugins/hook-ui-slot :page-head-actions-slotted nil)
-                    (plugins/hook-ui-items :pagebar)]]))]
+              (when (and (not config/publishing?)
+                         (not whiteboard?)
+                         config/lsp-enabled?
+                         (not (config/demo-graph?)))
+                [:div.flex.flex-row
+                 [(plugins/hook-ui-slot :page-head-actions-slotted nil)
+                  (plugins/hook-ui-items :pagebar)]])]
+
              [:div.flex.flex-row.space-between
               (when (or (mobile-util/native-platform?) (util/mobile?))
                 [:div.flex.flex-row.pr-2
@@ -588,12 +592,16 @@
                   :on-mouse-leave (fn [e]
                                     (page-mouse-leave e *control-show?))}
                  (page-blocks-collapse-control title *control-show? *all-collapsed?)])
+
               (when-not whiteboard?
                 [:div.ls-page-title.flex-1.flex-row.w-full
                  {:style {:justify-content "space-between"}}
                  (page-title page-name icon title format fmt-journal?)])]])
+
           [:div
-           (when (and block? (not sidebar?) (not whiteboard?))
+           (when (and block?
+                      (not sidebar?)
+                      (not whiteboard?))
              (let [config {:id "block-parent"
                            :block? true}]
                [:div.mb-4
@@ -602,21 +610,26 @@
            (let [entity (if block?
                           (db/entity repo [:block/uuid block-id])
                           page-entity)
-                 _ (and block? entity (reset! *current-block-page (:block/name (:block/page entity))))
-                 _ (when (and block? (not entity))
+                 _ (and block?
+                        entity (reset! *current-block-page (:block/name (:block/page entity))))
+                 _ (when (and block?
+                              (not entity))
                      (route-handler/redirect-to-page! @*current-block-page))]
              (page-blocks-cp repo entity {:sidebar? sidebar? :whiteboard? whiteboard?}))]])
 
       ;; 今日のジャーナルのみ サイドバーに移設したためコメントアウト
-      ;;  (when-not whiteboard?
-      ;;    (when today?
-      ;;      (today-queries repo today? sidebar?))
-      ;;    (when today?
-      ;;      (scheduled/scheduled-and-deadlines page-name)))
+       (when (and
+              (not whiteboard?)
+              (not config/publishing?)
+              journal?)
+        ;;    (today-queries repo journal? sidebar?)
+         (scheduled/scheduled-and-deadlines-for-date-history page-name))
 
-       (when whiteboard? ;; ホワイトボードのみページタグを表示
-         (when-not (or block? sidebar? journal?)
-           (tagged-pages repo title)))
+       (when (and whiteboard?
+                  (not (or block?
+                           sidebar?
+                           journal?)))
+         (tagged-pages repo title)) ;; ホワイトボードのみページタグを表示
 
        ;; referenced blocks
        (when-not block-or-whiteboard?
