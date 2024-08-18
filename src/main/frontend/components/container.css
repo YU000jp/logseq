@@ -81,6 +81,13 @@
 
   -webkit-font-smoothing: antialiased;
 
+  .contents-left-menu {
+    background: var(--lx-gray-01, var(--ls-primary-background-color));
+    max-height: 10vh;
+    overflow: auto;
+    max-width: 35vw;
+  }
+
   >.wrap {
     height: calc(100vh - var(--ls-headbar-inner-top-padding) - 50px);
     margin-top: 30px;

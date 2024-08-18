@@ -7,6 +7,7 @@
             [frontend.components.journal :as journal]
             [frontend.components.onboarding :as onboarding]
             [frontend.components.plugins :as plugins]
+            [frontend.components.page :as page]
             ;; [frontend.components.repo :as repo]
             ;; [frontend.components.hierarchy :as hierarchy]
             [frontend.components.scheduled-deadlines :as scheduled]
@@ -512,6 +513,12 @@
            :active (and (not srs-open?) (= route-name :all-pages))
            :icon "files"})]]
 
+
+       ;; 目次コンテンツをメニューバーに配置 TODO: オプションでトグルする
+       [:div.contents-left-menu
+        {:title (t :right-side-bar/contents)}
+        (when-let [contents (db/entity [:block/name "contents"])]
+          (page/contents-page contents))]
 
        [:div.nav-contents-container.gap-1.pt-1
         {:on-scroll on-contents-scroll}

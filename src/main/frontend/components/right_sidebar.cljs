@@ -155,7 +155,7 @@ opacity: 0.6;
 }
 }
                                             ")]])
-       [:div.contents.flex-col.flex.ml-3
+       [:div.flex-col.flex.ml-3
         (page/page-blocks-cp repo entity {:sidebar? true
                                           :headerList? true})]])))
 
