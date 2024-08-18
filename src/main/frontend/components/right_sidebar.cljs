@@ -276,7 +276,7 @@ opacity: 0.6;
       [[:.flex.items-center
         (ui/icon "search" {:class "mr-1"})
         (let [input (rum/react *db-id)
-              input' (if (string/blank? input) (t :search/blank-input) input)]
+              input' (if (string/blank? input) (t :search/what-are-you-looking-for) input)]
           [:span.overflow-hidden.text-ellipsis input'])]
        (rum/with-key
          (cmdk/cmdk-block {:initial-input db-id

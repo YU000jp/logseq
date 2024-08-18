@@ -745,7 +745,7 @@
     (cond
       (= search-mode :graph) "Add graph filter"
       :else
-      (t :search/what-are-you-looking-for))))
+      (t  :search/blank-input))))
 
 (rum/defc input-row
   [state all-items opts]
