@@ -14,8 +14,8 @@
 
 (defn- scheduled-or-deadlines?
   [page-name]
-  (and (date/valid-journal-title? (string/capitalize page-name))
-       (not (true? (state/scheduled-deadlines-disabled?)))))
+  (true? (and (date/valid-journal-title? (string/capitalize page-name))
+              (not (true? (state/scheduled-deadlines-disabled?))))))
 
 
 (defn- get-refs
@@ -40,13 +40,13 @@
 
 (rum/defc scheduled-and-deadlines
   [page-name]
-  (let [refs (get-refs page-name)]
+  (when-let [refs (get-refs page-name)]
     (scheduled-and-deadlines-inner page-name refs)))
 
 
 (rum/defc scheduled-and-deadlines-for-left-menu < rum/reactive db-mixins/query
   [page-name on-contents-scroll]
-  (let [refs (get-refs page-name)]
+  (when-let [refs (get-refs page-name)]
     (when (seq refs)
       [:div.nav-contents-container.gap-1.pt-1
        {:on-scroll on-contents-scroll}
@@ -62,15 +62,54 @@
         (scheduled-and-deadlines-inner page-name refs)]])))
 
 
-(rum/defc scheduled-and-deadlines-for-toolbar-tip < rum/reactive db-mixins/query
+(defn- get-refs-for-repeat
   [page-name]
-  (let [refs (get-refs page-name)]
+  (when (true? (scheduled-or-deadlines? page-name))
+    (db/get-repeat-tasks (string/capitalize page-name))))
+
+(rum/defc repeat-tasks
+  [page-name]
+  (let [refs (get-refs-for-repeat page-name)]
+    (scheduled-and-deadlines-inner page-name refs)))
+
+(rum/defc repeat-tasks-for-left-menu < rum/reactive db-mixins/query
+  [page-name on-contents-scroll]
+  (when-let [refs (get-refs-for-repeat page-name)]
+    (when (seq refs)
+      [:div.nav-contents-container.gap-1.pt-1
+       {:on-scroll on-contents-scroll}
+       [:details
+        {:open "true"}
+        [:summary
+         [(ui/icon "calendar-time" {:class "text-sm mr-1"})
+
+          (let [countNumber (count refs)]
+            [:span.overflow-hidden.text-ellipsis
+             {:title (t :right-side-bar/scheduled-and-deadline-desc)}
+             [(t :right-side-bar/repeat-tasks) " (" countNumber ")"]])]]
+        (scheduled-and-deadlines-inner page-name refs)]])))
+
+(rum/defc repeat-tasks-for-toolbar-tip < rum/reactive db-mixins/query
+  [page-name]
+  (when-let [refs (get-refs-for-repeat page-name)]
     (when (seq refs)
       [:div
        [(ui/icon "calendar-time" {:class "text-sm mr-1"})
         (let [countNumber (count refs)]
           [:span.overflow-hidden.text-ellipsis
-           {:title (t :right-side-bar/scheduled-and-deadline-desc)}
+           {:title (t :right-side-bar/repeat-tasks)}
+           [" (" countNumber ")"]])]])))
+
+
+(rum/defc scheduled-and-deadlines-for-toolbar-tip < rum/reactive db-mixins/query
+  [page-name]
+  (when-let [refs (get-refs page-name)]
+    (when (seq refs)
+      [:div
+       [(ui/icon "calendar-time" {:class "text-sm mr-1"})
+        (let [countNumber (count refs)]
+          [:span.overflow-hidden.text-ellipsis
+           {:title (t :right-side-bar/scheduled-and-deadline)}
            [" (" countNumber ")"]])]])))
 
 
@@ -82,7 +121,7 @@
 
 (rum/defc scheduled-and-deadlines-for-date-history < rum/reactive db-mixins/query
   [page-name]
-  (let [refs (get-refs-for-date-history page-name)]
+  (when-let [refs (get-refs-for-date-history page-name)]
     (when (seq refs)
       [:div.gap-1.pt-1
        [:details
