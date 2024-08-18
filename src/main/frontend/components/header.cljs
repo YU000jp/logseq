@@ -262,7 +262,7 @@
                  (user-handler/alpha-or-beta-user?))
         (fs-sync/indicator))
 
-      (when current-page
+      (when (and current-page current-repo)
         [:div.flex.items-center.space-x-2.mr-4.rounded-md
          {:style {:background-color "var(--lx-gray-04, var(--color-level-3, var(--rx-gray-04)))"}}
          [;; ページ用メニュー
