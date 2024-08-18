@@ -81,6 +81,7 @@
     {:nodes nodes
      :links links}))
 
+
 (defn build-global-graph
   [theme {:keys [journal? orphan-pages? builtin-pages? excluded-pages?]}]
   (let [dark? (= "dark" theme)
@@ -120,14 +121,13 @@
           :links links
           :page-name->original-name page-name->original-name})))))
 
+
 (defn build-page-graph
   [page theme show-journal]
   (let [dark? (= "dark" theme)]
     (when-let [repo (state/get-current-repo)]
-      (let [page (util/page-name-sanity-lc page)
-            page-entity (db/entity [:block/name page])
-            tags (:tags (:block/properties page-entity))
-            tags (remove #(= page %) tags)
+      (let [page (util/page-name-sanity-lc page) 
+            tags (remove #(= page %) (:tags (:block/properties (db/entity [:block/name page]))))
             ref-pages (db/get-page-referenced-pages repo page)
             mentioned-pages (db/get-pages-that-mentioned-page repo page show-journal)
             namespaces (db/get-all-namespace-relation repo)
@@ -146,12 +146,12 @@
                              (set))
             other-pages-links (mapcat
                                (fn [page]
-                                 (let [ref-pages (-> (map first (db/get-page-referenced-pages repo page))
+                                 (let [ref-pages (-> (map first ref-pages)
                                                      (set)
                                                      (set/intersection other-pages))
-                                       mentioned-pages (-> (map first (db/get-pages-that-mentioned-page repo page show-journal))
-                                                           (set)
-                                                           (set/intersection other-pages))]
+                                       mentioned-pages (-> (map first mentioned-pages)
+                                                                (set)
+                                                                (set/intersection other-pages))]
                                    (concat
                                     (map (fn [p] [page p]) ref-pages)
                                     (map (fn [p] [p page]) mentioned-pages))))
@@ -176,6 +176,7 @@
           :links links
           :page-name->original-name page-name->original-name})))))
 
+
 (defn build-block-graph
   "Builds a citation/reference graph for a given block uuid."
   [block theme]
@@ -192,7 +193,7 @@
                               (set))
             other-blocks-links (mapcat
                                 (fn [block]
-                                  (let [ref-blocks (-> (map first (db/get-block-referenced-blocks block))
+                                  (let [ref-blocks (-> (map first ref-blocks)
                                                        (set)
                                                        (set/intersection other-blocks))]
                                     (concat
