@@ -178,6 +178,12 @@ opacity: 0.6;
         (ui/icon "calendar-time" {:class "text-sm mr-1"})
         [:span.overflow-hidden.text-ellipsis (t :right-side-bar/scheduled-and-deadline)]]
        (scheduled/scheduled-and-deadlines (date/today))]
+      
+      :repeat-tasks
+      [[:.flex.items-center#open-sidebar-repeat-tasks
+        (ui/icon "repeat" {:class "text-sm mr-1"})
+        [:span.overflow-hidden.text-ellipsis (t :right-side-bar/repeat-tasks)]]
+       (scheduled/repeat-tasks (date/today))]
 
       :default-queries
       [[:.flex.items-center#open-sidebar-default-queries

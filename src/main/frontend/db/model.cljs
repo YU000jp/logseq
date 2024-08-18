@@ -1288,6 +1288,7 @@ independent of format as format specific heading characters are stripped"
                            k)]
                    [k blocks])))))))))
 
+
 (defn get-page-referenced-blocks
   ([page]
    (get-page-referenced-blocks (state/get-current-repo) page nil))
@@ -1327,59 +1328,87 @@ independent of format as format specific heading characters are stripped"
           future-day (some->> (t/plus current-day (t/days future-days))
                               (tf/unparse date-format)
                               (parse-long))]
-      (when future-day
+      (when (and future-day (state/get-current-repo))
         (when-let [repo (state/get-current-repo)]
-          (->> (react/q repo [:custom :scheduled-deadline journal-title]
-                        {:use-cache? false}
-                        '[:find [(pull ?block ?block-attrs) ...]
-                          :in $ ?day ?future ?block-attrs
-                          :where
-                          (or
-                           [?block :block/scheduled ?d]
-                           [?block :block/deadline ?d])
-                          [(get-else $ ?block :block/repeated? false) ?repeated]
-                          [(get-else $ ?block :block/marker "NIL") ?marker]
-                          [(not= ?marker "DONE")]
-                          [(not= ?marker "CANCELED")]
-                          [(not= ?marker "CANCELLED")]
-                          [(<= ?d ?future)]
-                          (or-join [?repeated ?d ?day]
-                                   [(true? ?repeated)]
-                                   [(>= ?d ?day)])]
-                        date
-                        future-day
-                        block-attrs)
+          (when-let [result (react/q repo [:custom :scheduled-deadline journal-title]
+                                     {:use-cache? false}
+                                     '[:find [(pull ?block ?block-attrs) ...]
+                                       :in $ ?day ?future ?block-attrs
+                                       :where
+                                       (or
+                                        [?block :block/scheduled ?d]
+                                        [?block :block/deadline ?d])
+                                       [(get-else $ ?block :block/marker "NIL") ?marker]
+                                       [(not= ?marker "DONE")]
+                                       [(not= ?marker "CANCELED")]
+                                       [(not= ?marker "CANCELLED")]
+                                       [(<= ?d ?future)]
+                                       [(>= ?d ?day)]]
+                                     date
+                                     future-day
+                                     block-attrs)]
+            (->> result
+                 react
+                 (sort-by-left-recursive)
+                 db-utils/group-by-page)))))))
+
+
+
+(defn get-scheduled-and-deadlines-for-date-history
+  [journal-title]
+  (when-let [date (date/journal-title->int journal-title)]
+    (let [date-format (tf/formatter "yyyyMMdd")
+          current-day (tf/parse date-format (str date))]
+      (when-let [repo (state/get-current-repo)]
+        (let [query-result (react/q repo [:custom :scheduled-deadline journal-title]
+                                    {:use-cache? false}
+                                    '[:find [(pull ?block ?block-attrs) ...]
+                                      :in $ ?day ?block-attrs
+                                      :where
+                                      (or
+                                       [?block :block/scheduled ?d]
+                                       [?block :block/deadline ?d])
+                                      [(get-else $ ?block :block/repeated? false) ?repeated]
+                                      [(get-else $ ?block :block/marker "NIL") ?marker]
+                                      [(= ?d ?day)]
+                                      (or-join [?repeated ?d ?day]
+                                               [(true? ?repeated)]
+                                               [(>= ?d ?day)])]
+                                    date
+                                    block-attrs)]
+          ;; (println "Query result:" query-result)
+          (when query-result
+            (->> query-result
+                 react
+                 (sort-by-left-recursive)
+                 db-utils/group-by-page)))))))
+
+
+
+(defn get-repeat-tasks
+  [journal-title]
+  (when-let [repo (state/get-current-repo)]
+    (when-let [date (date/journal-title->int journal-title)]
+      (let [query-result (react/q repo [:custom :repeat-tasks journal-title]
+                                  {:use-cache? false}
+                                  '[:find [(pull ?block ?block-attrs) ...]
+                                    :in $ ?day ?block-attrs
+                                    :where
+                                    [?block :block/repeated? true]
+                                    [?block :block/marker ?marker]
+                                    (or-join [?marker]
+                                             [(= ?marker "TODO")]
+                                             [(= ?marker "DOING")]
+                                             [(= ?marker "NOW")])]
+                                  date
+                                  block-attrs)]
+        ;; (println "Query result:" query-result)
+        (when query-result
+          (->> query-result
                react
                (sort-by-left-recursive)
                db-utils/group-by-page))))))
 
-
-(defn get-scheduled-or-deadlines-for-date-history
-  [journal-title]
-  (when-let [date (date/journal-title->int journal-title)]
-    (let [future-days 5
-          date-format (tf/formatter "yyyyMMdd")
-          current-day (tf/parse date-format (str date))]
-      (when-let [repo (state/get-current-repo)]
-        (->> (react/q repo [:custom :scheduled-deadline journal-title]
-                      {:use-cache? false}
-                      '[:find [(pull ?block ?block-attrs) ...]
-                        :in $ ?day ?block-attrs
-                        :where
-                        (or
-                         [?block :block/scheduled ?d]
-                         [?block :block/deadline ?d])
-                        [(get-else $ ?block :block/repeated? false) ?repeated]
-                        [(get-else $ ?block :block/marker "NIL") ?marker]
-                        [(= ?d ?day)] ;; ここが当日分のみを取得する条件です
-                        (or-join [?repeated ?d ?day]
-                                 [(true? ?repeated)]
-                                 [(>= ?d ?day)])]
-                      date
-                      block-attrs)
-             react
-             (sort-by-left-recursive)
-             db-utils/group-by-page)))))
 
 (defn- pattern [name]
   (re-pattern (str "(?i)(^|[^\\[#0-9a-zA-Z]|((^|[^\\[])\\[))"

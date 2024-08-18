@@ -528,8 +528,8 @@
                 ;; includeSlash (string/includes? hierarchy-target "/")
                 split (string/split page-name #"/")
                 ;; first-class (first split)
-                last-name (last split) 
-                
+                last-name (last split)
+
                 children (db-model/get-namespace-hierarchy (state/get-current-repo) hierarchy-target)]
             [;; hierarchy
              [:div.nav-contents-container.pt-1.text-sm
@@ -546,6 +546,10 @@
        (ui/lazy-visible
         (fn [] (scheduled/scheduled-and-deadlines-for-left-menu (date/today) on-contents-scroll))
         {:debug-id "scheduled-and-deadlines"})
+
+       (ui/lazy-visible
+        (fn [] (scheduled/repeat-tasks-for-left-menu (date/today) on-contents-scroll))
+        {:debug-id "repeat-tasks"})
 
        [:footer.px-2.mt-1.create
         (when-not config/publishing?

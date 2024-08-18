@@ -8,129 +8,122 @@
             [clojure.string :as string]
             [frontend.components.editor :as editor]
             [rum.core :as rum]
-            [frontend.db :as db]
+            [frontend.db.model :as db]
             [frontend.db-mixins :as db-mixins]))
 
 
-(defn- scheduled-or-deadlines?
+(defn check?
   [page-name]
-  (true? (and (date/valid-journal-title? (string/capitalize page-name))
+  (true? (and (true? (date/valid-journal-title? (string/capitalize page-name)))
               (not (true? (state/scheduled-deadlines-disabled?))))))
 
 
-(defn- get-refs
+(defn scheduled-and-deadlines-inner
+  [page-name blocks]
+  (if (seq blocks)
+    [:div.scheduled-deadlines.references-blocks.mb-2.text-sm
+     (let [ref-hiccup (block/->hiccup blocks
+                                      {:id (str page-name "-agenda")
+                                       :ref? true
+                                       :group-by-page? true
+                                       :editor-box editor/box}
+                                      {})]
+       (content/content page-name {:hiccup ref-hiccup}))]
+    [:span (t :right-side-bar/scheduled-and-deadline-no-result)]))
+
+
+(rum/defc scheduled-and-deadlines < rum/reactive db-mixins/query
   [page-name]
-  (when (true? (scheduled-or-deadlines? page-name))
-    (db/get-scheduled-or-deadlines (string/capitalize page-name))))
-
-
-(rum/defc scheduled-and-deadlines-inner
-  [page-name refs]
-  (when refs
-    (if (seq refs)
-      [:div.scheduled-deadlines.references-blocks.mb-2.text-sm
-       (let [ref-hiccup (block/->hiccup refs
-                                        {:id (str page-name "-agenda")
-                                         :ref? true
-                                         :group-by-page? true
-                                         :editor-box editor/box}
-                                        {})]
-         (content/content page-name {:hiccup ref-hiccup}))]
-      [:span (t :right-side-bar/scheduled-and-deadline-no-result)])))
-
-(rum/defc scheduled-and-deadlines
-  [page-name]
-  (when-let [refs (get-refs page-name)]
-    (scheduled-and-deadlines-inner page-name refs)))
+  (when (true? (check? page-name))
+    (when-let [blocks (db/get-scheduled-and-deadlines (string/capitalize page-name))]
+      (scheduled-and-deadlines-inner page-name blocks))))
 
 
 (rum/defc scheduled-and-deadlines-for-left-menu < rum/reactive db-mixins/query
   [page-name on-contents-scroll]
-  (when-let [refs (get-refs page-name)]
-    (when (seq refs)
-      [:div.nav-contents-container.gap-1.pt-1
-       {:on-scroll on-contents-scroll}
-       [:details
-        {:open "true"}
-        [:summary
-         [(ui/icon "calendar-time" {:class "text-sm mr-1"})
+  (when (true? (check? page-name))
+    (when-let [blocks (db/get-scheduled-and-deadlines (string/capitalize page-name))]
+      (when (seq blocks)
+        [:div.nav-contents-container.gap-1.pt-1
+         {:on-scroll on-contents-scroll}
+         [:details
+          {:open "true"}
+          [:summary
+           [(ui/icon "calendar-time" {:class "text-sm mr-1"})
 
-          (let [countNumber (count refs)]
-            [:span.overflow-hidden.text-ellipsis
-             {:title (t :right-side-bar/scheduled-and-deadline-desc)}
-             [(t :right-side-bar/scheduled-and-deadline) " (" countNumber ")"]])]]
-        (scheduled-and-deadlines-inner page-name refs)]])))
-
-
-(defn- get-refs-for-repeat
-  [page-name]
-  (when (true? (scheduled-or-deadlines? page-name))
-    (db/get-repeat-tasks (string/capitalize page-name))))
-
-(rum/defc repeat-tasks
-  [page-name]
-  (let [refs (get-refs-for-repeat page-name)]
-    (scheduled-and-deadlines-inner page-name refs)))
-
-(rum/defc repeat-tasks-for-left-menu < rum/reactive db-mixins/query
-  [page-name on-contents-scroll]
-  (when-let [refs (get-refs-for-repeat page-name)]
-    (when (seq refs)
-      [:div.nav-contents-container.gap-1.pt-1
-       {:on-scroll on-contents-scroll}
-       [:details
-        {:open "true"}
-        [:summary
-         [(ui/icon "calendar-time" {:class "text-sm mr-1"})
-
-          (let [countNumber (count refs)]
-            [:span.overflow-hidden.text-ellipsis
-             {:title (t :right-side-bar/scheduled-and-deadline-desc)}
-             [(t :right-side-bar/repeat-tasks) " (" countNumber ")"]])]]
-        (scheduled-and-deadlines-inner page-name refs)]])))
-
-(rum/defc repeat-tasks-for-toolbar-tip < rum/reactive db-mixins/query
-  [page-name]
-  (when-let [refs (get-refs-for-repeat page-name)]
-    (when (seq refs)
-      [:div
-       [(ui/icon "calendar-time" {:class "text-sm mr-1"})
-        (let [countNumber (count refs)]
-          [:span.overflow-hidden.text-ellipsis
-           {:title (t :right-side-bar/repeat-tasks)}
-           [" (" countNumber ")"]])]])))
+            (let [count-number (count blocks)]
+              [:span.overflow-hidden.text-ellipsis
+               {:title (t :right-side-bar/scheduled-and-deadline-desc)}
+               [(t :right-side-bar/scheduled-and-deadline) " (" count-number ")"]])]]
+          (scheduled-and-deadlines-inner page-name blocks)]]))))
 
 
 (rum/defc scheduled-and-deadlines-for-toolbar-tip < rum/reactive db-mixins/query
   [page-name]
-  (when-let [refs (get-refs page-name)]
-    (when (seq refs)
-      [:div
-       [(ui/icon "calendar-time" {:class "text-sm mr-1"})
-        (let [countNumber (count refs)]
-          [:span.overflow-hidden.text-ellipsis
-           {:title (t :right-side-bar/scheduled-and-deadline)}
-           [" (" countNumber ")"]])]])))
+  (when (true? (check? page-name))
+    (when-let [blocks (db/get-scheduled-and-deadlines (string/capitalize page-name))]
+      (when (seq blocks)
+        [:div
+         [(ui/icon "calendar-time" {:class "text-sm mr-1"})
+          (let [count-number (count blocks)]
+            [:span.overflow-hidden.text-ellipsis
+             {:title (t :right-side-bar/scheduled-and-deadline)}
+             [" (" count-number ")"]])]]))))
 
 
-(defn- get-refs-for-date-history
+
+(rum/defc repeat-tasks < rum/reactive db-mixins/query
   [page-name]
-  (when (true? (scheduled-or-deadlines? page-name))
-    (db/get-scheduled-or-deadlines-for-date-history (string/capitalize page-name))))
+  (when (true? (check? page-name))
+    (when-let [blocks (db/get-repeat-tasks (string/capitalize page-name))]
+      (scheduled-and-deadlines-inner page-name blocks))))
+
+
+(rum/defc repeat-tasks-for-left-menu < rum/reactive db-mixins/query
+  [page-name on-contents-scroll]
+  (when (true? (check? page-name))
+    (when-let [blocks (db/get-repeat-tasks (string/capitalize page-name))]
+      (when (seq blocks)
+        [:div.nav-contents-container.gap-1.pt-1
+         {:on-scroll on-contents-scroll}
+         [:details
+          [:summary
+           [(ui/icon "repeat" {:class "text-sm mr-1"})
+
+            (let [count-number (count blocks)]
+              [:span.overflow-hidden.text-ellipsis
+               {:title (t :right-side-bar/scheduled-and-deadline-desc)}
+               [(t :right-side-bar/repeat-tasks) " (" count-number ")"]])]]
+          (scheduled-and-deadlines-inner page-name blocks)]]))))
+
+
+(rum/defc repeat-tasks-for-toolbar-tip < rum/reactive db-mixins/query
+  [page-name]
+  (when (true? (check? page-name))
+    (when-let [blocks (db/get-repeat-tasks (string/capitalize page-name))]
+      (when (seq blocks)
+        [:div
+         [(ui/icon "repeat" {:class "text-sm mr-1"})
+          (let [count-number (count blocks)]
+            [:span.overflow-hidden.text-ellipsis
+             {:title (t :right-side-bar/repeat-tasks)}
+             [" (" count-number ")"]])]]))))
+
 
 
 (rum/defc scheduled-and-deadlines-for-date-history < rum/reactive db-mixins/query
   [page-name]
-  (when-let [refs (get-refs-for-date-history page-name)]
-    (when (seq refs)
-      [:div.gap-1.pt-1
-       [:details
-        {:open "true"}
-        [:summary
-         [(ui/icon "calendar-time" {:class "text-sm mr-1"})
+  (when (true? (check? page-name))
+    (when-let [blocks (db/get-scheduled-and-deadlines-for-date-history (string/capitalize page-name))]
+      (when (seq blocks)
+        [:div.gap-1.pt-1
+         [:details
+          {:open "true"}
+          [:summary
+           [(ui/icon "calendar-time" {:class "text-sm mr-1"})
 
-          (let [countNumber (count refs)]
-            [:span.overflow-hidden.text-ellipsis
-             {:title (t :right-side-bar/scheduled-and-deadline-desc)}
-             [(t :right-side-bar/scheduled-and-deadline) " (" countNumber ")"]])]]
-        (scheduled-and-deadlines-inner page-name refs)]])))
+            (let [count-number (count blocks)]
+              [:span.overflow-hidden.text-ellipsis
+               {:title (t :right-side-bar/scheduled-and-deadline-desc)}
+               [(t :right-side-bar/scheduled-and-deadline) " (" count-number ")"]])]]
+          (scheduled-and-deadlines-inner page-name blocks)]]))))

@@ -644,6 +644,7 @@
  :right-side-bar/toggle-right-sidebar "サイドバーを開閉する"
  :right-side-bar/whiteboards "ホワイトボード"
  :right-side-bar/scheduled-and-deadline "スケジュールと期限" 
+ :right-side-bar/repeat-tasks "リピート・タスク"
  :right-side-bar/scheduled-and-deadline-desc "ブロックズームでの編集を推奨"
  :right-side-bar/scheduled-and-deadline-no-result "見つかりませんでした。"
  :right-side-bar/default-queries "デフォルト クエリー" 
