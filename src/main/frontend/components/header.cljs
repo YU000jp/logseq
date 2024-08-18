@@ -2,7 +2,8 @@
   (:require [cljs-bean.core :as bean]
             [frontend.components.export :as export]
             [frontend.components.page-menu :as page-menu]
-            [frontend.handler.page :as page-handler]
+            [frontend.components.scheduled-deadlines :as scheduled]
+            ;; [frontend.handler.page :as page-handler]
             [frontend.components.plugins :as plugins]
             [frontend.components.server :as server]
             [frontend.components.right-sidebar :as sidebar]
@@ -242,7 +243,7 @@
                              (js/window.apis.toggleMaxOrMinActiveWindow)
 
                              (mobile-util/native-platform?)
-                             (util/scroll-to-top true))))} 
+                             (util/scroll-to-top true))))}
      [:div.l.flex.drag-region
       [left-menu
        [:div.text-md.ml-2
@@ -260,15 +261,21 @@
       (when (and current-repo
                  (not (config/demo-graph? current-repo)) ;; デモグラフの場合を除く
                  (user-handler/alpha-or-beta-user?))
-        (fs-sync/indicator))
-      
-      
+        [(fs-sync/indicator)
+         [:div.text-sm.mr-4
+          [:button.button.icon
+           {:title (t :right-side-bar/scheduled-and-deadline)
+            :on-click (fn[]
+                        (state/sidebar-add-block! current-repo "scheduled-and-deadline" :scheduled-and-deadline)
+                        )}
+           (scheduled/scheduled-and-deadlines-for-toolbar-tip (date/today))]]])
+
 
       (when (and current-page current-repo)
         [:div.flex.items-center.space-x-2.mr-4.rounded-md
          {:style {:background-color "var(--lx-gray-04, var(--color-level-3, var(--rx-gray-04)))"}}
          [;; ページ用メニュー
-          
+
           ;; Linked Referencesを表示する
           [:div.text-sm
            [:button.button.icon
@@ -294,7 +301,7 @@
              :title (t :right-side-bar/page-headers-list)}
             (ui/icon "pennant" {:class "icon" :size 24})]]
 
-          
+
          ;; ページのグラフを表示する
           [:div.text-sm
            [:button.button.icon
@@ -319,10 +326,10 @@
       ;; (when (and (not= (state/get-current-route) :home)
       ;;            (not custom-home-page?))
       ;;   (home-button))
-      
+
       ;; (when sync-enabled?
       ;;   (login))
-      
+
 
       ;; search button for non-mobile
       (when current-repo

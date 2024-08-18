@@ -564,16 +564,6 @@ opacity: 0.6;
            [:span.ml-1.mr-2
             (t :right-side-bar/contents)]]]]
 
-        ;; SCHEDULED AND DEADLINEを表示する
-        [:div.text-sm
-         [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "alias"}
-                                                         :on-click (fn [_e]
-                                                                     (state/sidebar-add-block! repo "scheduled-and-deadline" :scheduled-and-deadline))
-                                                         :title (t :right-side-bar/scheduled-and-deadline)}
-          [(ui/icon "calendar-time" {:class "icon" :size 23 :color "gray"})
-           [:span.ml-1.mr-2
-            (t :right-side-bar/scheduled-and-deadline)]]]]
-
         ;; :dafault-queries
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "alias"}

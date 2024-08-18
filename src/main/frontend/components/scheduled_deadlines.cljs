@@ -58,5 +58,17 @@
              [(t :right-side-bar/scheduled-and-deadline) " (" countNumber ")"]])]]
         (scheduled-and-deadlines-inner page-name refs)]])))
 
+
+(rum/defc scheduled-and-deadlines-for-toolbar-tip < rum/reactive db-mixins/query
+  [page-name]
+  (let [refs (get-refs page-name)]
+    (when (seq refs)
+      [:div
+       [(ui/icon "calendar-time" {:class "text-sm mr-1"})
+        (let [countNumber (count refs)]
+          [:span.overflow-hidden.text-ellipsis
+           {:title (t :right-side-bar/scheduled-and-deadline-desc)}
+           [" (" countNumber ")"]])]])))
+
 ;;TODO: Logseqアプリを開いたときに、SCHEDULEDとDEADLINEがあったら、ユーザーに通知する
 
