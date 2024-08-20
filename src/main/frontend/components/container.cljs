@@ -137,11 +137,13 @@
           ))]))))
 
 (defn get-page-icon [page-entity]
-  (let [default-icon (ui/icon "page" {:extension? true})
-        from-properties (get-in (into {} page-entity) [:block/properties :icon])]
-    (or
-     (when (not= from-properties "") from-properties)
-     default-icon))) ;; Fall back to default if icon is undefined or empty
+  (let [from-properties (get-in (into {} page-entity) [:block/properties :icon])
+        journal?  (get-in (into {} page-entity) [:block/journal?])]
+    (if journal?
+      (ui/icon "calendar-time")
+    (when (not= from-properties "")
+      from-properties)
+      )))
 
 
 (rum/defcs favorite-item <
@@ -260,9 +262,10 @@
             [:li.recent-item.select-none.cursor
              {:key name
               :title name
-              :draggable true
-              :on-drag-start (fn [event] (editor-handler/block->data-transfer! name event))
-              :data-ref name}
+              ;; :draggable true
+              ;; :on-drag-start (fn [event] (editor-handler/block->data-transfer! name event))
+              ;; :data-ref name
+              }
              (page-name-dot name (get-page-icon entity) true)])))])))
 
 (rum/defcs flashcards < db-mixins/query rum/reactive
