@@ -100,16 +100,7 @@
          (reference/references title)
          (str title "-refs"))]
       {:default-collapsed? false})])) ; ツールチップ用
-       
 
-     ;; TODO: 設定項目追加。ジャーナルで、今日以外は折りたたみ状態をデフォルトにする
-     ;; (if today? false true)
-
-    ;; サイドバーに移設したためコメントアウト
-    ;; TODO: ジャーナルを開いたときに、サイドバーで呼び出すかどうかを選択できるようにする設定項目をつくる
-    ;;  (page/today-queries repo today? false)
-    ;;  (when today?
-    ;;    (scheduled/scheduled-and-deadlines page))
      
 
 (rum/defc journals < rum/reactive
