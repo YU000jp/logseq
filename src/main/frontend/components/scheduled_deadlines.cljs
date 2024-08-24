@@ -48,7 +48,7 @@
          {:on-scroll on-contents-scroll}
          [:details
           {:open "true"}
-          [:summary
+          [:summary.header.mr-1.font-bold
            [(ui/icon "calendar-time" {:class "text-sm mr-1"})
 
             (let [count-number (count blocks)]
@@ -86,7 +86,7 @@
         [:div.nav-contents-container.gap-1.pt-1
          {:on-scroll on-contents-scroll}
          [:details
-          [:summary
+          [:summary.header.mr-1.font-bold
            [(ui/icon "repeat" {:class "text-sm mr-1"})
 
             (let [count-number (count blocks)]
@@ -117,7 +117,7 @@
         [:div.gap-1.pt-1
          [:details
           {:open "true"}
-          [:summary
+          [:summary.mr-1.font-bold
            [(ui/icon "calendar-time" {:class "text-sm mr-1"})
 
             (let [count-number (count blocks)]

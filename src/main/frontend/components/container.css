@@ -180,8 +180,8 @@
   }
 
   .nav-contents-container {
-    @apply relative flex-grow-0 overflow-x-hidden overflow-y-auto;
-    max-height: 30vh;
+    @apply relative overflow-x-hidden overflow-y-auto;
+    max-height: 45vh;
     margin-bottom: 1em;
     margin-top: auto;
     margin-bottom: auto;
@@ -197,9 +197,17 @@
     &:not(:is(:hover, :focus-within)) {
       opacity: 0.96;
     }
+
+    details>summary.header {
+      background-color: var(--ls-tertiary-background-color)
+    }
   }
 
   .nav-content-item {
+    .header {
+      background-color: var(--ls-tertiary-background-color)
+    }
+
     &:not(:hover) {
 
       ::-webkit-scrollbar-thumb,

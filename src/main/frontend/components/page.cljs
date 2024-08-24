@@ -260,7 +260,7 @@
        {:style {:margin-left "1em"}}
        [:details.mt-6.flex-1.flex-row
         {:open "true"}
-        [:summary.mr-1.font-bold.opacity-50.pb-1.ml-1
+        [:summary.header.mr-1.font-bold.opacity-50.pb-1.ml-1
          {:title [(t :left-side-bar/tagged-pages) " " tag]}
          [(ui/icon "tag" {:size 16}) (t :left-side-bar/tagged-pages)]]
         [:ul.page-tags-list
@@ -278,7 +278,7 @@
        {:style {:margin-left "1em"}}
        [:details.mt-6.flex-1.flex-row
         {:open "true"}
-        [:summary.mr-1.font-bold.opacity-50.pb-1.ml-1
+        [:summary.header.mr-1.font-bold.opacity-50.pb-1.ml-1
          {:title (t :left-side-bar/search-by-page-name-desc)}
          [(shui/tabler-icon "pencil" {:size 16}) (t :left-side-bar/search-by-page-name)]]
         [:ul.search-by-page-name

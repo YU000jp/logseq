@@ -1515,7 +1515,7 @@
          {:title (t :left-side-bar/hierarchy)}
          "Namespace "]
         (page-cp config {:block/name namespace})]
-       [:summary.mr-1.font-bold.opacity-50.pb-1.ml-1
+       [:summary.header.mr-1.font-bold.opacity-50.pb-1.ml-1
         (ui/icon "hierarchy" {:size 16})
         [:span
          (t :left-side-bar/hierarchy)]])
