@@ -22,7 +22,7 @@
             [frontend.handler.ui :as ui-handler]
             [frontend.handler.user :as user-handler]
             [frontend.mobile.util :as mobile-util]
-            [frontend.modules.instrumentation.core :as instrument]
+            ;; [frontend.modules.instrumentation.core :as instrument]
             [frontend.modules.shortcut.data-helper :as shortcut-helper]
             [frontend.components.shortcut :as shortcut]
             [frontend.spec.storage :as storage-spec]

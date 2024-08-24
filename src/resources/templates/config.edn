@@ -1,5 +1,14 @@
 {:meta/version 1
 
+ 
+
+ ;; Logseq-Classic only
+
+
+
+ ;; end
+
+
  ;; Set the preferred format.
  ;; Available options:
  ;; - Markdown (default)

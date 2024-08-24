@@ -141,9 +141,8 @@
         journal?  (get-in (into {} page-entity) [:block/journal?])]
     (if journal?
       (ui/icon "calendar-time")
-    (when (not= from-properties "")
-      from-properties)
-      )))
+      (when (not= from-properties "")
+        from-properties))))
 
 
 (rum/defcs favorite-item <
