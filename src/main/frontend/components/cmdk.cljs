@@ -890,7 +890,7 @@
            "Blocks" (t :search/blocks)
            "Files"  (t :search/files)
            "Recents" (t :search/recents)
-           "Whiteboards" (t :search/whiteboards)
+           "Whiteboards" (t :search/only-whiteboards)
            "Commands" (t :search/commands)
            "Filters" (t :search/filters)
            "Current-page" (t :search/current-page)
