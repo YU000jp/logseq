@@ -2465,6 +2465,7 @@
         (invalid-properties-cp invalid-properties))
 
       (when (and (seq properties)
+                 (not collapsed?)
                  (let [hidden? (property/properties-hidden? properties)]
                    (not hidden?))
                  (not (and block-ref? (or (seq title) (seq body))))
