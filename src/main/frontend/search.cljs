@@ -342,8 +342,9 @@
                                :pages-to-add        pages-to-add})))))
 
 (defn rebuild-indices!
-  []
-  (let [repo (state/get-current-repo)]
+  ([]
+   (rebuild-indices! (state/get-current-repo)))
+  ([repo]
    (when repo
      (when-let [engine (get-engine repo)]
        (let [page-titles (search-db/make-pages-title-indice!)]
