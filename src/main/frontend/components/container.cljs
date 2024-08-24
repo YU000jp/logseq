@@ -535,17 +535,17 @@
        (when page-name
 
          [(let [hierarchy-target page-name
-                ;; includeSlash (string/includes? hierarchy-target "/")
+                includeSlash (string/includes? hierarchy-target "/")
                 split (string/split page-name #"/")
                 ;; first-class (first split)
                 last-name (last split)
-
                 children (db-model/get-namespace-hierarchy (state/get-current-repo) hierarchy-target)]
             [;; hierarchy
-             [:div.nav-contents-container.pt-1.text-sm
-              {:on-scroll on-contents-scroll
-               :style {:margin-left "1em"}}
-              (com-block/namespace-hierarchy {} hierarchy-target children false)]
+             (when (and children includeSlash)
+               [:div.nav-contents-container.pt-1.text-sm
+                {:on-scroll on-contents-scroll
+                 :style {:margin-left "1em"}}
+                (com-block/namespace-hierarchy {} hierarchy-target children false)])
                  ;; search-by-page-name
              (when last-name
                (com-page/search-by-page-name repo last-name page-name))])
