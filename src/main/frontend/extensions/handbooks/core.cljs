@@ -6,9 +6,11 @@
             [frontend.date :as date]
             [frontend.state :as state]
             [frontend.db :as db]
+            [frontend.db.model :as db-model]
             [frontend.components.page :as page]
             [frontend.components.right-sidebar :as right-sidebar]
-            [frontend.components.reference :as reference]
+            [frontend.components.block :as com-block]
+            [frontend.components.cmdk :as cmdk]
             ;; [frontend.modules.shortcut.config :as shortcut-config]
             [frontend.util :as util]
             [frontend.components.scheduled-deadlines :as scheduled]
@@ -23,17 +25,18 @@
     s))
 
 (defn button-with-count
-  [title icon key count pane-state nav-to-pane!]
+  [title icon key num pane-state nav-to-pane!]
   [:button.category-card.text-left
    {:key      key
     :style    {:border-left-color "var(--ls-secondary-background-color)"
-               :opacity (if (= count 0) "0.3" "1")}
+               :opacity (if (zero? num) "0.3" "1")}
     :on-click (fn []
-                (nav-to-pane! [key nil [title " " count]] pane-state))}
+                (when-not (zero? num)
+                  (nav-to-pane! [key nil [title " " num]] pane-state)))}
    [:div.icon-wrap
     (ui/icon  icon {:size 22})]
    [:div.text-wrap
-    [:strong title] count]])
+    [:strong [title " " num]]]])
 
 
 (defn button
@@ -47,6 +50,7 @@
     (ui/icon  icon {:size 22})]
    [:div.text-wrap
     [:strong title]]])
+
 
 (defn pane-dashboard
   [handbooks-nodes pane-state nav-to-pane! current-page-name-or-uuid repo]
@@ -83,6 +87,16 @@
               icon "pennant"]
           (button title icon key pane-state nav-to-pane!)))
 
+      (let [title (t :header/search)
+            key :search
+            icon "search"]
+        (button title icon key pane-state nav-to-pane!))
+
+      (let [title (t :handbook/hierarchy-search)
+            key :hierarchy-search
+            icon "search"]
+        (button title icon key pane-state nav-to-pane!))
+
       ;; (when current-page-name-or-uuid
       ;;   (let [title (t :linked-references/sidebar-open)
       ;;         key :linked-references
@@ -106,6 +120,7 @@
      ;; ここにトグル
      ]
     [:small.opacity-30 (str "desc")]]])
+
 
 (defn scheduled-and-deadlines
   [handbooks-nodes pane-state nav-to-pane! current-page-name-or-uuid repo]
@@ -142,6 +157,46 @@
      [:div
       "No headers"])])
 
+(defn search
+  [handbooks-nodes pane-state nav-to-pane! current-page-name-or-uuid repo]
+  [:div.pane.search
+   (cmdk/cmdk-block {:initial-input ""
+                     :sidebar? true})])
+
+(rum/defc hierarchy-search
+  [handbooks-nodes pane-state nav-to-pane! current-page-name-or-uuid repo]
+  (let [[q set-q!] (rum/use-state nil)
+        *search-ref (rum/use-ref nil)
+        blank? (string/blank? q)]
+    [[:div.pane.hierarchy-search
+      [:span.search-input-wrap.flex
+       [[:input.form-input
+         {:placeholder (t :keymap/search)
+          :ref         *search-ref
+          :value       (or q "")
+          :auto-focus  true
+          ;; :on-key-down #(when (= 27 (.-keyCode %))
+          ;;                 (util/stop %)
+          ;;                 (if (string/blank? q)
+          ;;                   (some-> (rum/deref *search-ref) (.blur))
+          ;;                   (set-q! "")))
+          :on-change   #(let [v (util/evalue %)]
+                          (set-q! v))}]
+        (when-not blank?
+          [:a.x
+           {:on-click (fn []
+                        (set-q! "")
+                        (js/setTimeout #(some-> (rum/deref *search-ref) (.focus)) 50))}
+           (ui/icon "x" {:size 14})])]]]
+     (when (and (not blank?) (db/page-exists? q))
+       (let [children (db-model/get-namespace-hierarchy repo q)]
+         (when children
+           [:div.nav-contents-container.pt-1.text-sm
+            {:style {:margin-left "1em"}}
+            (com-block/namespace-hierarchy {} q children false true true)])))]))
+
+
+
 ;; (defn linked-references
 ;;   [handbooks-nodes pane-state nav-to-pane! current-page-name-or-uuid repo]
 ;;   [:div.pane.linked-references
@@ -157,16 +212,22 @@
 ;;    {:title (t :right-side-bar/long-time)}
 ;;    (page/page-graph)])
 
+
+
 (def panes-mapping
-  {:dashboard    [pane-dashboard]
-   :scheduled    [scheduled-and-deadlines]
-   :repeat-tasks [repeat-tasks]
-   :default-queries [default-queries]
-   :page-headers-list [page-headers-list]
-   :contents     [contents-embed]
+  {:dashboard           [pane-dashboard]
+   :scheduled           [scheduled-and-deadlines]
+   :repeat-tasks        [repeat-tasks]
+   :default-queries     [default-queries]
+   :page-headers-list   [page-headers-list]
+   :contents            [contents-embed]
+   :search              [search]
+   :hierarchy-search   [hierarchy-search]
   ;;  :linked-references  [linked-references]
   ;;  :page-graph   [page-graph]
-   :settings     [pane-settings]})
+   :settings            [pane-settings]})
+
+
 
 (rum/defc ^:large-vars/data-var content
   []
@@ -215,9 +276,9 @@
       :on-scroll on-scroll}
      [:div.pane-wrap
       [:div.hd.flex.justify-between.select-none.draggable-handle
-       [:h1.text-xl.flex.items-center.font-bold
+       [:span.flex.items-center
         (if pane-dashboard?
-          [:span "Handy Board"]
+          [:span (t :help/handbook)]
           [:button.active:opacity-80.flex.items-center.cursor-pointer
            {:on-click (fn [] (let [prev (first history-state)
                                    prev (cond-> prev
@@ -235,11 +296,11 @@
                                  :tabIndex   "0"
                                  :on-click   #(nav-to-pane! [:settings nil "Settings"] active-pane-state)}
            (ui/icon "settings")])
-        [:a.flex.items-center {:aria-label (t :handbook/close) :tabIndex "0" :on-click #(state/toggle! :ui/handbooks-open?)}
-         (ui/icon "x")]]]
+        ;; [:a.flex.items-center {:aria-label (t :handbook/close) :tabIndex "0" :on-click #(state/toggle! :ui/handbooks-open?)}
+        ;;  (ui/icon "x")]
+        ]]
 
-
-                 ;; entry pane
+      ;; entry pane
       (when pane-render
         (apply pane-render
                (case active-pane-name

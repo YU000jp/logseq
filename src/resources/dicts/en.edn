@@ -344,6 +344,7 @@
  :handbook/home "Home"
  :handbook/popular-topics "Popular topics"
  :handbook/search "Search"
+ :handbook/hierarchy-search "Find hierarchical pages"
  :handbook/settings "Settings"
  :handbook/title "Help"
  :handbook/topics "Topics"

@@ -137,19 +137,19 @@
           :options {:href (rfe/href :all-files)}
           :icon (ui/icon "files")})
 
-       {:class "shortcut-settings"
-        :title (t :command.go/keyboard-shortcuts)
-        :style {:cursor "help"}
-        :options {:on-click (fn [_e]
-                              (state/sidebar-add-block! current-repo ":shortcut-settings" :shortcut-settings))}
-        :icon (ui/icon "keyboard")}
+      ;;  {:class "shortcut-settings"
+      ;;   :title (t :command.go/keyboard-shortcuts)
+      ;;   :style {:cursor "help"}
+      ;;   :options {:on-click (fn [_e]
+      ;;                         (state/sidebar-add-block! current-repo ":shortcut-settings" :shortcut-settings))}
+      ;;   :icon (ui/icon "keyboard")}
 
-       {:class "syntax-help"
-        :title (t :right-side-bar/syntax)
-        :style {:cursor "help"}
-        :options {:on-click (fn [_e]
-                              (state/sidebar-add-block! current-repo ":syntax-help" :syntax-help))}
-        :icon (ui/icon "vector-bezier")}
+      ;;  {:class "syntax-help"
+      ;;   :title (t :right-side-bar/syntax)
+      ;;   :style {:cursor "help"}
+      ;;   :options {:on-click (fn [_e]
+      ;;                         (state/sidebar-add-block! current-repo ":syntax-help" :syntax-help))}
+      ;;   :icon (ui/icon "vector-bezier")}
 
        (when (and config/dev?
                   (state/sub [:ui/developer-mode?]))
@@ -294,20 +294,20 @@
          [;; ページ用メニュー
 
           ;; Linked Referencesを表示する
-          [:div.text-sm
-           [:button.button.icon
-            {:on-click (fn []
-                         (state/sidebar-add-block! current-repo current-page :reference))
-             :title (str (t :linked-references/sidebar-open) "\n" (t :content/open-in-sidebar))}
-            (ui/icon "layers-difference" {:class "icon" :size 24})]]
+          ;; [:div.text-sm
+          ;;  [:button.button.icon
+          ;;   {:on-click (fn []
+          ;;                (state/sidebar-add-block! current-repo current-page :reference))
+          ;;    :title (str (t :linked-references/sidebar-open) "\n" (t :content/open-in-sidebar))}
+          ;;   (ui/icon "layers-difference" {:class "icon" :size 24})]]
 
-          ;; Unlinked Referencesを表示する
-          [:div.text-sm
-           [:button.button.icon
-            {:on-click (fn []
-                         (state/sidebar-add-block! current-repo current-page :unlinked-reference))
-             :title (str (t :unlinked-references/sidebar-open) "\n" (t :content/open-in-sidebar))}
-            (ui/icon "list" {:class "icon" :size 24})]]
+          ;; ;; Unlinked Referencesを表示する
+          ;; [:div.text-sm
+          ;;  [:button.button.icon
+          ;;   {:on-click (fn []
+          ;;                (state/sidebar-add-block! current-repo current-page :unlinked-reference))
+          ;;    :title (str (t :unlinked-references/sidebar-open) "\n" (t :content/open-in-sidebar))}
+          ;;   (ui/icon "list" {:class "icon" :size 24})]]
 
            ;; ページのグラフを表示する
           [:div.text-sm
@@ -321,12 +321,12 @@
             (ui/icon "hierarchy" {:class "icon" :size 24})]]
 
           ;; Page headers list
-          [:div.text-sm
-           [:button.button.icon
-            {:on-click (fn []
-                         (state/sidebar-add-block! current-repo "headers-list" :headers-list))
-             :title (str (t :right-side-bar/page-headers-list) "\n" (t :content/open-in-sidebar))}
-            (ui/icon "pennant" {:class "icon" :size 24})]]
+          ;; [:div.text-sm
+          ;;  [:button.button.icon
+          ;;   {:on-click (fn []
+          ;;                (state/sidebar-add-block! current-repo "headers-list" :headers-list))
+          ;;    :title (str (t :right-side-bar/page-headers-list) "\n" (t :content/open-in-sidebar))}
+          ;;   (ui/icon "pennant" {:class "icon" :size 24})]]
 
         ;; 削除ボタン
           (when-not (or (= current-page "contents")

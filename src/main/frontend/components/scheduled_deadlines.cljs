@@ -82,7 +82,7 @@
       (if (seq blocks)
         (let [count-number (count blocks)]
           [(str count-number)])
-        [(str "0")]))))
+        0))))
 
 
 (rum/defc repeat-tasks < rum/reactive db-mixins/query
@@ -117,7 +117,7 @@
       (if (seq blocks)
         (let [count-number (count blocks)]
           [(str count-number)])
-        [(str "0")]))))
+        0))))
 
 
 (rum/defc repeat-tasks-for-toolbar-tip < rum/reactive db-mixins/query

@@ -19,6 +19,7 @@
             [frontend.components.block :as com-block]
             [frontend.components.widgets :as widgets]
             [frontend.components.handbooks :as handbooks]
+            [frontend.extensions.handbooks.core :as handbooks-core]
             [frontend.config :as config]
             [frontend.context.i18n :refer [t]]
             [frontend.db :as db]
@@ -517,10 +518,10 @@
 
        ;; 目次コンテンツをメニューバーに配置 TODO: オプションでトグルする
 
-       (when-let [contents (db/entity [:block/name "contents"])]
-         [:div.contents-left-menu
-          {:title (t :right-side-bar/contents)}
-          (page/contents-page contents)])
+      ;;  (when-let [contents (db/entity [:block/name "contents"])]
+      ;;    [:div.contents-left-menu
+      ;;     {:title (t :right-side-bar/contents)}
+      ;;     (page/contents-page contents)])
 
        [:div.nav-contents-container.gap-1.pt-1
         {:on-scroll on-contents-scroll}
@@ -530,31 +531,12 @@
         {:on-scroll on-contents-scroll}
         (recent-pages t)]
 
-
-       (when page-name
-
-         [(let [hierarchy-target page-name
-                includeSlash (string/includes? hierarchy-target "/")
-                split (string/split page-name #"/")
-                ;; first-class (first split)
-                last-name (last split)
-                children (db-model/get-namespace-hierarchy (state/get-current-repo) hierarchy-target)]
-            [;; hierarchy
-             (when (and children includeSlash)
-               [:div.nav-contents-container.pt-1.text-sm
-                {:on-scroll on-contents-scroll
-                 :style {:margin-left "1em"}}
-                (com-block/namespace-hierarchy {} hierarchy-target children false)])
-                 ;; search-by-page-name
-             (when last-name
-               (page/search-by-page-name repo last-name page-name))])
-
-           ;; tagged pages
-          (page/tagged-pages repo page-name)])
-
        [:footer.px-2.mt-1.create
-        (when-not config/publishing?
-          (create-dropdown enable-whiteboards? page-name))]]]
+        [[:div.cp__handbooks-popup.mb-1
+          [:div.cp__handbooks-content-wrap
+           (handbooks-core/content)]]
+         (when-not config/publishing?
+           (create-dropdown enable-whiteboards? page-name))]]]]
 
      [:span.shade-mask
       (cond-> {:on-click close-fn}
@@ -589,7 +571,7 @@
                 #js {:listeners
                      #js {:move (fn [^js/MouseEvent e]
                                   (when-let [offset (.-left (.-rect e))]
-                                    (let [width (.toFixed (max (min offset 600) 240) 2)]
+                                    (let [width (.toFixed (max (min offset 600) 380) 2)] ;; 600 240
                                       (adjust-size! (str width "px")))))}})
                (.styleCursor false)
                (.on "dragstart" (fn []
@@ -664,6 +646,12 @@
     {:style {:bottom (+ @util/keyboard-height 45)}}
     (footer/audio-record-cp)]])
 
+(defn match-title [title]
+  (or (re-matches #"\d{4}" title) ; 4桁の数字
+      (re-matches #"\d{4}/\d{2}" title) ; YYYY/MM形式
+      (re-matches #"\d{4}/Q[1-4]" title) ; YYYY/Q1-Q4形式
+      (re-matches #"\d{4}/Q[1-4]/\d{2}" title))) ; YYYY/Q1-Q4/DD形式
+
 (rum/defc main <
   {:did-mount (fn [state]
                 (when-let [element (gdom/getElement "app-container")]
@@ -703,6 +691,7 @@
       (when show-action-bar?
         (action-bar/action-bar))
 
+
       [:div.cp__sidebar-main-content
        {:data-is-margin-less-pages margin-less-pages?
         :data-is-full-width        (or margin-less-pages?
@@ -737,7 +726,47 @@
           main-content])
 
        (when onboarding-and-home?
-         (onboarding/intro onboarding-and-home?))]]]))
+         (onboarding/intro onboarding-and-home?))]
+      
+
+      (let [repo               (state/get-current-repo)
+            page-name (or (state/get-current-page) (state/get-current-whiteboard))
+            zoom-in? (if page-name
+                       (parse-uuid page-name)
+                       false)]
+
+        (when (and repo page-name (not zoom-in?))
+
+          (let [sidebar-open? (state/sub :ui/sidebar-open?)
+                whiteboard-page? (db-model/whiteboard-page? page-name)
+                journal? (db/journal-page? page-name)
+                yearOrMonth? (match-title page-name)]
+
+            (when (and (not sidebar-open?) (not whiteboard-page?) (not journal?) (not yearOrMonth?))
+
+              [:div.page-side
+               {:style {:min-width "240px" :max-width "380px" :overflow "auto" :margin-right "2em"}}
+
+               [(when-not journal?
+
+                  (let [hierarchy-target page-name
+                        split (string/split page-name #"/")
+                                ;; first-class (first split)
+                        last-name (last split)
+                        children (db-model/get-namespace-hierarchy (state/get-current-repo) hierarchy-target)]
+                    [;; hierarchy
+                     (when children
+                       [:div.nav-contents-container.pt-1.text-sm
+                        {:style {:margin-left "1em"}}
+                        (com-block/namespace-hierarchy {} hierarchy-target children false)])
+                    
+                     ;; search-by-page-name
+                     (when last-name
+                       (page/search-by-page-name repo last-name page-name))]))
+                     ;; TODO: ジャーナル用 サイド・ナビゲーション
+
+                     ;; tagged pages
+                (page/tagged-pages repo page-name)]]))))]]))
 
 (defonce sidebar-inited? (atom false))
 ;; TODO: simplify logic
@@ -869,12 +898,13 @@
                "D"])))
 
 (def help-menu-items
-  [{:title (t :help/handbook) :icon "book-2" :on-click #(handbooks/toggle-handbooks)}
+  [;;  {:title (t :help/handbook) :icon "book-2" :on-click #(handbooks/toggle-handbooks)}
    {:title (t :help/shortcuts) :icon "command" :on-click #(state/sidebar-add-block! (state/get-current-repo) "shortcut-settings" :shortcut-settings)}
+   {:title (t :right-side-bar/syntax) :icon "vector-bezier" :on-click #(state/sidebar-add-block! (state/get-current-repo) ":syntax-help" :syntax-help)}
    {:title (t :help/docs) :icon "help" :href "https://docs.logseq.com/"}
    :hr
   ;;  {:title (t :help/bug) :icon "bug" :on-click #(rfe/push-state :bug-report)}
-   ;;{:title t(t :help/feature) :icon "git-pull-request" :href "https://discuss.logseq.com/c/feature-requests/"} Removed from discuss forum
+  ;;  {:title t(t :help/feature) :icon "git-pull-request" :href "https://discuss.logseq.com/c/feature-requests/"} Removed from discuss forum
   ;;  {:title (t :help/feedback) :icon "messages" :href "https://discuss.logseq.com/c/feedback/13"}
   ;;  :hr
    {:title (str "Discord " (t :help/title-community)) :icon "brand-discord" :href "https://discord.com/invite/KpN4eHY"}
@@ -923,13 +953,16 @@
         handbooks-open? (state/sub :ui/handbooks-open?)]
     [:<>
      [:div.cp__sidebar-help-btn
-      [:div.inner
-       {:title    (t :help-shortcut-title)
-        :on-click #(state/toggle! :ui/help-open?)}
-       [:svg.scale-125 {:stroke "currentColor", :fill "none", :stroke-linejoin "round", :width "24", :viewbox "0 0 24 24", :xmlns "http://www.w3.org/2000/svg", :stroke-linecap "round", :stroke-width "2", :class "icon icon-tabler icon-tabler-help-small", :height "24"}
-        [:path {:stroke "none", :d "M0 0h24v24H0z", :fill "none"}]
-        [:path {:d "M12 16v.01"}]
-        [:path {:d "M12 13a2 2 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483"}]]]]
+      [;;  [:div.inner
+      ;;   {:title (t :help/handbook)
+      ;;    :on-click #(state/toggle! :ui/handbooks-open?)}
+      ;;   (ui/icon "book-2" {:size 24})]
+       [:div.inner
+        {:on-click #(state/toggle! :ui/help-open?)}
+        [:svg.scale-125 {:stroke "currentColor", :fill "none", :stroke-linejoin "round", :width "24", :viewbox "0 0 24 24", :xmlns "http://www.w3.org/2000/svg", :stroke-linecap "round", :stroke-width "2", :class "icon icon-tabler icon-tabler-help-small", :height "24"}
+         [:path {:stroke "none", :d "M0 0h24v24H0z", :fill "none"}]
+         [:path {:d "M12 16v.01"}]
+         [:path {:d "M12 13a2 2 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483"}]]]]]
 
      (when help-open?
        (help-menu-popup))
@@ -1019,7 +1052,7 @@
        (t :accessibility/skip-to-main-content)]
       [:div.#app-container
        [:div#left-container
-        {:class (if (state/sub :ui/sidebar-open?) "overflow-hidden" "w-full")}
+        {:class (if sidebar-open? "overflow-hidden" "w-full")}
         (header/header {:open-fn        open-fn
                         :light?         light?
                         :current-repo   current-repo

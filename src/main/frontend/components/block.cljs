@@ -1489,7 +1489,7 @@
       (render-macro config name arguments macro-content format))))
 
 (rum/defc namespace-hierarchy-aux
-  [config namespace children]
+  [config namespace children no-collapse?]
   [:ul.mt-2.text-sm.namespace-list
    (for [child children]
      [:li {:key (str "namespace-" namespace "-" (:db/id child))}
@@ -1499,28 +1499,33 @@
             children (:namespace/children child)]
         (if (seq children)
           [:details
+           {:open (if no-collapse? true false)}
            [[:summary
              (page-cp {:label shorten-name} child)]
-            (namespace-hierarchy-aux config (:block/name child) children)]]
+            (namespace-hierarchy-aux config (:block/name child) children no-collapse?)]]
           (page-cp {:label shorten-name} child)))])])
 
 (rum/defc namespace-hierarchy
-  [config namespace children as-query?]
+  [config namespace children as-query? no-title? no-collapse?]
   (when (seq children)
-    [:details.namespace
-     {:open "true"}
-     (if as-query?
-       [:summary.font-medium.flex.flex-row.items-center.header
-        [:span.mr-1
-         {:title (t :left-side-bar/hierarchy)}
-         "Namespace "]
-        (page-cp config {:block/name namespace})]
-       [:summary.header.mr-1.font-bold.opacity-50.pb-1.ml-1
-        (ui/icon "hierarchy" {:size 16})
-        [:span
-         (t :left-side-bar/hierarchy)]])
 
-     (namespace-hierarchy-aux config namespace children)]))
+    (if (not no-title?)
+      [:details.namespace
+       {:open "true"}
+       (if as-query?
+         [:summary.font-medium.flex.flex-row.items-center.header
+          [:span.mr-1
+           {:title (t :left-side-bar/hierarchy)}
+           "Namespace "]
+          (page-cp config {:block/original-name namespace})]
+         [:summary.header.mr-1.font-bold.opacity-50.pb-1.ml-1
+          (ui/icon "hierarchy" {:size 16})
+          [:span
+           (t :left-side-bar/hierarchy)]])
+
+       (namespace-hierarchy-aux config namespace children no-collapse?)])
+    [:div.namespace
+     (namespace-hierarchy-aux config namespace children no-collapse?)]))
 
 (defn- macro-cp
   [config options]
@@ -1799,10 +1804,9 @@
                            (or ref? query?)
                            (assoc :ref-query-child? true))]
               (when (or (not headerList?) (and headerList? heading?))
-               (rum/with-key 
-                 (block-container config child)
-                (str (:blocks-container-id config) "-" (:block/uuid child))))
-              )))]])))
+                (rum/with-key
+                  (block-container config child)
+                  (str (:blocks-container-id config) "-" (:block/uuid child)))))))]])))
 
 (defn- block-content-empty?
   [{:block/keys [properties title body]}]

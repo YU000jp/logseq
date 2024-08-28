@@ -92,16 +92,14 @@
     --ls-tertiary-background-color1: var(--ls-tertiary-background-color, var(--lx-gray-05, var(--rx-gray-05)));
     --ls-quaternary-background-color1: var(--ls-quaternary-background-color, var(--lx-gray-08, var(--rx-gray-08)));
 
-    @apply fixed rounded-lg overflow-hidden border z-[19] shadow-lg flex justify-center flex-col;
+    @apply rounded-lg border shadow-lg gap-1 pt-1;
 
-    background-color: var(--ls-tertiary-background-color1);
-    border: 1px solid var(--ls-tertiary-background-color1);
+    background-color: var(--ls-primary-background-color1);
+    border: 1px solid var(--ls-primary-background-color1);
     touch-action: none;
     height: 686px;
-    max-height: 86vh;
-    width: 460px;
-    right: 32px;
-    bottom: 58px;
+    max-height: 45vh;
+    font-size: 0.88em;
   }
 }
 
@@ -125,7 +123,7 @@ html[data-theme="light"] {
 
         &:hover,
         &:active {
-          background-color: var(--ls-tertiary-background-color1);
+          background-color: var(--ls-primary-background-color1);
         }
       }
     }

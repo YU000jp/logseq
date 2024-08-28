@@ -162,148 +162,149 @@ opacity: 0.6;
 
 (defn build-sidebar-item
   [repo idx db-id block-type *db-id init-key]
-  (let  [current-page-name-or-uuid (or (state/get-current-page) (state/get-current-whiteboard))]
-    (case (keyword block-type)
-      :contents
-      [[:.flex.items-center
-        (ui/icon "note" {:class "text-sm mr-2"})
-        (t :right-side-bar/contents)]
-       (contents)]
+  ;; (let  [current-page-name-or-uuid (or (state/get-current-page) (state/get-current-whiteboard))]
+  (case (keyword block-type)
+    :contents
+    [[:.flex.items-center
+      (ui/icon "note" {:class "text-sm mr-2"})
+      (t :right-side-bar/contents)]
+     (contents)]
 
     ;; :help
     ;; [[:.flex.items-center (ui/icon "help" {:class "text-md mr-2"}) (t :right-side-bar/help)] (onboarding/help)]
 
-      :scheduled-and-deadline
-      [[:.flex.items-center#open-sidebar-scheduled-and-deadline
-        (ui/icon "calendar-time" {:class "text-sm mr-1"})
-        [:span.overflow-hidden.text-ellipsis (t :right-side-bar/scheduled-and-deadline)]]
-       (scheduled/scheduled-and-deadlines (date/today))]
+    :scheduled-and-deadline
+    [[:.flex.items-center#open-sidebar-scheduled-and-deadline
+      (ui/icon "calendar-time" {:class "text-sm mr-1"})
+      [:span.overflow-hidden.text-ellipsis (t :right-side-bar/scheduled-and-deadline)]]
+     (scheduled/scheduled-and-deadlines (date/today))]
 
-      :repeat-tasks
-      [[:.flex.items-center#open-sidebar-repeat-tasks
-        (ui/icon "repeat" {:class "text-sm mr-1"})
-        [:span.overflow-hidden.text-ellipsis (t :right-side-bar/repeat-tasks)]]
-       (scheduled/repeat-tasks (date/today))]
+    :repeat-tasks
+    [[:.flex.items-center#open-sidebar-repeat-tasks
+      (ui/icon "repeat" {:class "text-sm mr-1"})
+      [:span.overflow-hidden.text-ellipsis (t :right-side-bar/repeat-tasks)]]
+     (scheduled/repeat-tasks (date/today))]
 
-      :default-queries
-      [[:.flex.items-center#open-sidebar-default-queries
-        (ui/icon "brand-4chan" {:class "mr-2"})
-        [:span.overflow-hidden.text-ellipsis (t :right-side-bar/default-queries)]]
-       (page/today-queries repo)]
+      ;; :default-queries
+      ;; [[:.flex.items-center#open-sidebar-default-queries
+      ;;   (ui/icon "brand-4chan" {:class "mr-2"})
+      ;;   [:span.overflow-hidden.text-ellipsis (t :right-side-bar/default-queries)]]
+      ;;  (page/today-queries repo)]
 
-      :reference
-      [[:.flex.items-center#open-sidebar-reference
-        (ui/icon "layers-difference" {:class "mr-2"})
-        [:span.overflow-hidden.text-ellipsis
-         [(t :linked-references/sidebar-open) " >> " db-id]]]
-       (if-let [page-name db-id]
-         [[:div {:key "page-references"}
-           (reference/references page-name)]
-          [:div.text-sm.opacity-50.ml-4.mt-6#long-time-message (t :right-side-bar/long-time)]]
-         (t :linked-references/sidebar-not-page))]
+    :reference
+    [[:.flex.items-center#open-sidebar-reference
+      (ui/icon "layers-difference" {:class "mr-2"})
+      [:span.overflow-hidden.text-ellipsis
+       [(t :linked-references/sidebar-open) " >> " db-id]]]
+     (if-let [page-name db-id]
+       [[:div {:key "page-references"}
+         (reference/references page-name)]
+        [:div.text-sm.opacity-50.ml-4.mt-6#long-time-message (t :right-side-bar/long-time)]]
+       (t :linked-references/sidebar-not-page))]
 
-      :unlinked-reference
-      [[:.flex.items-center#open-sidebar-reference
-        (ui/icon "list" {:class "mr-2"})
-        [:span.overflow-hidden.text-ellipsis
-         (t :unlinked-references/sidebar-open) " >> " db-id]]
-       (if-let [page-name db-id]
-         [[:div {:key "page-unlinked-references"}
-           (reference/unlinked-references page-name)]
-          [:div.text-sm.opacity-50.ml-4.mt-6#long-time-message (t :right-side-bar/long-time)]]
-         (t :unlinked-references/sidebar-not-page))]
+      ;; :unlinked-reference
+      ;; [[:.flex.items-center#open-sidebar-reference
+      ;;   (ui/icon "list" {:class "mr-2"})
+      ;;   [:span.overflow-hidden.text-ellipsis
+      ;;    (t :unlinked-references/sidebar-open) " >> " db-id]]
+      ;;  (if-let [page-name db-id]
+      ;;    [[:div {:key "page-unlinked-references"}
+      ;;      (reference/unlinked-references page-name)]
+      ;;     [:div.text-sm.opacity-50.ml-4.mt-6#long-time-message (t :right-side-bar/long-time)]]
+      ;;    (t :unlinked-references/sidebar-not-page))]
 
-      :page-graph
-      [[:.flex.items-center
-        [(ui/icon "hierarchy" {:class "mr-2"})
-         (t :right-side-bar/page-graph)]
-        [:span.text-sm.opacity-50.ml-4 (t :right-side-bar/long-time)]]
-       (page/page-graph)]
+    :page-graph
+    [[:.flex.items-center
+      [(ui/icon "hierarchy" {:class "mr-2"})
+       (t :right-side-bar/page-graph)]
+      [:span.text-sm.opacity-50.ml-4 (t :right-side-bar/long-time)]]
+     (page/page-graph)]
 
-      :headers-list
-      [[:.flex.items-center
-        (shui/tabler-icon "pennant" {:class "mr-2"})
-        [:span.overflow-hidden.text-ellipsis
-         (t :right-side-bar/page-headers-list)]]
-       (if current-page-name-or-uuid
-         (headers-list repo current-page-name-or-uuid)
-         [:div
-          "No headers"])]
+      ;; :headers-list
+      ;; [[:.flex.items-center
+      ;;   (shui/tabler-icon "pennant" {:class "mr-2"})
+      ;;   [:span.overflow-hidden.text-ellipsis
+      ;;    (t :right-side-bar/page-headers-list)]]
+      ;;  (if current-page-name-or-uuid
+      ;;    (headers-list repo current-page-name-or-uuid)
+      ;;    [:div
+      ;;     "No headers"])]
 
-      :history
-      [[:.flex.items-center
-        (ui/icon "history" {:class "mr-2"})
-        (t :right-side-bar/history)]
-       (history)]
+    :history
+    [[:.flex.items-center
+      (ui/icon "history" {:class "mr-2"})
+      (t :right-side-bar/history)]
+     (history)]
 
-      :all-pages
-      [[:.flex.items-center
-        (ui/icon "book" {:class "mr-2"})
-        (t :right-side-bar/all-pages)]
-       (page/all-pages)]
+    :all-pages
+    [[:.flex.items-center
+      (ui/icon "book" {:class "mr-2"})
+      (t :right-side-bar/all-pages)]
+     (page/all-pages)]
 
-      :all-files
-      [[:.flex.items-center
-        (ui/icon "files" {:class "mr-2"})
-        (t :right-side-bar/all-files)]
-       (file/files)]
+    :all-files
+    [[:.flex.items-center
+      (ui/icon "files" {:class "mr-2"})
+      (t :right-side-bar/all-files)]
+     (file/files)]
 
-      :block-ref
-      #_:clj-kondo/ignore
-      (let [lookup (if (integer? db-id) db-id [:block/uuid db-id])]
-        (when-let [block (db/entity repo lookup)]
-          (block-with-breadcrumb repo block idx [repo db-id block-type] true)))
+    :block-ref
+    #_:clj-kondo/ignore
+    (let [lookup (if (integer? db-id) db-id [:block/uuid db-id])]
+      (when-let [block (db/entity repo lookup)]
+        (block-with-breadcrumb repo block idx [repo db-id block-type] true)))
 
-      :block
-      #_:clj-kondo/ignore
-      (let [lookup (if (integer? db-id) db-id [:block/uuid db-id])]
-        (when-let [block (db/entity repo lookup)]
-          (block-with-breadcrumb repo block idx [repo db-id block-type] false)))
+    :block
+    #_:clj-kondo/ignore
+    (let [lookup (if (integer? db-id) db-id [:block/uuid db-id])]
+      (when-let [block (db/entity repo lookup)]
+        (block-with-breadcrumb repo block idx [repo db-id block-type] false)))
 
-      :page
-      (let [lookup (if (integer? db-id) db-id [:block/uuid db-id])
-            page (db/entity repo lookup)
-            page-name (:block/name page)]
-        [[:.flex.items-center.page-title
-          [:span.text-sm.mr-4 (t :right-side-bar/opened-page)]
-          (if-let [icon (get-in page [:block/properties :icon])]
-            [icon]
-            (ui/icon (if (= "whiteboard" (:block/type page)) "whiteboard" "page") {:class "mr-2"}))
-          [:span.overflow-hidden.text-ellipsis (db-model/get-page-original-name page-name)]]
-         (page-cp repo page-name)])
+    :page
+    (let [lookup (if (integer? db-id) db-id [:block/uuid db-id])
+          page (db/entity repo lookup)
+          page-name (:block/name page)]
+      [[:.flex.items-center.page-title
+        [:span.text-sm.mr-4 (t :right-side-bar/opened-page)]
+        (if-let [icon (get-in page [:block/properties :icon])]
+          [icon]
+          (ui/icon (if (= "whiteboard" (:block/type page)) "whiteboard" "page") {:class "mr-2"}))
+        [:span.overflow-hidden.text-ellipsis (db-model/get-page-original-name page-name)]]
+       (page-cp repo page-name)])
 
-      :search
-      [[:.flex.items-center
-        (ui/icon "search" {:class "mr-1"})
-        (let [input (rum/react *db-id)
-              input' (if (string/blank? input) (t :search/what-are-you-looking-for) input)]
-          [:span.overflow-hidden.text-ellipsis input'])]
-       (rum/with-key
-         (cmdk/cmdk-block {:initial-input db-id
-                           :sidebar? true
-                           :on-input-change (fn [new-value]
-                                              (reset! *db-id new-value))
-                           :on-input-blur (fn [new-value]
-                                            (state/sidebar-replace-block! [repo db-id block-type]
-                                                                          [repo new-value block-type]))})
-         (str init-key))]
+    :search
+    [[:.flex.items-center
+      (ui/icon "search" {:class "mr-1"})
+      (let [input (rum/react *db-id)
+            input' (if (string/blank? input) (t :search/what-are-you-looking-for) input)]
+        [:span.overflow-hidden.text-ellipsis input'])]
+     (rum/with-key
+       (cmdk/cmdk-block {:initial-input db-id
+                         :sidebar? true
+                         :on-input-change (fn [new-value]
+                                            (reset! *db-id new-value))
+                         :on-input-blur (fn [new-value]
+                                          (state/sidebar-replace-block! [repo db-id block-type]
+                                                                        [repo new-value block-type]))})
+       (str init-key))]
 
-      :page-slide-view
-      (let [page-name (:block/name (db/entity db-id))]
-        [[:a.page-title {:href (rfe/href :page {:name page-name})}
-          (db-model/get-page-original-name page-name)]
-         [:div.ml-2.slide.mt-2
-          (slide/slide page-name)]])
+    :page-slide-view
+    (let [page-name (:block/name (db/entity db-id))]
+      [[:a.page-title {:href (rfe/href :page {:name page-name})}
+        (db-model/get-page-original-name page-name)]
+       [:div.ml-2.slide.mt-2
+        (slide/slide page-name)]])
 
-      :shortcut-settings
-      [[:.flex.items-center (ui/icon "command" {:class "text-md mr-2"}) (t :help/shortcuts)]
-       (shortcut-settings)]
+    :shortcut-settings
+    [[:.flex.items-center (ui/icon "command" {:class "text-md mr-2"}) (t :help/shortcuts)]
+     (shortcut-settings)]
 
-      :syntax-help
-      [[:.flex.items-center (ui/icon "vector-bezier" {:class "text-md mr-2"}) (t :right-side-bar/syntax)]
-       (syntax-help)]
+    :syntax-help
+    [[:.flex.items-center (ui/icon "vector-bezier" {:class "text-md mr-2"}) (t :right-side-bar/syntax)]
+     (syntax-help)]
 
-      ["" [:span]])))
+    ["" [:span]]))
+      ;; )
 
 (defonce *drag-to
   (atom nil))
@@ -582,14 +583,14 @@ opacity: 0.6;
         ;;     (t :right-side-bar/page-headers-list)]]]]
 
         ;; dafault-queries 
-        (when (and repo
-                   (not demo?))
-          [:div.text-sm
-           [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "alias"}
-                                                           :on-click (fn [_e]
-                                                                       (state/sidebar-add-block! repo "default-queries" :default-queries))
-                                                           :title (t :right-side-bar/default-queries)}
-            (ui/icon "brand-4chan" {:class "icon" :size 23 :color "gray"})]])
+        ;; (when (and repo
+        ;;            (not demo?))
+        ;;   [:div.text-sm
+        ;;    [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "alias"}
+        ;;                                                    :on-click (fn [_e]
+        ;;                                                                (state/sidebar-add-block! repo "default-queries" :default-queries))
+        ;;                                                    :title (t :right-side-bar/default-queries)}
+        ;;     (ui/icon "brand-4chan" {:class "icon" :size 23 :color "gray"})]])
 
 
         ;; 今日のジャーナルを開く

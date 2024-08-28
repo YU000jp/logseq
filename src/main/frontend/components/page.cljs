@@ -283,8 +283,9 @@
          [(shui/tabler-icon "pencil" {:size 16}) (t :left-side-bar/search-by-page-name)]]
         [:ul.search-by-page-name
          (for [[original-name name] (sort-by last pages)]
-           [:li.mt-1
-            (component-block/page-cp {} {:block/name name :block/original-name original-name})])]]])))
+           (when-not (or (parse-uuid original-name) (string/starts-with? original-name "hls/"))
+            [:li.mt-1
+            (component-block/page-cp {} {:block/name name :block/original-name original-name})]))]]])))
 
 
 (rum/defc page-title-editor < rum/reactive
@@ -641,7 +642,11 @@
                                (state/sidebar-add-block! repo title :reference)))}
            (rum/with-key
              (reference/references title)
-             (str title "-refs"))]])])))
+             (str title "-refs"))
+                      (rum/with-key
+             (reference/unlinked-references title)
+             (str title "-unrefs"))
+           ]])])))
 
       ;;  (when-not (or block-or-whiteboard? sidebar? journal?)
       ;;      (hierarchy/structures title))
