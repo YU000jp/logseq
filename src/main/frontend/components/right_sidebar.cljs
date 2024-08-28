@@ -145,7 +145,7 @@
            (get-in entity [:block/original-name])]
           [:style
            (str "
-#right-sidebar .item-type-headers-list .ls-block {
+.item-type-headers-list .ls-block {
 &[blockid='" current-page-name-or-uuid "'] {
 background: var(--ls-selection-background-color);
 opacity: 1;
@@ -178,7 +178,7 @@ opacity: 0.6;
         (ui/icon "calendar-time" {:class "text-sm mr-1"})
         [:span.overflow-hidden.text-ellipsis (t :right-side-bar/scheduled-and-deadline)]]
        (scheduled/scheduled-and-deadlines (date/today))]
-      
+
       :repeat-tasks
       [[:.flex.items-center#open-sidebar-repeat-tasks
         (ui/icon "repeat" {:class "text-sm mr-1"})
@@ -541,7 +541,9 @@ opacity: 0.6;
                  state)}
   [state repo t blocks]
   (let [*anim-finished? (get state ::anim-finished?)
-        block-count (count blocks)]
+        block-count (count blocks)
+        repo (state/get-current-repo)
+        demo? (config/demo-graph? repo)]
     [:div.cp__right-sidebar-inner.flex.flex-col.h-full#right-sidebar-container
 
      [:div.cp__right-sidebar-scrollable
@@ -552,10 +554,9 @@ opacity: 0.6;
         ;; Search
         [:div.text-sm
          [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
-                                                                      ;; サイドバーで検索を開く
-                                                                     (let [repo (state/get-current-repo)]
-                                                                       [(state/close-modal!)
-                                                                        (state/sidebar-add-block! repo "" :search)]))
+                                                                      ;; サイドバーで検索を開く 
+                                                                     [(state/close-modal!)
+                                                                      (state/sidebar-add-block! repo "" :search)])
                                                          :title (t :header/search)}
           [(ui/icon "search" {:class "icon" :size 23 :color "gray"})
            [:span.ml-1.mr-2
@@ -570,6 +571,7 @@ opacity: 0.6;
            [:span.ml-1.mr-2
             (t :right-side-bar/contents)]]]]
 
+
         ;; Table of Contents (Headers List)
         ;; [:div.text-sm
         ;;  [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]
@@ -578,6 +580,16 @@ opacity: 0.6;
         ;;   [(ui/icon "pennant" {:class "icon" :size 23 :color "gray"})
         ;;    [:span.ml-1.mr-2
         ;;     (t :right-side-bar/page-headers-list)]]]]
+
+        ;; dafault-queries 
+        (when (and repo
+                   (not demo?))
+          [:div.text-sm
+           [:button.button.cp__right-sidebar-settings-btn {:style {:cursor "alias"}
+                                                           :on-click (fn [_e]
+                                                                       (state/sidebar-add-block! repo "default-queries" :default-queries))
+                                                           :title (t :right-side-bar/default-queries)}
+            (ui/icon "brand-4chan" {:class "icon" :size 23 :color "gray"})]])
 
 
         ;; 今日のジャーナルを開く
@@ -658,7 +670,7 @@ opacity: 0.6;
         ;;                                                              (state/sidebar-add-block! repo "help" :help))}
         ;;   (t :right-side-bar/help)]]
 
-        (when (and config/dev? 
+        (when (and config/dev?
                    (state/sub [:ui/developer-mode?]))
           [:div.text-sm
            [:button.button.cp__right-sidebar-settings-btn {:on-click (fn [_e]

@@ -247,7 +247,10 @@
         custom-home-page? (and (state/custom-home-page?)
                                (= (state/sub-default-home-page) (state/get-current-page)))
         ;; sync-enabled? (file-sync-handler/enable-sync?)
-        current-page (or (state/get-current-page) (state/get-current-whiteboard))]
+        current-page (or (state/get-current-page) (state/get-current-whiteboard))
+        block-zoom? (if current-page
+                      (parse-uuid current-page)
+                      false)]
     [:div.cp__header.drag-region#head
      {:class           (util/classnames [{:electron-mac   electron-mac?
                                           :native-ios     (mobile-util/native-ios?)
@@ -281,35 +284,11 @@
         (fs-sync/indicator)
 
         (let [today (date/today)]
-          [(when-let [display (scheduled/scheduled-and-deadlines-for-toolbar-tip today)]
-             [:div.text-sm.mr-4
-              [:button.button.icon
-               {:title (str (t :right-side-bar/scheduled-and-deadline) "\n" (t :content/open-in-sidebar))
-                :on-click (fn []
-                            (state/sidebar-add-block! current-repo "scheduled-and-deadline" :scheduled-and-deadline))}
-               display]])
-
-           (when-let [display (scheduled/repeat-tasks-for-toolbar-tip today)]
-             [:div.text-sm.mr-4
-              [:button.button.icon
-               {:title (str (t :right-side-bar/repeat-tasks) "\n" (t :content/open-in-sidebar))
-                :on-click (fn []
-                            (state/sidebar-add-block! current-repo "repeat-tasks" :repeat-tasks))}
-               display]])]))
-
-      ;; :dafault-queries 
-      (when (and current-repo
-                 (not (config/demo-graph? current-repo)))
-        [:button.button.icon#search-button
-         {:title (str (t :right-side-bar/default-queries) "\n" (t :content/open-in-sidebar))
-          :style {:cursor "alias"}
-          :on-click (fn []
-                      (state/sidebar-add-block! current-repo "default-queries" :default-queries))}
-         (ui/icon "brand-4chan" {:size ui/icon-size})])
-
+          [(scheduled/scheduled-and-deadlines-for-toolbar-tip today current-repo)
+           (scheduled/repeat-tasks-for-toolbar-tip today current-repo)]))
 
       (when (and current-page
-                 current-repo)
+                 current-repo (not block-zoom?));; ブロックズームを除く
         [:div.flex.items-center.space-x-2.mr-4.rounded-md
          {:style {:background-color "var(--lx-gray-04, var(--color-level-3, var(--rx-gray-04)))"}}
          [;; ページ用メニュー
@@ -330,17 +309,7 @@
              :title (str (t :unlinked-references/sidebar-open) "\n" (t :content/open-in-sidebar))}
             (ui/icon "list" {:class "icon" :size 24})]]
 
-
-          ;; Page headers list
-          [:div.text-sm
-           [:button.button.icon
-            {:on-click (fn []
-                         (state/sidebar-add-block! current-repo "headers-list" :headers-list))
-             :title (str (t :right-side-bar/page-headers-list) "\n" (t :content/open-in-sidebar))}
-            (ui/icon "pennant" {:class "icon" :size 24})]]
-
-
-         ;; ページのグラフを表示する
+           ;; ページのグラフを表示する
           [:div.text-sm
            [:button.button.icon
             {:on-click (fn []
@@ -350,6 +319,14 @@
                           :page-graph))
              :title (str (t :right-side-bar/page-graph) "\n" (t :content/open-in-sidebar))}
             (ui/icon "hierarchy" {:class "icon" :size 24})]]
+
+          ;; Page headers list
+          [:div.text-sm
+           [:button.button.icon
+            {:on-click (fn []
+                         (state/sidebar-add-block! current-repo "headers-list" :headers-list))
+             :title (str (t :right-side-bar/page-headers-list) "\n" (t :content/open-in-sidebar))}
+            (ui/icon "pennant" {:class "icon" :size 24})]]
 
         ;; 削除ボタン
           (when-not (or (= current-page "contents")

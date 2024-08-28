@@ -10,13 +10,12 @@
             [frontend.components.page :as page]
             ;; [frontend.components.repo :as repo]
             ;; [frontend.components.hierarchy :as hierarchy]
-            [frontend.components.scheduled-deadlines :as scheduled]
+            ;; [frontend.components.scheduled-deadlines :as scheduled]
             [frontend.components.cmdk :as cmdk]
             [frontend.date :as date]
             [frontend.components.right-sidebar :as right-sidebar]
             [frontend.components.select :as select]
             [frontend.components.theme :as theme]
-            [frontend.components.page :as com-page]
             [frontend.components.block :as com-block]
             [frontend.components.widgets :as widgets]
             [frontend.components.handbooks :as handbooks]
@@ -517,10 +516,11 @@
 
 
        ;; 目次コンテンツをメニューバーに配置 TODO: オプションでトグルする
-       [:div.contents-left-menu
-        {:title (t :right-side-bar/contents)}
-        (when-let [contents (db/entity [:block/name "contents"])]
-          (page/contents-page contents))]
+
+       (when-let [contents (db/entity [:block/name "contents"])]
+         [:div.contents-left-menu
+          {:title (t :right-side-bar/contents)}
+          (page/contents-page contents)])
 
        [:div.nav-contents-container.gap-1.pt-1
         {:on-scroll on-contents-scroll}
@@ -547,18 +547,10 @@
                 (com-block/namespace-hierarchy {} hierarchy-target children false)])
                  ;; search-by-page-name
              (when last-name
-               (com-page/search-by-page-name repo last-name page-name))])
+               (page/search-by-page-name repo last-name page-name))])
 
            ;; tagged pages
-          (com-page/tagged-pages repo page-name)])
-
-       (ui/lazy-visible
-        (fn [] (scheduled/scheduled-and-deadlines-for-left-menu (date/today) on-contents-scroll))
-        {:debug-id "scheduled-and-deadlines"})
-
-       (ui/lazy-visible
-        (fn [] (scheduled/repeat-tasks-for-left-menu (date/today) on-contents-scroll))
-        {:debug-id "repeat-tasks"})
+          (page/tagged-pages repo page-name)])
 
        [:footer.px-2.mt-1.create
         (when-not config/publishing?
@@ -877,7 +869,7 @@
                "D"])))
 
 (def help-menu-items
-  [;;{:title (t :help/handbook) :icon "book-2" :on-click #(handbooks/toggle-handbooks)}
+  [{:title (t :help/handbook) :icon "book-2" :on-click #(handbooks/toggle-handbooks)}
    {:title (t :help/shortcuts) :icon "command" :on-click #(state/sidebar-add-block! (state/get-current-repo) "shortcut-settings" :shortcut-settings)}
    {:title (t :help/docs) :icon "help" :href "https://docs.logseq.com/"}
    :hr

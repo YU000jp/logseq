@@ -36,6 +36,37 @@ html[data-theme=light] a.toggle:hover {
   }
 }
 
+/* For Table of Content (Headers List) */
+.item-type-headers-list .blocks-container>div>div div.ls-block {
+
+  .block-control,
+  .block-properties {
+    display: none
+  }
+
+  .bullet-container {
+    height: 32px;
+    width: 32px;
+  }
+
+  &:not(:has(h1, h2, h3, h4, h5, h6)) {
+    &:not(:has(.editor-wrapper)) {
+      display: none
+    }
+  }
+
+  &:has(h1),
+  &:has(h2),
+  &:has(h3),
+  &:has(h4),
+  &:has(h5),
+  &:has(h6) {
+    &.block-children-container {
+      display: none
+    }
+  }
+}
+
 .cp__right-sidebar {
   z-index: var(--ls-z-index-level-1);
   transition: width 0.3s;
@@ -150,37 +181,6 @@ html[data-theme=light] a.toggle:hover {
     display: flex;
     overflow-x: scroll;
     flex-wrap: wrap;
-  }
-
-  /* For Table of Content (Headers List) */
-  .item-type-headers-list .blocks-container>div>div div.ls-block {
-
-    .block-control,
-    .block-properties {
-      display: none
-    }
-
-    .bullet-container {
-      height: 32px;
-      width: 32px;
-    }
-
-    &:not(:has(h1, h2, h3, h4, h5, h6)) {
-      &:not(:has(.editor-wrapper)) {
-        display: none
-      }
-    }
-
-    &:has(h1),
-    &:has(h2),
-    &:has(h3),
-    &:has(h4),
-    &:has(h5),
-    &:has(h6) {
-      &.block-children-container {
-        display: none
-      }
-    }
   }
 
   .sidebar-item {

@@ -59,16 +59,30 @@
 
 
 (rum/defc scheduled-and-deadlines-for-toolbar-tip < rum/reactive db-mixins/query
-  [page-name]
+  [page-name current-repo]
   (when (true? (check? page-name))
     (when-let [blocks (db/get-scheduled-and-deadlines (string/capitalize page-name))]
       (when (seq blocks)
-        [:div
-         [(ui/icon "calendar-time" {:class "text-sm mr-1"})
-          (let [count-number (count blocks)]
-            [:span.overflow-hidden.text-ellipsis
-             [" (" count-number ")"]])]]))))
+        [:div.text-sm.mr-4
+         [:button.button.icon
+          {:title (str (t :right-side-bar/scheduled-and-deadline) "\n" (t :content/open-in-sidebar))
+           :on-click (fn []
+                       (state/sidebar-add-block! current-repo "scheduled-and-deadline" :scheduled-and-deadline))}
+          [:div
+           [(ui/icon "calendar-time" {:class "text-sm mr-1"})
+            (let [count-number (count blocks)]
+              [:span
+               [" (" count-number ")"]])]]]]))))
 
+
+(rum/defc scheduled-and-deadlines-return-count < rum/reactive db-mixins/query
+  [page-name]
+  (when (true? (check? page-name))
+    (when-let [blocks (db/get-scheduled-and-deadlines (string/capitalize page-name))]
+      (if (seq blocks)
+        (let [count-number (count blocks)]
+          [(str count-number)])
+        [(str "0")]))))
 
 
 (rum/defc repeat-tasks < rum/reactive db-mixins/query
@@ -96,17 +110,30 @@
           (scheduled-and-deadlines-inner page-name blocks)]]))))
 
 
-(rum/defc repeat-tasks-for-toolbar-tip < rum/reactive db-mixins/query
+(rum/defc repeat-tasks-return-count < rum/reactive db-mixins/query
   [page-name]
   (when (true? (check? page-name))
     (when-let [blocks (db/get-repeat-tasks (string/capitalize page-name))]
-      (when (seq blocks)
-        [:div
-         [(ui/icon "repeat" {:class "text-sm mr-1"})
-          (let [count-number (count blocks)]
-            [:span.overflow-hidden.text-ellipsis
-             [" (" count-number ")"]])]]))))
+      (if (seq blocks)
+        (let [count-number (count blocks)]
+          [(str count-number)])
+        [(str "0")]))))
 
+
+(rum/defc repeat-tasks-for-toolbar-tip < rum/reactive db-mixins/query
+  [page-name current-repo]
+  (when (true? (check? page-name))
+    (when-let [blocks (db/get-repeat-tasks (string/capitalize page-name))]
+      (when (seq blocks)
+        [:div.text-sm.mr-4
+         [:button.button.icon
+          {:title (str (t :right-side-bar/repeat-tasks) "\n" (t :content/open-in-sidebar))
+           :on-click (fn []
+                       (state/sidebar-add-block! current-repo "repeat-tasks" :repeat-tasks))}
+          [(ui/icon "repeat" {:class "text-sm mr-1"})
+           (let [count-number (count blocks)]
+             [:span
+              [" (" count-number ")"]])]]]))))
 
 
 (rum/defc scheduled-and-deadlines-for-date-history < rum/reactive db-mixins/query
