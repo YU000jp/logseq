@@ -29,19 +29,23 @@
     (page/page-blocks-cp repo page-e {})))
 
 (rum/defc journal-cp < rum/reactive
-  [title]
-  (let [;; Don't edit the journal title
-        lower-case-page-name (string/lower-case title)
-        repo (state/sub :git/current-repo)
-        today? (= lower-case-page-name
-                  (string/lower-case (date/journal-name))) ;; ジャーナルかどうか
-        page-entity (db/pull [:block/name lower-case-page-name])
-        data-page-tags (when (seq (:block/tags page-entity))
-                         (let [page-names (model/get-page-names-by-ids (map :db/id (:block/tags lower-case-page-name)))]
-                           (text-util/build-data-value page-names)))]
-    [:div.flex-1.journal.page (cond-> {}
-                                data-page-tags
-                                (assoc :data-page-tags data-page-tags))
+  ([title]
+   (let [lower-case-page-name (string/lower-case title)
+         page-entity (db/pull [:block/name lower-case-page-name])]
+     (journal-cp title page-entity)))
+  ([title page-entity]
+   (let [;; Don't edit the journal title
+         lower-case-page-name (string/lower-case title)
+         repo (state/sub :git/current-repo)
+         today? (= lower-case-page-name
+                   (string/lower-case (date/journal-name))) ;; ジャーナルかどうか
+
+         data-page-tags (when (seq (:block/tags page-entity))
+                          (let [page-names (model/get-page-names-by-ids (map :db/id (:block/tags lower-case-page-name)))]
+                            (text-util/build-data-value page-names)))]
+     [:div.flex-1.journal.page (cond-> {}
+                                 data-page-tags
+                                 (assoc :data-page-tags data-page-tags))
 
      ;;TODO: 日付ナビゲーション設置
 
@@ -115,9 +119,10 @@
     ;;     (when-not (js/document.getElementById "open-sidebar-scheduled-and-deadline")
     ;;       (state/sidebar-add-block! repo "scheduled-and-deadline" :scheduled-and-deadline))])
      
-     (for [{:block/keys [name]} latest-journals]
-      [:div.journal-item.content {:key name}
-       (journal-cp name)])]
+    [(for [page-entity latest-journals]
+       (let [{:block/keys [name]} page-entity]
+         [:div.journal-item.content {:key name}
+          (journal-cp name page-entity)]))]
     {:has-more (page-handler/has-more-journals?)
      :more-class "text-l"
      :on-load (fn []
