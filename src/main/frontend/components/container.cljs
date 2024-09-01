@@ -485,6 +485,17 @@
            :icon "calendar-time"
            :shortcut :go/journals})
 
+         (sidebar-item
+          {:class "weekly-nav"
+           :active (and (not srs-open?)
+                        (= route-name :weekly))
+           :title (t :weeklyJournal)
+           :on-click-handler (fn []
+                               (route-handler/go-to-weeklyJournal!))
+           :icon "notebook"
+          ;;  :shortcut :go/journals
+           })
+
          (when enable-whiteboards?
            (sidebar-item
             {:class "whiteboard"
@@ -695,7 +706,7 @@
       [:div.cp__sidebar-main-content
        {:data-is-margin-less-pages margin-less-pages?
         :data-is-full-width        (or margin-less-pages?
-                                       (contains? #{:all-files :all-pages :my-publishing} route-name))}
+                                       (contains? #{:all-files :all-pages :my-publishing :weekly} route-name))}
 
        (when show-recording-bar?
          (recording-bar))
@@ -727,7 +738,7 @@
 
        (when onboarding-and-home?
          (onboarding/intro onboarding-and-home?))]
-      
+
 
       (let [repo               (state/get-current-repo)
             page-name (or (state/get-current-page) (state/get-current-whiteboard))
@@ -759,7 +770,7 @@
                        [:div.nav-contents-container.pt-1.text-sm
                         {:style {:margin-left "1em"}}
                         (com-block/namespace-hierarchy {} hierarchy-target children false)])
-                    
+
                      ;; search-by-page-name
                      (when last-name
                        (page/search-by-page-name repo last-name page-name))]))
@@ -809,9 +820,6 @@
   []
   (let [default-home (get-default-home-if-valid)
         current-repo (state/sub :git/current-repo)
-        loading-files? (when current-repo (state/sub [:repo/loading-files? current-repo]))
-        journals-length (state/sub :journals-length)
-        latest-journals (db/get-latest-journals (state/get-current-repo) journals-length)
         graph-parsing-state (state/sub [:graph/parsing-state current-repo])]
     (cond
       (or
@@ -831,19 +839,17 @@
          (route-handler/redirect-to-page! (:page default-home))
 
          (and config/publishing?
-              (not default-home)
-              (empty? latest-journals))
+              (not default-home))
          (route-handler/redirect! {:to :all-pages})
 
-         loading-files?
+         (when current-repo (state/sub [:repo/loading-files? current-repo]))
          (ui/loading (t :loading-files))
 
-         (seq latest-journals)
-         (journal/journals latest-journals)
-
-         ;; FIXME: why will this happen?
          :else
-         [:div])])))
+         (let [latest-journals (db/get-latest-journals (state/get-current-repo) (state/sub :journals-length))]
+           (if [seq latest-journals]
+             (journal/journals latest-journals)
+             (route-handler/redirect! {:to :all-pages}))))])))
 
 (defn- hide-context-menu-and-clear-selection
   [e]

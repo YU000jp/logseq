@@ -685,7 +685,7 @@
             :stroke-linejoin "round"
             :stroke-linecap  "round"}]]]
         [:div.mt-3.text-center.sm:mt-0.sm:ml-4.sm:text-left
-         [:h2.headline.text-lg.leading-6.font-medium
+         [:h2.headline.leading-6
           (if (keyword? title) (t title) title)]
          [:label.sublabel
           (when sub-checkbox?

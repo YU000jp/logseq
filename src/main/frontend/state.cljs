@@ -136,7 +136,7 @@
      :editor/on-paste?                      false
      :editor/last-key-code                  nil
      :editor/block-op-type                  nil             ;; :cut, :copy
-
+     
      ;; Stores deleted refed blocks, indexed by repo
      :editor/last-replace-ref-content-tx    nil
 
@@ -225,7 +225,7 @@
      :plugin/updates-unchecked              #{}
      :plugin/navs-settings?                 true
      :plugin/focused-settings               nil ;; plugin id
-
+     
      ;; pdf
      :pdf/system-win?                       false
      :pdf/current                           nil
@@ -283,7 +283,7 @@
      ;;                :file-sync/last-synced-at {}}
      :file-sync/graph-state                 {:current-graph-uuid nil}
                                              ;; graph-uuid -> ...
-
+     
      :user/info                             {:UserGroups (storage/get :user-groups)}
      :encryption/graph-parsing?             false
 
@@ -306,6 +306,8 @@
      ;; db tx-id -> editor cursor
      :history/tx->editor-cursor             {}
      
+     :journal/weeklyJournalView          "thisWeek"
+     :journal/weeklyJournalHideLinkedReferences? true
      })))
 
 ;; Block ast state
@@ -1353,6 +1355,15 @@ Similar to re-frame subscriptions"
   [value]
   (when value
     (set-state! :journals-length value)))
+
+(defn weeklyJournalView!
+  [value]
+  (when value
+    (set-state! :journal/weeklyJournalView value)))
+
+(defn weeklyJournalHideLinkedReferences!
+  [checked] 
+   (set-state! :journal/weeklyJournalHideLinkedReferences? (not checked)))
 
 (defn save-scroll-position!
   ([value]

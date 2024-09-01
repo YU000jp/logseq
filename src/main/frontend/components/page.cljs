@@ -117,20 +117,7 @@
 
 (rum/defc dummy-block
   [page-name]
-  (let [[hover set-hover!] (rum/use-state false)
-        click-handler-fn (fn []
-                           (let [block (editor-handler/insert-first-page-block-if-not-exists! page-name {:redirect? false})]
-                             (js/setTimeout #(editor-handler/edit-block! block :max (:block/uuid block)) 0)))
-        drop-handler-fn (fn [^js event]
-                          (util/stop event)
-                          (p/let [block-uuids (state/get-selection-block-ids)
-                                  lookup-refs (map (fn [id] [:block/uuid id]) block-uuids)
-                                  selected (db/pull-many (state/get-current-repo) '[*] lookup-refs)
-                                  blocks (if (seq selected) selected [@component-block/*dragging-block])
-                                  _ (editor-handler/insert-first-page-block-if-not-exists! page-name {:redirect? false})]
-                            (js/setTimeout #(let [target-block (db/pull (:db/id (db/get-page page-name)))]
-                                              (dnd/move-blocks event blocks target-block :sibling))
-                                           0)))]
+  (let [[hover set-hover!] (rum/use-state false)]
     [:div.ls-block.flex-1.flex-col.rounded-sm
      {:style {:width "100%"
               ;; The same as .dnd-separator
@@ -145,7 +132,7 @@
              [:span.bullet-container.cursor
               [:span.bullet]]]
             [:div.flex.flex-1.pb-12
-             [:span.mb-10
+             [:span.mb-6
               ((ui/make-confirm-modal
                 {:title    (t :on-boarding/insert-a-journal)
                  :on-confirm (fn []
@@ -155,21 +142,34 @@
                                   (js/setTimeout #((ui-handler/toggle-right-sidebar!))
                                                  1300)]))}))]]])))
 
-     [:div.flex.flex-row
-      [:div.flex.flex-row.items-center.mr-2.ml-1 {:style {:height 24}}
-       [:span.bullet-container.cursor
-        [:span.bullet]]]
-      [:div.flex.flex-1 {:tabIndex 0
-                         :on-key-press (fn [e]
-                                         (when (= "Enter" (util/ekey e))
-                                           (click-handler-fn)))
-                         :on-click click-handler-fn
-                         :on-drag-enter #(set-hover! true)
-                         :on-drag-over #(util/stop %)
-                         :on-drop drop-handler-fn
-                         :on-drag-leave #(set-hover! false)}
-       [:span.opacity-70
-        (t :on-boarding/click-here-to-edit-block)]]]]))
+     (let [click-handler-fn (fn []
+                              (let [block (editor-handler/insert-first-page-block-if-not-exists! page-name {:redirect? false})]
+                                (js/setTimeout #(editor-handler/edit-block! block :max (:block/uuid block)) 0)))
+           drop-handler-fn (fn [^js event]
+                             (util/stop event)
+                             (p/let [block-uuids (state/get-selection-block-ids)
+                                     lookup-refs (map (fn [id] [:block/uuid id]) block-uuids)
+                                     selected (db/pull-many (state/get-current-repo) '[*] lookup-refs)
+                                     blocks (if (seq selected) selected [@component-block/*dragging-block])
+                                     _ (editor-handler/insert-first-page-block-if-not-exists! page-name {:redirect? false})]
+                               (js/setTimeout #(let [target-block (db/pull (:db/id (db/get-page page-name)))]
+                                                 (dnd/move-blocks event blocks target-block :sibling))
+                                              0)))]
+       [:div.flex.flex-row
+        [:div.flex.flex-row.items-center.mr-2.ml-1 {:style {:height 24}}
+         [:span.bullet-container.cursor
+          [:span.bullet]]]
+        [:div.flex.flex-1 {:tabIndex 0
+                           :on-key-press (fn [e]
+                                           (when (= "Enter" (util/ekey e))
+                                             (click-handler-fn)))
+                           :on-click click-handler-fn
+                           :on-drag-enter #(set-hover! true)
+                           :on-drag-over #(util/stop %)
+                           :on-drop drop-handler-fn
+                           :on-drag-leave #(set-hover! false)}
+         [:span.opacity-70
+          (t :on-boarding/click-here-to-edit-block)]]])]))
 
 (rum/defc add-button
   [args]
@@ -191,7 +191,7 @@
   {:will-mount (fn [state]
                  (let [page-e (second (:rum/args state))
                        page-name (:block/name page-e)]
-                   (when-not (state/journal-create-user-submit?)
+                   (when-not (state/journal-create-user-submit?) ;; falseならテンプレートの自動挿入を実行
                      (when (and (db/journal-page? page-name)
                                 (>= (date/journal-title->int page-name)
                                     (date/journal-title->int (date/today))))
@@ -284,8 +284,8 @@
         [:ul.search-by-page-name
          (for [[original-name name] (sort-by last pages)]
            (when-not (or (parse-uuid original-name) (string/starts-with? original-name "hls/"))
-            [:li.mt-1
-            (component-block/page-cp {} {:block/name name :block/original-name original-name})]))]]])))
+             [:li.mt-1
+              (component-block/page-cp {} {:block/name name :block/original-name original-name})]))]]])))
 
 
 (rum/defc page-title-editor < rum/reactive
@@ -535,8 +535,6 @@
           fmt-journal? (:block/journal-day page-entity)
           format (db/get-page-format page-entity)
           title (or page-original-name path-page-name page-name)
-          {:keys [icon]} (:block/properties page-entity)
-          icon (or icon "")
           ;; today? (and
           ;;         journal?
           ;;         (= page-name (util/page-name-sanity-lc (date/journal-name)))) ;; today page
@@ -595,9 +593,11 @@
                  (page-blocks-collapse-control title *control-show? *all-collapsed?)])
 
               (when-not whiteboard?
-                [:div.ls-page-title.flex-1.flex-row.w-full
-                 {:style {:justify-content "space-between"}}
-                 (page-title page-name icon title format fmt-journal?)])]])
+                (let [{:keys [icon]} (:block/properties page-entity)
+                      icon (or icon "")]
+                  [:div.ls-page-title.flex-1.flex-row.w-full
+                   {:style {:justify-content "space-between"}}
+                   (page-title page-name icon title format fmt-journal?)]))]])
 
           [:div
            (when (and block?
@@ -612,7 +612,8 @@
                           (db/entity repo [:block/uuid block-id])
                           page-entity)
                  _ (and block?
-                        entity (reset! *current-block-page (:block/name (:block/page entity))))
+                        entity
+                        (reset! *current-block-page (:block/name (:block/page entity))))
                  _ (when (and block?
                               (not entity))
                      (route-handler/redirect-to-page! @*current-block-page))]
@@ -643,10 +644,9 @@
            (rum/with-key
              (reference/references title)
              (str title "-refs"))
-                      (rum/with-key
+           (rum/with-key
              (reference/unlinked-references title)
-             (str title "-unrefs"))
-           ]])])))
+             (str title "-unrefs"))]])])))
 
       ;;  (when-not (or block-or-whiteboard? sidebar? journal?)
       ;;      (hierarchy/structures title))

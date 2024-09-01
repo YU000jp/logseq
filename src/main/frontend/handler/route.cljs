@@ -73,17 +73,17 @@
    (redirect-to-page! page-name {}))
   ([page-name {:keys [anchor push click-from-recent?]
                :or {click-from-recent? false}}]
-    (when (or (uuid? page-name) (seq page-name))
+   (when (or (uuid? page-name) (seq page-name))
      (recent-handler/add-page-to-recent! (state/get-current-repo) page-name
                                          click-from-recent?)
      (let [m (cond->
-               (default-page-route page-name)
+              (default-page-route page-name)
 
                anchor
                (assoc :query-params {:anchor anchor})
 
-              (boolean? push)
-              (assoc :push push))]
+               (boolean? push)
+               (assoc :push push))]
        (redirect! m)))))
 
 (defn redirect-to-whiteboard!
@@ -116,6 +116,8 @@
     (t :all-files)
     :all-pages
     (t :all-pages)
+    :weeklyJournal
+    (t :weeklyJournal)
     :all-journals
     (t :all-journals)
     :file
@@ -210,6 +212,14 @@
                 :home)]
     (redirect! {:to route}))
   (util/scroll-to-top))
+
+(defn go-to-weeklyJournal!
+  ([]
+   [(state/weeklyJournalView! "thisWeek")
+    (redirect! {:to :weekly})])
+  ([selectWeek]
+   [(state/weeklyJournalView! selectWeek)
+    (redirect! {:to :weekly})]))
 
 (defn- redirect-to-file!
   [page]

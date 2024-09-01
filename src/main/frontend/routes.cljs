@@ -55,7 +55,7 @@
 
    ["/all-pages"
     {:name :all-pages
-     :view page/all-pages}]
+     :view page/all-pages}] 
 
    ["/graph"
     {:name :graph
@@ -84,6 +84,10 @@
    ["/all-journals"
     {:name :all-journals
      :view journal/all-journals}]
+   
+      ["/weekly"
+    {:name :weekly
+     :view journal/weeklyJournal}]
 
    ["/plugins"
     {:name :plugins

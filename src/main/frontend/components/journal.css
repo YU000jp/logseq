@@ -16,11 +16,37 @@
       padding-top: 0;
       border-top: none;
     }
+
     &>div.journal>div.flex>div.initial {
       min-height: 90vh;
     }
+
+    &.dummy-block {
+      opacity: 0.8;
+    }
   }
+
   #long-time-message {
     display: none;
+  }
+}
+
+#weeklyJournal {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-around;
+
+  .weekly-journal-item {
+    height: 44vh;
+    overflow: auto;
+    font-size: small;
+		width:700px;
+		&:hover,&:focus-within {
+			width: 900px;
+			margin-right:-200px;
+			outline: 3px solid var(--outline-color);
+			z-index: 1;
+			background-color:var(--ls-primary-background-color) ;
+		}
   }
 }
