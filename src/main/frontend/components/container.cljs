@@ -615,11 +615,7 @@
              (state/set-state! :mobile/show-tabbar? true))
            state)}
   []
-  (let [default-home (get-default-home-if-valid)
-        current-repo (state/sub :git/current-repo)
-        loading-files? (when current-repo (state/sub [:repo/loading-files? current-repo]))
-        journals-length (state/sub :journals-length)
-        latest-journals (db/get-latest-journals (state/get-current-repo) journals-length)
+  (let [current-repo (state/sub :git/current-repo)
         graph-parsing-state (state/sub [:graph/parsing-state current-repo])]
     (cond
       (or
@@ -631,27 +627,25 @@
 
       :else
       [:div
-       (cond
-         (and default-home
-              (= :home (state/get-current-route))
-              (not (state/route-has-p?))
-              (:page default-home))
-         (route-handler/redirect-to-page! (:page default-home))
+       (let [default-home (get-default-home-if-valid)
+             loading-files? (when current-repo (state/sub [:repo/loading-files? current-repo]))
+             journals-length (state/sub :journals-length)
+             latest-journals (db/get-latest-journals (state/get-current-repo) journals-length)]
+         (cond
+           (and default-home
+                (= :home (state/get-current-route))
+                (not (state/route-has-p?))
+                (:page default-home))
+           (route-handler/redirect-to-page! (:page default-home))
 
-         (and config/publishing?
-              (not default-home)
-              (empty? latest-journals))
-         (route-handler/redirect! {:to :all-pages})
+           loading-files?
+           (ui/loading (t :loading-files))
 
-         loading-files?
-         (ui/loading (t :loading-files))
-
-         (seq latest-journals)
-         (journal/journals latest-journals)
-
-         ;; FIXME: why will this happen?
-         :else
-         [:div])])))
+           :else
+           (if (and (not config/publishing?)
+                    (seq latest-journals))
+             (journal/journals latest-journals)
+             (route-handler/redirect! {:to :all-pages}))))])))
 
 (defn- hide-context-menu-and-clear-selection
   [e]
