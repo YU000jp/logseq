@@ -1361,6 +1361,10 @@ Similar to re-frame subscriptions"
   (when value
     (set-state! :journal/weeklyJournalView value)))
 
+(defn getWeeklyJournalHideLinkedReferences?
+  []
+  (:journal/weeklyJournalHideLinkedReferences? @state))
+
 (defn weeklyJournalHideLinkedReferences!
   [checked] 
    (set-state! :journal/weeklyJournalHideLinkedReferences? (not checked)))

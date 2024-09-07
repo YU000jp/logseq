@@ -185,29 +185,45 @@
 
 (rum/defc weeklyJournal < rum/reactive
   ([]
-   (weeklyJournal (or (state/sub :journal/weeklyJournalView) "thisWeek")))
+   (weeklyJournal (or (state/sub :journal/weeklyJournalView) "thisWeek") (state/getWeeklyJournalHideLinkedReferences?)))
   ([start-of-week?]
+   (weeklyJournal start-of-week? (state/getWeeklyJournalHideLinkedReferences?)))
+  ([start-of-week? linked-ref-enabled?]
    (let [repo (state/get-current-repo)
          start-of-week? (state/sub :journal/weeklyJournalView)
          today (js/Date.)
          day-of-week (+ (.getDay today) (or (state/get-start-of-week) 0))
          start-of-this-week (doto (js/Date. today) (.setDate (- (.getDate today) day-of-week)))
-         start-of-prev-week (cond
-                              (= start-of-week? "prev")
-                              (doto (js/Date. start-of-this-week) (.setDate (- (.getDate start-of-this-week) 7)))
-                              (= start-of-week? "next")
-                              (doto (js/Date. start-of-this-week) (.setDate (+ (.getDate start-of-this-week) 7)))
-                              :else
-                              start-of-this-week)
-         end-of-next-week (cond
-                            (= start-of-week? "prev")
-                            start-of-this-week
-                            (= start-of-week? "next")
-                            (doto (js/Date. start-of-this-week) (.setDate (+ (.getDate start-of-this-week) 14)))
-                            :else
-                            (doto (js/Date. start-of-this-week) (.setDate (+ (.getDate start-of-this-week) 7))))
-         dates (for [d (range (.getTime start-of-prev-week) (.getTime end-of-next-week) (* 24 60 60 1000))]
-                 (js/Date. d))]
+         dates (cond
+                 (= start-of-week? "2-days")
+                 [(js/Date. (.setDate (js/Date. today) (- (.getDate today) 1)))
+                  today]
+
+                 (= start-of-week? "3-days")
+                 [(js/Date. (.setDate (js/Date. today) (- (.getDate today) 1)))
+                  today
+                  (js/Date. (.setDate (js/Date. today) (+ (.getDate today) 1)))]
+
+                 (= start-of-week? "same-5-years-ago")
+                 (cons today (for [year (range 1 6)]
+                               (js/Date. (.setFullYear (js/Date. today) (- (.getFullYear today) year)))))
+
+
+                 :else
+                 (for [d (range (.getTime (cond
+                                            (= start-of-week? "prev")
+                                            (doto (js/Date. start-of-this-week) (.setDate (- (.getDate start-of-this-week) 7)))
+                                            (= start-of-week? "next")
+                                            (doto (js/Date. start-of-this-week) (.setDate (+ (.getDate start-of-this-week) 7)))
+                                            :else
+                                            start-of-this-week)) (.getTime (cond
+                                                                             (= start-of-week? "prev")
+                                                                             start-of-this-week
+                                                                             (= start-of-week? "next")
+                                                                             (doto (js/Date. start-of-this-week) (.setDate (+ (.getDate start-of-this-week) 14)))
+                                                                             :else
+                                                                             (doto (js/Date. start-of-this-week) (.setDate (+ (.getDate start-of-this-week) 7))))) (* 24 60 60 1000))]
+                   (js/Date. d)))]
      [:div
       [:div.flex
        [:span.mr-4
@@ -218,7 +234,10 @@
                       (state/weeklyJournalView! (.. e -target -value)))}
         [:option {:value "thisWeek"} "This Week"]
         [:option {:value "prev"} "Previous Week"]
-        [:option {:value "next"} "Next Week"]]
+        [:option {:value "next"} "Next Week"]
+        [:option {:value "2-days"} "-1 Today"]
+        [:option {:value "3-days"} "-1 Today +1"]
+        [:option {:value "same-5-years-ago"} "Same Day Last 5 Years"]]
        [:details
         [:summary
          (ui/icon "settings")]
@@ -228,6 +247,7 @@
                                (state/weeklyJournalHideLinkedReferences! (.. e -target -checked)))}]]]]
 
       [:div#weeklyJournal
+       {:class (str "wj--" start-of-week?)}
        (let [prev-date (atom nil)]
          (for [date dates]
            (let [current-date date

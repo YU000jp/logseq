@@ -40,13 +40,16 @@
     height: 44vh;
     overflow: auto;
     font-size: small;
-		width:700px;
-		&:hover,&:focus-within {
-			width: 900px;
-			margin-right:-200px;
-			outline: 3px solid var(--outline-color);
-			z-index: 1;
-			background-color:var(--ls-primary-background-color) ;
-		}
+    width: 700px;
+    padding: 1em;
+
+    &:hover,
+    &:focus-within {
+      width: 900px;
+      margin-right: -200px;
+      outline: 3px solid var(--outline-color);
+      z-index: 1;
+      background-color: var(--ls-primary-background-color);
+    }
   }
 }
