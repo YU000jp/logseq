@@ -1222,7 +1222,7 @@
      ;;     ]])
 
 
-(def DEFAULT-ACTIVE-TAB-STATE [:style :style])
+(def DEFAULT-ACTIVE-TAB-STATE [:advanced :advanced])
 
 (rum/defc settings-effect
   < rum/static
