@@ -271,7 +271,7 @@
 (defn long->ts
   "longからts 20240507T000000"
   [long]
-  (tc/from-long long))
+  (t/to-default-time-zone (tc/from-long long)))
 
 ;; day-of-week-number (date/ts->day-of-week-number ts) ;ts → 0-6
 (defn ts->day-of-week-number

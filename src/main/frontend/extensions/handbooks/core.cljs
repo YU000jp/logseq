@@ -14,6 +14,8 @@
             ;; [frontend.modules.shortcut.config :as shortcut-config]
             [frontend.util :as util]
             [frontend.components.scheduled-deadlines :as scheduled]
+            [frontend.handler.route :as route-handler]
+            [logseq.shui.ui :as shui]
             [frontend.context.i18n :refer [t]]))
 
 (defonce *config (atom {}))
@@ -95,6 +97,11 @@
       (let [title (t :handbook/hierarchy-search)
             key :hierarchy-search
             icon "search"]
+        (button title icon key pane-state nav-to-pane!))
+      
+            (let [title "Calendar"
+                  key :calendar
+                  icon "calendar"]
         (button title icon key pane-state nav-to-pane!))
 
       ;; (when current-page-name-or-uuid
@@ -195,7 +202,22 @@
             {:style {:margin-left "1em"}}
             (com-block/namespace-hierarchy {} q children false true true)])))]))
 
-
+(defn calendar
+  [handbooks-nodes pane-state nav-to-pane! current-page-name-or-uuid repo]
+;; (let [select-handler! (fn [^js d]
+;;                         (let [gd (date/js-date->goog-date d)
+;;                               journal (date/js-date->journal-title gd)]
+;;                           (println journal)
+;;                           ))
+;;                           ]
+  [:div.pane.journal-calendar
+  ;;  FIXME: カレンダーがローカライズされていない
+   (shui/calendar {:initial-focus true
+                   :show-week-number true
+                   :on-day-click (fn [day]
+                                   (let [journal-name (date/journal-name (date/long->ts day))]
+                                     (route-handler/redirect-to-page! journal-name)
+                                     (shui/toast! journal-name :success)))})])
 
 ;; (defn linked-references
 ;;   [handbooks-nodes pane-state nav-to-pane! current-page-name-or-uuid repo]
@@ -222,7 +244,8 @@
    :page-headers-list   [page-headers-list]
    :contents            [contents-embed]
    :search              [search]
-   :hierarchy-search   [hierarchy-search]
+   :hierarchy-search    [hierarchy-search]
+   :calendar            [calendar]
   ;;  :linked-references  [linked-references]
   ;;  :page-graph   [page-graph]
    :settings            [pane-settings]})

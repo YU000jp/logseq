@@ -195,19 +195,27 @@
          day-of-week (+ (.getDay today) (or (state/get-start-of-week) 0))
          start-of-this-week (doto (js/Date. today) (.setDate (- (.getDate today) day-of-week)))
          dates (cond
-                 (= start-of-week? "2-days")
+
+                 (= start-of-week? "2-days-y-t")
                  [(js/Date. (.setDate (js/Date. today) (- (.getDate today) 1)))
                   today]
+
+                 (= start-of-week? "2-days-t-tm")
+                 [today
+                  (js/Date. (.setDate (js/Date. today) (+ (.getDate today) 1)))]
 
                  (= start-of-week? "3-days")
                  [(js/Date. (.setDate (js/Date. today) (- (.getDate today) 1)))
                   today
                   (js/Date. (.setDate (js/Date. today) (+ (.getDate today) 1)))]
 
+                 (= start-of-week? "same-5-months-ago")
+                 (cons today (for [year (range 1 6)]
+                               (js/Date. (.setMonth (js/Date. today) (- (.getMonth today) year)))))
+
                  (= start-of-week? "same-5-years-ago")
                  (cons today (for [year (range 1 6)]
                                (js/Date. (.setFullYear (js/Date. today) (- (.getFullYear today) year)))))
-
 
                  :else
                  (for [d (range (.getTime (cond
@@ -235,8 +243,10 @@
         [:option {:value "thisWeek"} "This Week"]
         [:option {:value "prev"} "Previous Week"]
         [:option {:value "next"} "Next Week"]
-        [:option {:value "2-days"} "-1 Today"]
+        [:option {:value "2-days-y-t"} "-1 Today"]
+        [:option {:value "2-days-t-tm"} "Today +1"]
         [:option {:value "3-days"} "-1 Today +1"]
+        [:option {:value "same-5-months-ago"} "Same Day Last 5 Months"]
         [:option {:value "same-5-years-ago"} "Same Day Last 5 Years"]]
        [:details
         [:summary
